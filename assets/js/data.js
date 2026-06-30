@@ -1,0 +1,161 @@
+/* ============================================================
+   MBL Catering — Data layer
+   ------------------------------------------------------------
+   Uniform CRUD API used by every page. Two interchangeable
+   adapters return IDENTICAL plain objects:
+     • SupabaseAdapter — when SUPABASE_URL/KEY are set in config.js
+     • LocalAdapter    — seed data (assets/js/seed.js) + localStorage
+   Relations (recipe items, menu slots, allergen_ids) are stored
+   as JSONB columns / nested arrays, so both adapters match.
+
+   Collections: allergens, ingredients, recipes, sites,
+                menu_days, people, subscribers
+   API:
+     Data.ready()                      -> Promise (resolves when loaded)
+     Data.all(coll)                    -> array (sync, from cache)
+     Data.get(coll, id)                -> object | null
+     await Data.create(coll, obj)      -> created obj (id assigned)
+     await Data.update(coll, id, patch)-> updated obj
+     await Data.remove(coll, id)
+     Data.source                       -> "local" | "supabase"
+   ============================================================ */
+(function () {
+  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers"];
+  const cfg = window.MBL_CONFIG || {};
+  const useSupabase = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+
+  const cache = {}; COLLS.forEach((c) => (cache[c] = []));
+  let readyResolve; const readyPromise = new Promise((r) => (readyResolve = r));
+
+  // simple id generator (avoids Date.now/Math.random ban concerns in app runtime is fine here,
+  // but we keep it deterministic-ish + unique enough for client use)
+  let counter = 0;
+  function newId(prefix) { counter++; return `${prefix}_${counter.toString(36)}${performance.now().toString(36).replace(".", "")}`; }
+
+  /* ---------------- LOCAL adapter ---------------- */
+  const Local = {
+    LSKEY: "mbl_data_v1",
+    load() {
+      let stored = null;
+      try { stored = JSON.parse(localStorage.getItem(this.LSKEY) || "null"); } catch (e) {}
+      const seed = window.MBL_SEED || {};
+      COLLS.forEach((c) => {
+        cache[c] = (stored && Array.isArray(stored[c])) ? stored[c] : JSON.parse(JSON.stringify(seed[c] || []));
+      });
+      if (!stored) this.persist();
+    },
+    persist() { try { const o = {}; COLLS.forEach((c) => (o[c] = cache[c])); localStorage.setItem(this.LSKEY, JSON.stringify(o)); } catch (e) {} },
+    reset() { try { localStorage.removeItem(this.LSKEY); } catch (e) {} this.load(); },
+    async create(coll, obj) { obj.id = obj.id || newId(coll.slice(0, 3)); cache[coll].push(obj); this.persist(); return obj; },
+    async update(coll, id, patch) { const i = cache[coll].findIndex((x) => x.id === id); if (i < 0) return null; cache[coll][i] = Object.assign({}, cache[coll][i], patch); this.persist(); return cache[coll][i]; },
+    async remove(coll, id) { cache[coll] = cache[coll].filter((x) => x.id !== id); this.persist(); },
+  };
+
+  /* ---------------- SUPABASE adapter ---------------- */
+  let sb = null;
+  const Supa = {
+    async load() {
+      sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+      await Promise.all(COLLS.map(async (c) => {
+        const { data, error } = await sb.from(c).select("*");
+        if (error) { console.error("Supabase load", c, error); cache[c] = []; }
+        else cache[c] = data || [];
+      }));
+    },
+    async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) throw error; cache[coll].push(data); return data; },
+    async update(coll, id, patch) { const { data, error } = await sb.from(coll).update(patch).eq("id", id).select().single(); if (error) throw error; const i = cache[coll].findIndex((x) => x.id === id); if (i >= 0) cache[coll][i] = data; return data; },
+    async remove(coll, id) { const { error } = await sb.from(coll).delete().eq("id", id); if (error) throw error; cache[coll] = cache[coll].filter((x) => x.id !== id); },
+    async sendNewsletter(payload) {
+      const { data, error } = await sb.functions.invoke(cfg.NEWSLETTER_FUNCTION || "send-newsletter", { body: payload });
+      if (error) throw error; return data;
+    },
+  };
+
+  const adapter = useSupabase ? Supa : Local;
+
+  const Data = {
+    source: useSupabase ? "supabase" : "local",
+    COLLS,
+    ready: () => readyPromise,
+    all: (c) => cache[c] || [],
+    get: (c, id) => (cache[c] || []).find((x) => x.id === id) || null,
+    create: (c, o) => adapter.create(c, o),
+    update: (c, id, p) => adapter.update(c, id, p),
+    remove: (c, id) => adapter.remove(c, id),
+    resetLocal: () => { if (!useSupabase) Local.reset(); },
+    async sendNewsletter(payload) {
+      if (useSupabase) return Supa.sendNewsletter(payload);
+      // local mode: pretend-queue
+      return { ok: true, queued: true, count: payload.recipients ? payload.recipients.length : 0, local: true };
+    },
+
+    /* ---------- domain helpers (shared by pages) ---------- */
+    allergenName(id) { const a = this.get("allergens", id); return a ? I18N.pick(a, "name") : id; },
+    siteName(id) { const s = this.get("sites", id); return s ? I18N.pick(s, "name") : ""; },
+
+    // total covers across all sites (active people fallback to sites.covers)
+    totalCovers() {
+      const sites = this.all("sites");
+      const byPeople = this.activePeople().length;
+      const byCfg = sites.reduce((n, s) => n + (s.covers || 0), 0);
+      return byCfg || byPeople;
+    },
+    coversForSite(siteId) { const s = this.get("sites", siteId); return s ? (s.covers || 0) : 0; },
+
+    activePeople(onDate) {
+      const d = onDate || U.TODAY;
+      return this.all("people").filter((p) => (!p.date_in || p.date_in <= d) && (!p.date_out || p.date_out >= d));
+    },
+
+    // recipe nutrition computed from linked ingredients (per portion, where ingredient macros exist)
+    recipeNutrition(recipe) {
+      const out = { kcal: 0, protein: 0, carbs: 0, fat: 0, sugar: 0, fiber: 0, salt: 0 };
+      let any = false;
+      (recipe.items || []).forEach((it) => {
+        const ing = it.ingredient_id && this.get("ingredients", it.ingredient_id);
+        if (!ing || it.grams == null) return;
+        const f = it.grams / 100;
+        ["kcal", "protein", "carbs", "fat", "sugar", "fiber", "salt"].forEach((k) => {
+          if (ing[k] != null) { out[k] += ing[k] * f; any = true; }
+        });
+      });
+      if (!any) return null;
+      Object.keys(out).forEach((k) => (out[k] = Math.round(out[k] * 10) / 10));
+      return out;
+    },
+
+    recipeAllergens(recipe) {
+      const set = new Set(recipe.allergen_ids || []);
+      (recipe.items || []).forEach((it) => {
+        const ing = it.ingredient_id && this.get("ingredients", it.ingredient_id);
+        if (ing) (ing.allergen_ids || []).forEach((a) => set.add(a));
+      });
+      return [...set];
+    },
+
+    menuForDate(date) { return this.all("menu_days").find((m) => m.date === date) || null; },
+
+    // allergens present in a day's menu (union across slots' recipes + any explicit)
+    dayAllergens(menuDay) {
+      if (!menuDay) return [];
+      const set = new Set();
+      ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((s) => {
+        const slot = menuDay.slots && menuDay.slots[s];
+        if (!slot) return;
+        const r = slot.recipe_id && this.get("recipes", slot.recipe_id);
+        if (r) this.recipeAllergens(r).forEach((a) => set.add(a));
+      });
+      return [...set];
+    },
+  };
+
+  // boot
+  (async function () {
+    if (useSupabase) { try { await Supa.load(); } catch (e) { console.error(e); } }
+    else Local.load();
+    const badge = document.getElementById("dataSrc"); if (badge) badge.textContent = Data.source;
+    readyResolve();
+  })();
+
+  window.Data = Data;
+})();

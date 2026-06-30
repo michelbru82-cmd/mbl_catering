@@ -1,0 +1,73 @@
+/* ============================================================
+   MBL Catering — THEME / BRAND TOKENS
+   ------------------------------------------------------------
+   This is the ONLY file you need to edit to match the fbws.tw
+   "charte graphique". Drop your brand colours, fonts and logo
+   here. Nothing else in the app hard-codes a colour.
+
+   Logo:   put your file at  assets/img/logo.svg  (or .png and
+           change the <img src> in index.html).
+   Fonts:  change the Google Fonts <link> in index.html, then
+           update --font-sans / --font-zh below.
+   ============================================================ */
+
+:root {
+  /* ---- Brand palette (EDIT THESE) ---- */
+  --brand-primary:        #2f7d4f;   /* main brand colour            */
+  --brand-primary-dark:   #245f3d;
+  --brand-primary-soft:   #e6f1ea;
+  --brand-accent:         #e08a2e;   /* secondary / call-to-action   */
+  --brand-accent-soft:    #fbeeda;
+
+  /* ---- Neutrals / surfaces ---- */
+  --bg:            #f6f5f1;          /* app background (warm cream)  */
+  --surface:       #ffffff;
+  --surface-2:     #fbfaf7;
+  --border:        #e4e1d9;
+  --text:          #23211c;
+  --text-soft:     #6b665c;
+  --text-faint:    #9a948789;
+
+  /* ---- Semantic ---- */
+  --danger:        #c0392b;
+  --danger-soft:   #fbe7e4;
+  --warn:          #d39e00;
+  --warn-soft:     #fbf3d6;
+  --ok:            #2f7d4f;
+  --info:          #2d6cb5;
+
+  /* ---- Allergen alert colour (used on production/labels) ---- */
+  --allergen:      #b5341f;
+  --allergen-soft: #fae6e1;
+
+  /* ---- Typography ---- */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-zh:   "Noto Sans TC", var(--font-sans);
+  --fs-base: 15px;
+
+  /* ---- Shape & depth ---- */
+  --radius:    12px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 2px rgba(30,28,22,.06), 0 1px 3px rgba(30,28,22,.05);
+  --shadow:    0 4px 14px rgba(30,28,22,.08);
+  --shadow-lg: 0 12px 34px rgba(30,28,22,.14);
+
+  /* ---- Layout ---- */
+  --sidebar-w: 248px;
+  --topbar-h:  60px;
+  --maxw:      1280px;
+}
+
+/* Optional dark-ish brand variant: add class="theme-dark" to <html>.
+   Provided as a starting point — tweak to taste. */
+.theme-dark {
+  --bg: #1c1b18;
+  --surface: #26241f;
+  --surface-2: #2c2a24;
+  --border: #3a372f;
+  --text: #f2efe7;
+  --text-soft: #b8b2a4;
+  --brand-primary-soft: #20392b;
+  --shadow: 0 4px 14px rgba(0,0,0,.4);
+}

@@ -1,0 +1,459 @@
+[
+  {
+    "date": "2026-07-01",
+    "meat": "Three hours Pork belly",
+    "veg1": "spinach, garlic & butter",
+    "veg2": "Roast carrots & red onions",
+    "carb": "Steamed rice",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Dragon Fruits",
+    "side": "Tomatoes & Mustard Dressing sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Mustard",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Sesame seeds"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-02",
+    "meat": "4 cheeses quiche",
+    "veg1": "French beans and artichokes, flavoured with garlic",
+    "veg2": "Creamy cauliflower & parmesan",
+    "carb": "dauphinoise potatoes",
+    "dairy": "Banana & Dragon fruit Smoothie",
+    "fruit": null,
+    "side": "Bacon Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Soybeans"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-03",
+    "meat": "Salmon pave, curry sauce",
+    "veg1": "Broccolis, Tofu & Sweet peppers stir-fried",
+    "veg2": "Sweet Potato Cubes with Rosemary",
+    "carb": "Risotto with mushrooms and confit onions",
+    "dairy": null,
+    "fruit": "Chocolate Cake",
+    "side": "Lightly Seasoned Edamame",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Soybeans",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Fish"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-06",
+    "meat": "Chicken & Black Olives stew",
+    "veg1": "French Beans with Lemon Zest",
+    "veg2": "Cabbage & Carrot Slaw with Dijon Vinaigrette",
+    "carb": "Steamed rice",
+    "dairy": "Kirkland Fresh Mozarella",
+    "fruit": "Apples",
+    "side": "Tomatoes, French dressing sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Mustard",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-07",
+    "meat": "Braised beef chuck, bolognaise sauce",
+    "veg1": "Sautéed Broccoli, Spinach & Garlic",
+    "veg2": "Roasted Bell Peppers & Onions",
+    "carb": "Pastas Butter",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Orange",
+    "side": "Dry tofu & soy sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Soybeans",
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Sesame seeds",
+      "Beef (Religion)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-08",
+    "meat": "Three hours Pork belly",
+    "veg1": "Steamed Broccoli with Zucchini & Herb Vinaigrette",
+    "veg2": "Cauliflower Curry & Chickpeas",
+    "carb": "Steamed rice",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "tangerine",
+    "side": "Tomato Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Soybeans",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Sesame seeds"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-09",
+    "meat": "4 cheeses quiche",
+    "veg1": "Stir-Fried Green Beans, Bok Choy & Choy Sum with Sesame & Ginger",
+    "veg2": "french ratatouille",
+    "carb": "roast potatoes",
+    "dairy": "Mango Milk / Smoothie",
+    "fruit": null,
+    "side": "Raw vegetables",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Mango and products thereof"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-10",
+    "meat": "Salmon pave, curry sauce",
+    "veg1": "Broccolis, butter, garlic",
+    "veg2": "sweet potatoes puree",
+    "carb": "Couscous veggies",
+    "dairy": null,
+    "fruit": "Apple Cake",
+    "side": "Soft tofu - Chili Garlic sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Soybeans",
+      "Fish",
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-13",
+    "meat": "Japanese Curry Chicken",
+    "veg1": "Sautéed courgettes & Parmesan",
+    "veg2": "Taiwanese style cabbage",
+    "carb": "Steamed rice",
+    "dairy": "Kirkland Fresh Mozarella",
+    "fruit": "Mandarins",
+    "side": "Plain Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Milk",
+      "Eggs"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-14",
+    "meat": "Braised beef chuck, bolognaise sauce",
+    "veg1": "two cheese spinach",
+    "veg2": "Provencale tomatoes",
+    "carb": "pastas ratatouille",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Pineapple",
+    "side": "Grated Carrots",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Sesame seeds",
+      "Soybeans",
+      "Beef (Religion)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-15",
+    "meat": "Three hours Pork belly",
+    "veg1": "French beans, garlic & butter",
+    "veg2": "Cauliflower gratin with Comte & cumin",
+    "carb": "Steamed rice",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Dragon Fruits",
+    "side": "Tomatoes & Mustard Dressing sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Mustard",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Sesame seeds"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-16",
+    "meat": "4 cheeses quiche",
+    "veg1": "Broccolis, Mushroom & Tofu. Schezuan sauce",
+    "veg2": "Roast Carrots & Cardamom",
+    "carb": "Parsley Potatoes",
+    "dairy": "Pineapple & Banana Milk / Smoothie",
+    "fruit": null,
+    "side": "Bacon Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Soybeans"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-17",
+    "meat": "Salmon pave, curry sauce",
+    "veg1": "Broccoli & French Beans with Lemon Zest & Olive Oil",
+    "veg2": "stir-fried vegetables",
+    "carb": "Linguinis",
+    "dairy": null,
+    "fruit": "Chocolate Cake",
+    "side": "Lightly Seasoned Edamame",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Fish"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-20",
+    "meat": "Chicken Cream",
+    "veg1": "Green peas & butter",
+    "veg2": "cauliflower & black truffle gratin",
+    "carb": "Steamed rice",
+    "dairy": "Kirkland Fresh Mozarella",
+    "fruit": "Apples",
+    "side": "Tomatoes, French dressing sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Mustard",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-21",
+    "meat": "Braised beef chuck, bolognaise sauce",
+    "veg1": "Broccolis, zucchinis and French beans, flavoured with cumin",
+    "veg2": "vegetables flan",
+    "carb": "Pastas & Tomato sauce",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Orange",
+    "side": "Dry tofu & soy sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Eggs",
+      "Soybeans",
+      "Milk",
+      "Sesame seeds",
+      "Beef (Religion)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-22",
+    "meat": "Three hours Pork belly",
+    "veg1": "Stir-Fried Spinach & Garlic",
+    "veg2": "mushrooms, french beans, carrots & broccolis",
+    "carb": "Steamed rice",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "tangerine",
+    "side": "Tomato Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Sesame seeds"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-23",
+    "meat": "4 cheeses quiche",
+    "veg1": "Sauteed courgettes, cherry tomatoes, flavoured with chili, garlic and olive oil",
+    "veg2": "artichokes, spinach, garlic, sweet peppers, eggplants mix",
+    "carb": "Mash potatoes",
+    "dairy": "Banana Smoothie",
+    "fruit": null,
+    "side": "Raw vegetables",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-24",
+    "meat": "Salmon pave, curry sauce",
+    "veg1": "Broccolis & blue cheese gratin",
+    "veg2": "Braised Cabbage with Caraway Seeds",
+    "carb": "Ratatouille arborio",
+    "dairy": null,
+    "fruit": "Apple Cake",
+    "side": "Soft tofu - Chili Garlic sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Soybeans",
+      "Fish",
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-27",
+    "meat": "Baked Chicken Wings",
+    "veg1": "Mix of green veggies",
+    "veg2": "Roasted Mixed Veggies (Pumpkin, Eggplant, Peppers)",
+    "carb": "Steamed rice",
+    "dairy": "Kirkland Fresh Mozarella",
+    "fruit": "Mandarins",
+    "side": "Plain Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-28",
+    "meat": "Braised beef chuck, bolognaise sauce",
+    "veg1": "Sweet peppers, french beans, artichokes & eggplants",
+    "veg2": "Buttered Cabbage",
+    "carb": "Noodles",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Pineapple",
+    "side": "Grated Carrots",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Cereals containing gluten (wheat",
+      "rye",
+      "barley",
+      "oats",
+      "spelt",
+      "kamut",
+      "etc.)",
+      "Eggs",
+      "Milk",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Milk",
+      "Sesame seeds",
+      "Soybeans",
+      "Beef (Religion)"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-29",
+    "meat": "Three hours Pork belly",
+    "veg1": "broccolis & blue cheese gratin",
+    "veg2": "white cauliflower",
+    "carb": "Steamed rice",
+    "dairy": "fresh delight yoghurt",
+    "fruit": "Dragon Fruits",
+    "side": "Tomatoes & Mustard Dressing sauce",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Mustard",
+      "Sulphur dioxide & sulphites (>10 mg/kg or 10 mg/L)",
+      "Sesame seeds"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-30",
+    "meat": "4 cheeses quiche",
+    "veg1": "Zucchini, Carrot & Mushroom Stir-Fry",
+    "veg2": "Carrots & green peas",
+    "carb": "Boiled potatoes",
+    "dairy": "Banana & Dragon fruit Smoothie",
+    "fruit": null,
+    "side": "Bacon Scrumbled eggs",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Eggs",
+      "Soybeans"
+    ],
+    "notes": null
+  },
+  {
+    "date": "2026-07-31",
+    "meat": "Salmon pave, curry sauce",
+    "veg1": "spinach, garlic & butter",
+    "veg2": "Creamy mushrooms, bacon & Parmesan",
+    "carb": "Paella Rice",
+    "dairy": null,
+    "fruit": "Chocolate Cake",
+    "side": "Lightly Seasoned Edamame",
+    "site": "LIU-GONG + YONGCHUN",
+    "allergens": [
+      "Milk",
+      "Soybeans",
+      "Fish"
+    ],
+    "notes": null
+  }
+]

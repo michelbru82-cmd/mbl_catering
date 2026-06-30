@@ -1,0 +1,30 @@
+/* ============================================================
+   MBL Catering — CONFIGURATION
+   ------------------------------------------------------------
+   Fill these in to connect a real Supabase backend. If they are
+   left blank, the app runs in LOCAL mode (seed data + your
+   browser's localStorage) so you can use & demo it immediately.
+   ============================================================ */
+
+window.MBL_CONFIG = {
+  // ---- Supabase (leave blank to use local demo mode) ----
+  SUPABASE_URL:      "",   // e.g. https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: "",   // public anon key
+
+  // ---- Branding (also editable in assets/css/theme.css) ----
+  ORG_NAME:    "MBL Catering",
+  ORG_NAME_ZH: "MBL 餐飲",
+
+  // ---- Sites / campuses served (used by menus, production, people) ----
+  DEFAULT_SITES: ["Liu-Gong Campus", "Yongchun"],
+
+  // ---- Newsletter ----
+  NEWSLETTER_FROM:     "kitchen@fbws.tw",
+  NEWSLETTER_REPLY_TO: "kitchen@fbws.tw",
+  // When Supabase is connected, the "Send" button calls this Edge Function.
+  NEWSLETTER_FUNCTION: "send-newsletter",
+
+  // ---- Defaults ----
+  DEFAULT_LANG: "en",          // "en" | "zh"
+  CURRENCY: "NT$"
+};

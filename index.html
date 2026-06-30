@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBL Catering — Management</title>
+  <meta name="description" content="MBL Catering management: daily menus, recipes, ingredients, kitchen production, allergens, printable menus &amp; labels, and the daily newsletter." />
+
+  <!-- Fonts: swap freely in theme.css -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+
+  <!-- Supabase JS (used only when configured in config.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand__logo" src="assets/img/logo.svg" alt="MBL Catering" onerror="this.style.display='none'" />
+        <div class="brand__text">
+          <span class="brand__name">MBL Catering</span>
+          <span class="brand__sub">Management</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav"><!-- built by app.js --></nav>
+
+      <div class="sidebar__footer">
+        <button class="lang-toggle" id="langToggle" title="Switch language">
+          <span data-lang="en">中文</span><span data-lang="zh">EN</span>
+        </button>
+        <span class="datasrc" id="dataSrc" title="Active data source">local</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn" id="menuBtn" aria-label="Menu">&#9776;</button>
+        <h1 class="topbar__title" id="pageTitle">Dashboard</h1>
+        <div class="topbar__actions" id="topbarActions"></div>
+      </header>
+      <section class="content" id="view"><!-- pages render here --></section>
+    </main>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Config first (user fills Supabase keys, brand text) -->
+  <script src="assets/js/config.js"></script>
+  <!-- Core -->
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/seed.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/router.js"></script>
+  <!-- Pages -->
+  <script src="assets/js/pages/dashboard.js"></script>
+  <script src="assets/js/pages/menu.js"></script>
+  <script src="assets/js/pages/recipes.js"></script>
+  <script src="assets/js/pages/ingredients.js"></script>
+  <script src="assets/js/pages/production.js"></script>
+  <script src="assets/js/pages/people.js"></script>
+  <script src="assets/js/pages/allergens.js"></script>
+  <script src="assets/js/pages/print_menu.js"></script>
+  <script src="assets/js/pages/labels.js"></script>
+  <script src="assets/js/pages/newsletter.js"></script>
+  <!-- Boot -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

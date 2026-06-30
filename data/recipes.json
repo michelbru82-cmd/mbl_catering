@@ -1,0 +1,4195 @@
+[
+  {
+    "name_en": "Vegan couscous",
+    "name_zh": "純素北非庫斯小米",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "couscous",
+        "name_zh": "北非庫斯小米",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "unsalted almonds",
+        "name_zh": "杏仁",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "courgettes",
+        "name_zh": "櫛瓜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan sushis",
+    "name_zh": "純素壽司",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "thai rice",
+        "name_zh": "泰國米",
+        "grams": null
+      },
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Grilled sweet peppers, tomatoes & courgettes with pesto",
+    "name_zh": "純素烤甜椒、番茄與櫛瓜佐青醬",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "courgettes",
+        "name_zh": "櫛瓜",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "yellow sweet peppers",
+        "name_zh": "黃甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "fresh tomatoes",
+        "name_zh": "蕃茄",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Smoky Black Bean and Quinoa Soup",
+    "name_zh": "純素煙燻黑豆藜麥湯",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "black beans",
+        "name_zh": "豆鼓",
+        "grams": null
+      },
+      {
+        "name_en": "quinoa",
+        "name_zh": "藜麥",
+        "grams": null
+      },
+      {
+        "name_en": "soy sauce (5L)",
+        "name_zh": "醬油 (5L)",
+        "grams": null
+      },
+      {
+        "name_en": "fresh coriander",
+        "name_zh": "香菜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Daal",
+    "name_zh": "純素扁豆咖哩",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brown lentils",
+        "name_zh": "燉褐扁豆",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "孜然粉",
+        "grams": null
+      },
+      {
+        "name_en": "turmeric",
+        "name_zh": "薑黃",
+        "grams": null
+      },
+      {
+        "name_en": "fresh coriander",
+        "name_zh": "香菜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan chili",
+    "name_zh": "純素辣豆醬",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "red kidney beans",
+        "name_zh": "紅腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "孜然粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan tofu stir fry with veggies",
+    "name_zh": "純素豆腐炒蔬菜",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "soy sauce (5L)",
+        "name_zh": "醬油 (5L)",
+        "grams": null
+      },
+      {
+        "name_en": "broccolis",
+        "name_zh": "青花椰菜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Chickpeas Salad & Citrus",
+    "name_zh": "純素鷹嘴豆柑橘沙拉",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "chickpeas",
+        "name_zh": "鷹嘴豆",
+        "grams": null
+      },
+      {
+        "name_en": "orange",
+        "name_zh": "柳丁",
+        "grams": null
+      },
+      {
+        "name_en": "lemon",
+        "name_zh": "黃檸檬",
+        "grams": null
+      },
+      {
+        "name_en": "red onion",
+        "name_zh": "紫洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan tofu & mixed beans salad",
+    "name_zh": "純素豆腐與綜合豆沙拉",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "white beans",
+        "name_zh": "SL白腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "red kidney beans",
+        "name_zh": "紅腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "parsley",
+        "name_zh": "巴西里",
+        "grams": null
+      },
+      {
+        "name_en": "red onion",
+        "name_zh": "紫洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Mushrooms & Asparagus stew",
+    "name_zh": "純素綜合菇與蘆筍燉菜",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "king oyster mushrooms",
+        "name_zh": "杏鮑菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "paris mushrooms",
+        "name_zh": "蘑菇",
+        "grams": null
+      },
+      {
+        "name_en": "Asparagus",
+        "name_zh": "蘆筍",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Artichokes Soup",
+    "name_zh": "純素朝鮮薊湯",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "artichokes",
+        "name_zh": "朝鮮薊",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "paris mushrooms",
+        "name_zh": "蘑菇",
+        "grams": null
+      },
+      {
+        "name_en": "Asparagus",
+        "name_zh": "蘆筍",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Cottage Pie",
+    "name_zh": "純素牧羊人派",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "meat balls - vegetarian meat (Water, Vegetable Oil (Canola Oil), Pea Protein, Salt, Sugar, Cocoa Butter, Coconut Oil, Potato Starch, Methylcellulose, Red Yeast Rice Color, Maltodextrin, Yeast Extract Powder, Yeast Extract, Vegetarian Flavoring Agents (Disodium 5'-Guanylate, Disodium 5'-Inosinate), Hydrolyzed Corn Protein, Vegetarian Flavoring, Sorbitol Solution 70%, Beetroot Powder, Monosodium Glutamate (MSG), Glycine, DL-Alanine, Disodium Succinate, Fat Block (Soybean Oil, Thickener (Sodium Alginate), Quality Improver (Calcium Sulfate), Methylcellulose, Tapioca Starch, Binder (Sodium Acid Pyrophosphate), Oat Fiber), Water Chestnut, Vegan Seasoning)",
+        "name_zh": "素食肉丸 - 素食肉成分：（水、植物油（芥花籽油）、豌豆蛋白、鹽、糖、可可脂、椰子油、馬鈴薯澱粉、甲基纖維素、紅麴色素、麥芽糊精、酵母萃取粉、酵母萃取物、素食調味劑（5'-鳥苷酸二鈉、5'-肌苷酸二鈉）、水解玉米蛋白、素食風味劑、山梨醇溶液70%、甜菜根粉、味精（MSG）、甘氨酸、DL-丙氨酸、琥珀酸二鈉、脂肪塊（大豆油、增稠劑（海藻酸鈉）、品質改良劑（硫酸鈣）、甲基纖維素、木薯澱粉、黏合劑（焦磷酸鈉）、燕麥纖維）、荸薺、純素調味料）。",
+        "grams": null
+      },
+      {
+        "name_en": "potatoes",
+        "name_zh": "馬鈴薯",
+        "grams": null
+      },
+      {
+        "name_en": "organic carrots",
+        "name_zh": "有機胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "soy bean milk",
+        "name_zh": "豆漿",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "大蒜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Italian Meatballs",
+    "name_zh": "純素義大利肉丸",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "meat balls - vegetarian meat (Water, Vegetable Oil (Canola Oil), Pea Protein, Salt, Sugar, Cocoa Butter, Coconut Oil, Potato Starch, Methylcellulose, Red Yeast Rice Color, Maltodextrin, Yeast Extract Powder, Yeast Extract, Vegetarian Flavoring Agents (Disodium 5'-Guanylate, Disodium 5'-Inosinate), Hydrolyzed Corn Protein, Vegetarian Flavoring, Sorbitol Solution 70%, Beetroot Powder, Monosodium Glutamate (MSG), Glycine, DL-Alanine, Disodium Succinate, Fat Block (Soybean Oil, Thickener (Sodium Alginate), Quality Improver (Calcium Sulfate), Methylcellulose, Tapioca Starch, Binder (Sodium Acid Pyrophosphate), Oat Fiber), Water Chestnut, Vegan Seasoning)",
+        "name_zh": "素食肉丸 - 素食肉成分：（水、植物油（芥花籽油）、豌豆蛋白、鹽、糖、可可脂、椰子油、馬鈴薯澱粉、甲基纖維素、紅麴色素、麥芽糊精、酵母萃取粉、酵母萃取物、素食調味劑（5'-鳥苷酸二鈉、5'-肌苷酸二鈉）、水解玉米蛋白、素食風味劑、山梨醇溶液70%、甜菜根粉、味精（MSG）、甘氨酸、DL-丙氨酸、琥珀酸二鈉、脂肪塊（大豆油、增稠劑（海藻酸鈉）、品質改良劑（硫酸鈣）、甲基纖維素、木薯澱粉、黏合劑（焦磷酸鈉）、燕麥纖維）、荸薺、純素調味料）。",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "organic carrots",
+        "name_zh": "有機胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "fresh basil",
+        "name_zh": "羅勒",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "大蒜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Moroccan Meatballs",
+    "name_zh": "純素摩洛哥肉丸",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "meat balls - vegetarian meat (Water, Vegetable Oil (Canola Oil), Pea Protein, Salt, Sugar, Cocoa Butter, Coconut Oil, Potato Starch, Methylcellulose, Red Yeast Rice Color, Maltodextrin, Yeast Extract Powder, Yeast Extract, Vegetarian Flavoring Agents (Disodium 5'-Guanylate, Disodium 5'-Inosinate), Hydrolyzed Corn Protein, Vegetarian Flavoring, Sorbitol Solution 70%, Beetroot Powder, Monosodium Glutamate (MSG), Glycine, DL-Alanine, Disodium Succinate, Fat Block (Soybean Oil, Thickener (Sodium Alginate), Quality Improver (Calcium Sulfate), Methylcellulose, Tapioca Starch, Binder (Sodium Acid Pyrophosphate), Oat Fiber), Water Chestnut, Vegan Seasoning)",
+        "name_zh": "素食肉丸 - 素食肉成分：（水、植物油（芥花籽油）、豌豆蛋白、鹽、糖、可可脂、椰子油、馬鈴薯澱粉、甲基纖維素、紅麴色素、麥芽糊精、酵母萃取粉、酵母萃取物、素食調味劑（5'-鳥苷酸二鈉、5'-肌苷酸二鈉）、水解玉米蛋白、素食風味劑、山梨醇溶液70%、甜菜根粉、味精（MSG）、甘氨酸、DL-丙氨酸、琥珀酸二鈉、脂肪塊（大豆油、增稠劑（海藻酸鈉）、品質改良劑（硫酸鈣）、甲基纖維素、木薯澱粉、黏合劑（焦磷酸鈉）、燕麥纖維）、荸薺、純素調味料）。",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "chickpeas",
+        "name_zh": "鷹嘴豆",
+        "grams": null
+      },
+      {
+        "name_en": "cinnamon",
+        "name_zh": "肉桂粉",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "孜然粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Stuffed Roast tomatoes",
+    "name_zh": "純素香烤蕃茄",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "vegetarian minced meat (minced meat: Water, pea protein, vegetable oil (canola oil), salt, sugar, cocoa butter, coconut oil, potato starch, methylcellulose, yeast extract, disodium guanylate, disodium inosinate, hydrolyzed corn protein, natural flavors, D-sorbitol solution 70%, beetroot powder.)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Moussaka",
+    "name_zh": "純素穆薩卡",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brinjal",
+        "name_zh": "圓茄",
+        "grams": null
+      },
+      {
+        "name_en": "\"vegetarian minced meat (minced meat: Water, pea protein, vegetable oil (canola oil), salt, sugar, cocoa butter, coconut oil, potato starch, methylcellulose, yeast extract, disodium guanylate, disodium inosinate, hydrolyzed corn protein, natural flavors, D-sorbitol solution 70%, beetroot powder.)\"",
+        "name_zh": "素食絞肉（成分：水、豌豆蛋白、植物油（芥花籽油）、鹽、糖、可可脂、椰子油、馬鈴薯澱粉、甲基纖維素、酵母抽取物、鳥苷酸二鈉、肌苷酸二鈉、水解玉米蛋白、天然香料、D-山梨醇溶液 70%、甜菜根粉）。",
+        "grams": null
+      },
+      {
+        "name_en": "soy bean milk",
+        "name_zh": "豆漿",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "t55 flour",
+        "name_zh": "T55麵粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan coconut curry",
+    "name_zh": "純素椰漿咖哩",
+    "category": "vegan",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "curry madras",
+        "name_zh": "咖哩粉",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "chickpeas",
+        "name_zh": "鷹嘴豆",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "broccolis",
+        "name_zh": "青花椰菜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Tomatoes, Mozzarella & Pesto Quiche",
+    "name_zh": "蕃茄、莫札瑞拉起司青醬鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "fresh tomatoes",
+        "name_zh": "蕃茄",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "酥皮",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Italian arborio",
+    "name_zh": "義式燉飯",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "arborio rice",
+        "name_zh": "燉飯米",
+        "grams": null
+      },
+      {
+        "name_en": "artichokes",
+        "name_zh": "朝鮮薊",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "yellow sweet peppers",
+        "name_zh": "黃甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegetarian Indian curry stew",
+    "name_zh": "素食印度咖哩",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brown lentils",
+        "name_zh": "燉褐扁豆",
+        "grams": null
+      },
+      {
+        "name_en": "curry madras",
+        "name_zh": "咖哩粉",
+        "grams": null
+      },
+      {
+        "name_en": "turmeric",
+        "name_zh": "薑黃",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegetarian Burrito",
+    "name_zh": "素食墨西哥捲餅",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "tortilla",
+        "name_zh": "墨西哥捲餅",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "avocado",
+        "name_zh": "酪梨",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Feta cheese, green leaves, pesto and nuts lasagna.",
+    "name_zh": "費塔起司、青蔬、青醬堅果千層麵",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "lasagnas pasta",
+        "name_zh": "千層麵",
+        "grams": null
+      },
+      {
+        "name_en": "milk",
+        "name_zh": "牛奶",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Mushrooms & Asparagus Omelette",
+    "name_zh": "蕈菇與蘆筍歐姆蛋",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "Asparagus",
+        "name_zh": "蘆筍",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Mushrooms & Asparagus quiche",
+    "name_zh": "蕈菇綠蘆筍鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "Asparagus",
+        "name_zh": "蘆筍",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Spicy mixed crops grains and tofu",
+    "name_zh": "辣味雜穀飯與豆腐",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "mixed crop grain",
+        "name_zh": "十穀米",
+        "grams": null
+      },
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "soy sauce (5L)",
+        "name_zh": "醬油 (5L)",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Mushrooms & Coconut Lasagna",
+    "name_zh": "綜合菇與椰奶千層麵",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "king oyster mushrooms",
+        "name_zh": "杏鮑菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "milk",
+        "name_zh": "牛奶",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Poached eggs, Red wine sauce",
+    "name_zh": "水波蛋與紅酒醬汁",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "red wine \"cabernet sauviginon\"",
+        "name_zh": "紅酒 \"Cabernet sauvignon\"",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Creamy Mushrooms, Tofu & Parmesan",
+    "name_zh": "帕瑪森奶油豆腐與綜合菇類",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "4 cheeses quiche",
+    "name_zh": "起司四重奏鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "danish blue cheese",
+        "name_zh": "丹麥藍紋乳酪",
+        "grams": null
+      },
+      {
+        "name_en": "emmentaler Grand'Or",
+        "name_zh": "艾曼塔起司",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Mushrooms & Emmental Omelette",
+    "name_zh": "蕈菇艾曼塔起司歐姆蛋",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "emmentaler",
+        "name_zh": "愛爾門塔奶酪",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "4 cheese Omelette",
+    "name_zh": "起司四重奏鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "emmentaler Grand'Or",
+        "name_zh": "艾曼塔起司",
+        "grams": null
+      },
+      {
+        "name_en": "cheddar",
+        "name_zh": "切達起司",
+        "grams": null
+      },
+      {
+        "name_en": "danish blue cheese",
+        "name_zh": "丹麥藍紋乳酪",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "onions quiche",
+    "name_zh": "洋蔥鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "vegetarian lasagna",
+    "name_zh": "素食千層麵",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": 30.0
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": 30.0
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": 100.0
+      },
+      {
+        "name_en": "lasagnas pasta",
+        "name_zh": "千層麵",
+        "grams": 40.0
+      },
+      {
+        "name_en": "milk",
+        "name_zh": "牛奶",
+        "grams": 100.0
+      }
+    ]
+  },
+  {
+    "name_en": "Cheddar & Mozarella Quiche",
+    "name_zh": "切達與莫札瑞拉起司鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "cheddar",
+        "name_zh": "切達起司",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Spicy black bean tofu and eggplant",
+    "name_zh": "辣味黑豆乾及茄子",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "tofu",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "black beans",
+        "name_zh": "豆鼓",
+        "grams": null
+      },
+      {
+        "name_en": "eggplants",
+        "name_zh": "茄子",
+        "grams": null
+      },
+      {
+        "name_en": "unsalted almonds",
+        "name_zh": "杏仁",
+        "grams": null
+      },
+      {
+        "name_en": "whole grain mustard",
+        "name_zh": "芥末籽醬",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Mango curry",
+    "name_zh": "芒果咖哩",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "sweet corn",
+        "name_zh": "玉米罐",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "curry madras",
+        "name_zh": "咖哩粉",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Asian-style Creamy Corn Soup",
+    "name_zh": "台式玉米濃湯",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "sweet corn",
+        "name_zh": "玉米罐",
+        "grams": null
+      },
+      {
+        "name_en": "pakchoi",
+        "name_zh": "青江菜",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Chickpeas curry stew",
+    "name_zh": "燉鷹嘴豆咖哩",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "chickpeas",
+        "name_zh": "鷹嘴豆",
+        "grams": null
+      },
+      {
+        "name_en": "curry madras",
+        "name_zh": "咖哩粉",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red onion",
+        "name_zh": "紫洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "vegetarian chili",
+    "name_zh": "素食辣豆醬",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "red kidney beans",
+        "name_zh": "紅腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "sweet corn",
+        "name_zh": "玉米罐",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "vegetarian curry stew",
+    "name_zh": "素食香料咖哩",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "broccolis",
+        "name_zh": "青花椰菜",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "yellow sweet peppers",
+        "name_zh": "黃甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "vegetarian arborio",
+    "name_zh": "素食燉飯",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "arborio rice",
+        "name_zh": "燉飯米",
+        "grams": null
+      },
+      {
+        "name_en": "artichokes",
+        "name_zh": "朝鮮薊",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "indian shepherd's pie",
+    "name_zh": "印度香料牧羊人派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "brown lentils",
+        "name_zh": "燉褐扁豆",
+        "grams": null
+      },
+      {
+        "name_en": "fresh coriander",
+        "name_zh": "香菜",
+        "grams": null
+      },
+      {
+        "name_en": "turmeric",
+        "name_zh": "薑黃",
+        "grams": null
+      },
+      {
+        "name_en": "whole grain mustard",
+        "name_zh": "芥末籽醬",
+        "grams": null
+      },
+      {
+        "name_en": "organic carrots",
+        "name_zh": "有機胡蘿蔔",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "spanish tortilla",
+    "name_zh": "西班牙蔬菜烘蛋",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "potatoes",
+        "name_zh": "馬鈴薯",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "broccolis & blue cheese quiche",
+    "name_zh": "青花椰與藍紋起司鹹派",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Chili Cheese Sweet potato Casserole",
+    "name_zh": "辣豆醬烤起司與地瓜",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "sweet potatoes",
+        "name_zh": "地瓜",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Macaroni & American cheese",
+    "name_zh": "美式奶焗通心粉",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "conchiglie",
+        "name_zh": "貝殼麵AA",
+        "grams": null
+      },
+      {
+        "name_en": "cheddar",
+        "name_zh": "切達起司",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Vegan Meatballs",
+    "name_zh": "純素丸子",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "chickpeas",
+        "name_zh": "鷹嘴豆",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "italian slow cooker minestrone",
+    "name_zh": "義大利慢燉雜菜湯",
+    "category": "vegetarian",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Torsades",
+        "name_zh": "Baronia 螺旋麵/ Torsades 500g",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "courgettes",
+        "name_zh": "櫛瓜",
+        "grams": null
+      },
+      {
+        "name_en": "fresh tomatoes",
+        "name_zh": "蕃茄",
+        "grams": null
+      },
+      {
+        "name_en": "french beans",
+        "name_zh": "四季豆",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Braised beef chuck, bolognaise sauce",
+    "name_zh": "燉牛肉塊佐番茄肉醬",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": 120.0
+      },
+      {
+        "name_en": "black beans",
+        "name_zh": "豆鼓",
+        "grams": 20.0
+      },
+      {
+        "name_en": "sesame seeds",
+        "name_zh": "芝麻",
+        "grams": 5.0
+      },
+      {
+        "name_en": "Sesame oil",
+        "name_zh": "芝麻籽油",
+        "grams": 5.0
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": 2.0
+      }
+    ]
+  },
+  {
+    "name_en": "Braised beef chuck, black bean & sesame sauce",
+    "name_zh": "燉牛肉塊佐豆鼓芝麻醬",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Beef sauteed, cherry tomatoes & asparagus",
+    "name_zh": "小番茄蘆筍炒牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "cherry tomatoes",
+        "name_zh": "小番茄",
+        "grams": null
+      },
+      {
+        "name_en": "Asparagus",
+        "name_zh": "蘆筍",
+        "grams": null
+      },
+      {
+        "name_en": "thyme",
+        "name_zh": "百里香",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Stir-fried Beef & sweet peppers",
+    "name_zh": "甜椒炒牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Stir-fried Beef, Mushrooms, Garlic & Parsley",
+    "name_zh": "大蒜巴西里蕈菇炒牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "parsley",
+        "name_zh": "巴西里",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef Stew, Dijon sauce",
+    "name_zh": "法式芥末燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "白酒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef bourguignon stew",
+    "name_zh": "紅酒燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "t55 flour",
+        "name_zh": "T55麵粉",
+        "grams": null
+      },
+      {
+        "name_en": "bacon",
+        "name_zh": "培根",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef blanquette, mushrooms & carrots",
+    "name_zh": "白醬燉牛肉、蕈菇與胡蘿蔔",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef goulash stew",
+    "name_zh": "匈牙利燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "paprika",
+        "name_zh": "紅椒粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef & Ale stew",
+    "name_zh": "啤酒燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "台灣 beer",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "台灣啤酒",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "british kidney pie",
+    "name_zh": "英式牛排腰子派",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "台灣 beer",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "台灣啤酒",
+        "grams": null
+      },
+      {
+        "name_en": "t55 flour",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "T55麵粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef Strogonov stew",
+    "name_zh": "俄式酸奶燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef carrots stew",
+    "name_zh": "胡蘿蔔燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      },
+      {
+        "name_en": "red wine \"cabernet sauviginon\"",
+        "name_zh": "紅酒 \"Cabernet sauvignon\"",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "mediteranean beef stew",
+    "name_zh": "地中海式燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "Sunflower oil",
+        "name_zh": "葵花油(3L)",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "black olives",
+        "name_zh": "黑橄欖",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "hungarian beef goulash",
+    "name_zh": "匈牙利燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "paprika",
+        "name_zh": "紅椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "黑胡椒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "gardiane la camargue beef stew",
+    "name_zh": "紅酒橄欖燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "red wine \"cabernet sauviginon\"",
+        "name_zh": "紅酒 \"Cabernet sauvignon\"",
+        "grams": null
+      },
+      {
+        "name_en": "bay leaves",
+        "name_zh": "月桂葉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "braised beef & mushrooms tourte",
+    "name_zh": "燉牛肉蕈菇餡餅",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "flemish beef & beer stew",
+    "name_zh": "比利時啤酒燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "dijon mustard",
+        "name_zh": "第戎芥末醬",
+        "grams": null
+      },
+      {
+        "name_en": "guiness beer",
+        "name_zh": "健力士黑啤酒",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "大蒜",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef sauteed with vegetables & macadamia",
+    "name_zh": "時蔬夏威夷豆炒牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "unsalted macadamia nuts",
+        "name_zh": "夏威夷果",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "courgettes",
+        "name_zh": "櫛瓜",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "洋蔥",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Irish Beef Ale stew",
+    "name_zh": "愛爾蘭啤酒燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "British Kidney Pie",
+    "name_zh": "英式牛排腰子派",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "台灣 beer",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "台灣啤酒",
+        "grams": null
+      },
+      {
+        "name_en": "t55 flour",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "T55麵粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef stew, potatoes and carrots",
+    "name_zh": "馬鈴薯紅蘿蔔燉牛肉",
+    "category": "beef sirloin",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef sirloin",
+        "name_zh": "沙朗牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "potatoes",
+        "name_zh": "馬鈴薯",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "白酒",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Filet beef wellington, red wine sauce",
+    "name_zh": "惠靈頓菲力牛排佐紅酒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "塞蘭諾火腿",
+        "grams": null
+      },
+      {
+        "name_en": "serrano ham",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef burger, chili corn carne sauce",
+    "name_zh": "牛肉漢堡排，西班牙肉醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "紅腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "red kidney beans",
+        "name_zh": "青椒",
+        "grams": null
+      },
+      {
+        "name_en": "green sweet peppers",
+        "name_zh": "紅色甜椒",
+        "grams": null
+      },
+      {
+        "name_en": "red sweet peppers",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, parmesan sauce",
+    "name_zh": "烤牛肉佐帕馬森起司醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "葵花油(3L)",
+        "grams": null
+      },
+      {
+        "name_en": "Sunflower oil",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, black pepper sauce",
+    "name_zh": "烤牛肉佐黑胡椒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鹽",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, bbq thai sauce",
+    "name_zh": "烤牛肉佐泰式烤肉醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "伍斯特醬",
+        "grams": null
+      },
+      {
+        "name_en": "worcestershire sauce",
+        "name_zh": "番茄醬",
+        "grams": null
+      },
+      {
+        "name_en": "ketchup",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, Onion sauce",
+    "name_zh": "烤牛肉佐洋蔥醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, Texan sauce",
+    "name_zh": "烤牛肉佐自製烤肉醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "番茄醬",
+        "grams": null
+      },
+      {
+        "name_en": "ketchup",
+        "name_zh": "伍斯特醬",
+        "grams": null
+      },
+      {
+        "name_en": "worcestershire sauce",
+        "name_zh": "蜂蜜",
+        "grams": null
+      },
+      {
+        "name_en": "honey",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, Mushroms Duxelles & Ginger",
+    "name_zh": "烤牛肉佐法式磨菇泥及薑",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "杏鮑菇",
+        "grams": null
+      },
+      {
+        "name_en": "king oyster mushrooms",
+        "name_zh": "薑",
+        "grams": null
+      },
+      {
+        "name_en": "ginger",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Filet Beef, and original aioli sauce",
+    "name_zh": "菲力牛肉佐蒜味美乃滋",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Braised Beef, Wasabi sauce",
+    "name_zh": "燉牛肉佐日式芥末醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "山葵醬",
+        "grams": null
+      },
+      {
+        "name_en": "wasabi",
+        "name_zh": "玉米罐",
+        "grams": null
+      },
+      {
+        "name_en": "sweet corn",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "roast beef, mushroom sauce",
+    "name_zh": "烤牛肉佐蘑菇醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "葵花油(3L)",
+        "grams": null
+      },
+      {
+        "name_en": "Sunflower oil",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "roast beef & beer sauce",
+    "name_zh": "烤牛肉佐啤酒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "台灣 beer",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "台灣啤酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "roast beef, chasseur sauce",
+    "name_zh": "烤牛肉佐獵人醬汁",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "玉米粉",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "roast beef, blue cheese sauce",
+    "name_zh": "烤牛肉佐藍紋起司醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "丹麥藍紋乳酪",
+        "grams": null
+      },
+      {
+        "name_en": "danish blue cheese",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "玉米粉",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "braised beef, red wine sauce",
+    "name_zh": "烤牛肉佐紅酒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "紅酒 \"Cabernet sauvignon\"",
+        "grams": null
+      },
+      {
+        "name_en": "red wine \"cabernet sauviginon\"",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "培根",
+        "grams": null
+      },
+      {
+        "name_en": "bacon",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "roast beef, jalapenos sauce",
+    "name_zh": "烤牛肉佐青辣椒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef wellington, red wine sauce",
+    "name_zh": "威靈頓牛排佐紅酒醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      },
+      {
+        "name_en": "anchor parmesan cheese",
+        "name_zh": "安佳帕瑪森起司",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "braised slice filet beef, tomato",
+    "name_zh": "燉菲力牛肉與蕃茄",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "steak au poivre, (beef pepper with cognac)",
+    "name_zh": "菲力牛佐黑胡椒干邑醬汁",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "filet of beef & bearnaise sauce",
+    "name_zh": "菲力牛佐法式伯那西醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "白酒醋",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vinegar",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef filet grand-mere papillotte",
+    "name_zh": "紙包菲力牛排",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "培根",
+        "grams": null
+      },
+      {
+        "name_en": "bacon",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "紅酒 \"Cabernet sauvignon\"",
+        "grams": null
+      },
+      {
+        "name_en": "red wine \"cabernet sauviginon\"",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Chili Con Carne w/ filet beef",
+    "name_zh": "菲力牛佐辣肉醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "玉米罐",
+        "grams": null
+      },
+      {
+        "name_en": "sweet corn",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "紅腰豆",
+        "grams": null
+      },
+      {
+        "name_en": "red kidney beans",
+        "name_zh": "孜然粉",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef filet, butter, garlic and parsley",
+    "name_zh": "菲力牛佐奶油大蒜及巴西里",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "巴西里",
+        "grams": null
+      },
+      {
+        "name_en": "parsley",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Burrito with filet beef, bbq sauce",
+    "name_zh": "菲力牛與烤肉醬墨西哥捲",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "墨西哥捲餅",
+        "grams": null
+      },
+      {
+        "name_en": "tortilla",
+        "name_zh": "伍斯特醬",
+        "grams": null
+      },
+      {
+        "name_en": "worcestershire sauce",
+        "name_zh": "番茄醬",
+        "grams": null
+      },
+      {
+        "name_en": "ketchup",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Roast beef, Mushrooms duxelles & Ginger",
+    "name_zh": "烤牛肉與薑味法式蘑菇泥",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Grilled filet beef & gravy sauce",
+    "name_zh": "炙燒菲力牛佐肉汁醬",
+    "category": "filet beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "beef",
+        "name_zh": "菲力牛肉",
+        "grams": null
+      },
+      {
+        "name_en": "loin cut",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef meatballs, Green olives & Mozarella cheese sauce",
+    "name_zh": "牛肉丸佐綠橄欖及莫札瑞拉起司醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "黑橄欖",
+        "grams": null
+      },
+      {
+        "name_en": "black olives",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef Burger, Scottish whisky sauce",
+    "name_zh": "牛肉漢堡排佐蘇格蘭威士忌醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "鹽",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef & Spinach Lasagnas",
+    "name_zh": "牛肉菠菜千層麵",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "冷凍菠菜",
+        "grams": null
+      },
+      {
+        "name_en": "frozen spinach",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "牛奶",
+        "grams": null
+      },
+      {
+        "name_en": "milk",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef Meatballs, Tofu & Sechuan Pepper",
+    "name_zh": "牛肉花椒豆腐丸子",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "豆乾",
+        "grams": null
+      },
+      {
+        "name_en": "tofu",
+        "name_zh": "花椒",
+        "grams": null
+      },
+      {
+        "name_en": "schezuan pepper",
+        "name_zh": "醬油 (5L)",
+        "grams": null
+      },
+      {
+        "name_en": "soy sauce (5L)",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "chili con carne",
+    "name_zh": "燉辣肉醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "辣椒粉",
+        "grams": null
+      },
+      {
+        "name_en": "chili powder",
+        "name_zh": "孜然粉",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef bolognaise",
+    "name_zh": "番茄肉醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef burger, blue cheese sauce",
+    "name_zh": "漢堡排佐藍紋起司醬",
+    "category": "mince beef 2",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "丹麥藍紋乳酪",
+        "grams": null
+      },
+      {
+        "name_en": "danish blue cheese",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "french cottage pie",
+    "name_zh": "法式牧羊人派",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "伍斯特醬",
+        "grams": null
+      },
+      {
+        "name_en": "worcestershire sauce",
+        "name_zh": "馬鈴薯",
+        "grams": null
+      },
+      {
+        "name_en": "potatoes",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef friand",
+    "name_zh": "牛肉酥皮派",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "豬里肌",
+        "grams": null
+      },
+      {
+        "name_en": "pork loin",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "boneless",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "黑胡椒",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "",
+        "grams": null
+      },
+      {
+        "name_en": "black pepper",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef bolognaise burrito",
+    "name_zh": "番茄肉醬捲餅",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef & mint moussaka",
+    "name_zh": "牛肉薄荷茄子烤千層(慕薩卡)",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "茄子",
+        "grams": null
+      },
+      {
+        "name_en": "eggplants",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef lasagnas",
+    "name_zh": "牛肉千層麵",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "千層麵",
+        "grams": null
+      },
+      {
+        "name_en": "lasagnas pasta",
+        "name_zh": "奶油",
+        "grams": null
+      },
+      {
+        "name_en": "butter",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Bacon wrapped meatloves",
+    "name_zh": "培根牛肉捲",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "培根",
+        "grams": null
+      },
+      {
+        "name_en": "bacon",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "青豆",
+        "grams": null
+      },
+      {
+        "name_en": "green peas",
+        "name_zh": "莫扎瑞拉乳酪絲",
+        "grams": null
+      },
+      {
+        "name_en": "pizza mozzarella shredded",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef meatballs & tomato sauce",
+    "name_zh": "牛肉丸佐番茄醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "蕃茄泥",
+        "grams": null
+      },
+      {
+        "name_en": "tomato sauce",
+        "name_zh": "胡蘿蔔",
+        "grams": null
+      },
+      {
+        "name_en": "carrots",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef burger, mushroom sauce",
+    "name_zh": "漢堡排佐蘑菇醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "beef burger, green pepper sauce",
+    "name_zh": "漢堡排佐綠胡椒醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "綠胡椒粒",
+        "grams": null
+      },
+      {
+        "name_en": "green peppercorn",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Cabbage stuffed with meat",
+    "name_zh": "高麗菜鑲牛絞肉",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "豬絞肉",
+        "grams": null
+      },
+      {
+        "name_en": "ground pork",
+        "name_zh": "綠色高麗菜",
+        "grams": null
+      },
+      {
+        "name_en": "green cabbage",
+        "name_zh": "白酒",
+        "grams": null
+      },
+      {
+        "name_en": "white wine vino de pasa",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Canadian Beef Pie",
+    "name_zh": "加拿大牛肉派",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "\"bix\" original",
+        "name_zh": "\"bix\" 原味肉腸(新規格) - regular",
+        "grams": null
+      },
+      {
+        "name_en": "eggs",
+        "name_zh": "雞蛋",
+        "grams": null
+      },
+      {
+        "name_en": "puff pastry",
+        "name_zh": "酥皮",
+        "grams": null
+      },
+      {
+        "name_en": "salt",
+        "name_zh": "鹽",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef Koftas",
+    "name_zh": "中東絞肉餅",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "孜然粉",
+        "grams": null
+      },
+      {
+        "name_en": "cumin powder",
+        "name_zh": "薑黃",
+        "grams": null
+      },
+      {
+        "name_en": "turmeric",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Beef meatballs & mushrooms sauce",
+    "name_zh": "牛肉丸佐蘑菇醬",
+    "category": "mince beef",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "Ground beef",
+        "name_zh": "牛絞肉(90%瘦肉,10%油脂)",
+        "grams": null
+      },
+      {
+        "name_en": "90% lean 10% fat",
+        "name_zh": "洋蔥",
+        "grams": null
+      },
+      {
+        "name_en": "onions",
+        "name_zh": "大蒜",
+        "grams": null
+      },
+      {
+        "name_en": "garlic",
+        "name_zh": "鮮奶油",
+        "grams": null
+      },
+      {
+        "name_en": "milky lux cream",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "confit duck leg, red wine sauce",
+    "name_zh": "油封鴨腿佐紅酒醬",
+    "category": "duck leg",
+    "yield_portions": null,
+    "ingredients": [
+      {
+        "name_en": "duck leg",
+        "name_zh": "鴨腿",
+        "grams": null
+      },
+      {
+        "name_en": "olive oil (EVOO)",
+        "name_zh": "橄欖油 (EVOO)",
+        "grams": null
+      },
+      {
+        "name_en": "brown beech mushrooms",
+        "name_zh": "鴻喜菇",
+        "grams": null
+      },
+      {
+        "name_en": "bacon",
+        "name_zh": "培根",
+        "grams": null
+      },
+      {
+        "name_en": "corn starch",
+        "name_zh": "玉米粉",
+        "grams": null
+      }
+    ]
+  },
+  {
+    "name_en": "Texas beef porcupines",
+    "name_zh": "德州美式牛肉",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Roast beef served with sweet dipping sauce",
+    "name_zh": "烤牛肉佐甜醬",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Chicken noodle stew",
+    "name_zh": "雞肉燉麵",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Chicken parmesan meatballs",
+    "name_zh": "帕瑪森雞肉丸",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "New Orleans gumbo",
+    "name_zh": "紐澳良秋葵濃湯",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Boston salmon cakes",
+    "name_zh": "波士頓鮭魚派",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Skillet scallops",
+    "name_zh": "乾烙干貝",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "BBQ pulled pork",
+    "name_zh": "美式手撕豬肉",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Baked tofu nuggets served with orange marmalade dipping sauce",
+    "name_zh": "烤豆腐塊佐柑橘醬",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Quinoa and bean soft tacos",
+    "name_zh": "藜麥與豆子墨西哥玉米餅",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "California avocado and cucumber rolls served with pickled ginger",
+    "name_zh": "加州酪梨與黃瓜捲佐壽司薑",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Steamed broccoli with roasted corn kernels",
+    "name_zh": "蒸花椰菜佐烤玉米",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Skillet green beans",
+    "name_zh": "",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Raw kale and Brussels sprouts salad with pear (or other seasonal fruit)",
+    "name_zh": "",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Cauliflower crisp",
+    "name_zh": "鮮脆白花椰菜",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Sweet and sour cabbage",
+    "name_zh": "酸甜白菜",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Crunchy broccoli salad",
+    "name_zh": "鮮脆花椰菜沙拉",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Roasted carrots",
+    "name_zh": "烤紅蘿蔔",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Steamed yellow and green squash with garlic",
+    "name_zh": "",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Blanched veggies with ranch Greek yogurt dipping sauce",
+    "name_zh": "燙青菜佐希臘優格醬",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Oven fries",
+    "name_zh": "烤薯條",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Cheesy flatbread",
+    "name_zh": "起司扁麵包",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Corn-oat bread",
+    "name_zh": "玉米麵包",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Sesame crackers",
+    "name_zh": "芝麻蘇打餅",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Pumpkin empanadas",
+    "name_zh": "南瓜餡餅",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Applesauce quinoa bread",
+    "name_zh": "蘋果醬離麥麵包",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Texas beans and rice",
+    "name_zh": "",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Alfredo pasta",
+    "name_zh": "奶油白醬義大利麵",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Gnocci",
+    "name_zh": "馬鈴薯麵疙瘩",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  },
+  {
+    "name_en": "Risotto with greens",
+    "name_zh": "綠色蔬菜燉飯",
+    "category": "",
+    "yield_portions": null,
+    "ingredients": []
+  }
+]
