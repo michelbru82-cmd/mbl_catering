@@ -103,6 +103,20 @@ jobs:
           fi
           echo -n "ORIGIN index.html asset version: "; grep -o 'ingredients.js?v=[0-9]*' /tmp/live_index.html | head -1 || echo "(none)"
           echo -n "live ingredients.js bytes: "; wc -c < /tmp/live_ingredients.js 2>/dev/null || echo "?"
+          # 4) Locate the REAL docroot: search the whole instance for every mbl_catering / index.html
+          lftp <<EOF > /tmp/tree.txt 2>&1 || true
+          set sftp:auto-confirm yes
+          open sftp://$HOST:$PORT
+          user "$USER" "$PASS"
+          find /lamp0/web/vhosts/
+          bye
+          EOF
+          echo "=== DIRECTORY MAP (real docroot discovery) ==="
+          echo "--- top-level vhost folders ---"; grep -oE '^/lamp0/web/vhosts/[^/]+/?$' /tmp/tree.txt | sort -u
+          echo "--- every mbl_catering path ---"; grep -i 'mbl_catering' /tmp/tree.txt | grep -iE 'index\.html$|DEPLOY_CHECK|ingredients\.js$' | head -40
+          echo "--- every index.html on the instance ---"; grep -iE '/index\.html$' /tmp/tree.txt | head -40
+          echo "--- DEPLOY_CHECK copies (our new marker) ---"; grep -i 'DEPLOY_CHECK' /tmp/tree.txt || echo '(none found)'
+          echo "--- tree line count ---"; wc -l < /tmp/tree.txt
 
       - name: Probe LIVE fbws.tw (identify the real origin / CDN)
         run: |
