@@ -132,7 +132,7 @@ PAGES.menu = {
           const date = dateInput.value; if (!date) { U.toast("Pick a date", true); return false; }
           if (Data.menuForDate(date)) { U.toast("Menu already exists for that date", true); return false; }
           const data = form._collect();
-          await Data.create("menu_days", { id: "menu_" + date, date, site: "Liu-Gong Campus + Yongchun", slots: data.slots, notes: data.notes });
+          await Data.create("menu_days", { id: "menu_" + Data.activePlaceId() + "_" + date, date, slots: data.slots, notes: data.notes });
           U.toast(t("saved")); Router.go("#/menu/" + date.slice(0, 7)); Router.rerender();
         },
       });

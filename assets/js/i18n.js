@@ -32,6 +32,9 @@
       reducePortions: "Reduce portions to meet max", noOverMax: "No days are over the maximum",
       reduceIntro: "For these days no dish combination fits the maximum, so the serving sizes (grams) will be reduced just enough to meet it. Production quantities scale down accordingly:",
       reduceApply: "Reduce portions & regenerate", scaledHint: "Portions reduced to meet the calorie maximum",
+      place: "Place", places: "Places", addPlace: "Add place", setActive: "Set active", menusCount: "Menus",
+      placesIntro: "Each catering place has its own menus, calorie rules, people, production and newsletter. Recipes, ingredients and allergens are shared across all places. Switch the active place from the sidebar.",
+      cannotDeleteLast: "You must keep at least one place", deletePlaceWarn: "Delete this place and ALL its menus, people and subscribers? This cannot be undone.",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -113,6 +116,9 @@
       reducePortions: "減少份量以符合上限", noOverMax: "沒有超過上限的日期",
       reduceIntro: "這些日期無法以任何菜餚組合符合上限，因此將適度減少份量（公克）以達標，生產份量也會隨之調整：",
       reduceApply: "減少份量並重新產生", scaledHint: "已減少份量以符合熱量上限",
+      place: "據點", places: "據點", addPlace: "新增據點", setActive: "設為使用中", menusCount: "菜單數",
+      placesIntro: "每個餐飲據點各有自己的菜單、熱量規則、人員、生產與電子報。食譜、食材與過敏原為所有據點共用。可從側邊欄切換使用中的據點。",
+      cannotDeleteLast: "至少需保留一個據點", deletePlaceWarn: "刪除此據點及其所有菜單、人員與訂閱者？此動作無法復原。",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",

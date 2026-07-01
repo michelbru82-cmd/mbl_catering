@@ -98,17 +98,21 @@ window.MenuGen = (function () {
     const d = defaultConfig();
     return Object.assign(d, c, { weekday: Object.assign(d.weekday, c.weekday || {}), nutrition: c.nutrition || {} });
   }
+  // the menu-builder config is per catering place
+  function defaultConfigId() { return "menu_config__" + ((window.Data && Data.activePlaceId && Data.activePlaceId()) || "default"); }
   function getConfig(id) {
-    const c = Data.get("settings", id || "menu_config");
+    const c = Data.get("settings", id || defaultConfigId());
     return c ? mergeConfig(c) : defaultConfig();
   }
   function listProfiles() {
-    const rows = Data.all("settings").filter((s) => s.id === "menu_config" || String(s.id).startsWith("cfg_"));
-    if (!rows.some((r) => r.id === "menu_config")) rows.unshift(defaultConfig());
-    return rows.map((r) => ({ id: r.id, name: r.name || (r.id === "menu_config" ? "Default" : r.id) }));
+    const defId = defaultConfigId();
+    const rows = Data.all("settings").filter((s) => s.id === defId || String(s.id).startsWith("cfg_"));
+    const out = rows.map((r) => ({ id: r.id, name: r.name || (r.id === defId ? "Default" : r.id) }));
+    if (!rows.some((r) => r.id === defId)) out.unshift({ id: defId, name: "Default" });
+    return out;
   }
   async function saveConfig(cfg, id) {
-    cfg.id = id || cfg.id || "menu_config";
+    cfg.id = id || cfg.id || defaultConfigId();
     if (Data.get("settings", cfg.id)) return Data.update("settings", cfg.id, cfg);
     return Data.create("settings", cfg);
   }
@@ -420,5 +424,5 @@ window.MenuGen = (function () {
     return viol;
   }
 
-  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, getConfig, listProfiles, saveConfig, generate, importMenuDishes, poolFor, boosterRecipes, boosterProposals, kcalGapDays, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
+  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, defaultConfigId, getConfig, listProfiles, saveConfig, generate, importMenuDishes, poolFor, boosterRecipes, boosterProposals, kcalGapDays, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
 })();

@@ -23,14 +23,14 @@ PAGES.production = {
 
     function block(parent, d, label, kind) {
       const menu = Data.menuForDate(d);
-      const sites = Data.all("sites");
-      const totalCovers = sites.reduce((n, s) => n + (s.covers || 0), 0) || Data.activePeople(d).length;
+      const place = Data.activePlace();
+      const totalCovers = Data.totalCovers();
 
       parent.appendChild(h("div", { class: "section-head", style: "margin-top:22px" }, [
         h("h2", {}, label + " · " + U.fmtDate(d, true)),
         h("div", { class: "spacer" }),
+        place ? h("span", { class: "badge badge--cat" }, "🏢 " + place.name) : null,
         h("span", { class: "badge" }, "👥 " + totalCovers + " " + t("covers")),
-        ...sites.map((s) => h("span", { class: "badge" }, Data.siteName(s.id) + ": " + (s.covers || 0))),
       ]));
 
       if (!menu) { parent.appendChild(h("div", { class: "empty" }, t("noMenu"))); return; }
@@ -38,7 +38,6 @@ PAGES.production = {
       const SLOTS = [["meat", t("meat")], ["veg1", t("veg1")], ["veg2", t("veg2")], ["carb", t("carb")], ["dairy", t("dairy")], ["fruit", t("fruit")], ["side", "Side"]];
       const tbl = h("table", { class: "data" });
       const head = [h("th", {}, t("dishesToPrepare")), h("th", {}, "")];
-      sites.forEach((s) => head.push(h("th", { class: "num" }, Data.siteName(s.id))));
       head.push(h("th", { class: "num" }, t("qtyToPrepare")));
       head.push(h("th", {}, t("allergensLabel")));
       tbl.appendChild(h("thead", {}, h("tr", {}, head)));
@@ -53,7 +52,6 @@ PAGES.production = {
           h("td", {}, [h("span", { class: "badge badge--cat", style: "margin-right:6px" }, slabel), slot.name_en]),
           h("td", {}, r ? h("a", { class: "small", href: "#/recipes/" + r.id }, "🔗") : ""),
         ];
-        sites.forEach((s) => cells.push(h("td", { class: "num" }, portion != null ? kg(portion * (s.covers || 0)) : "—")));
         cells.push(h("td", { class: "num" }, portion != null ? h("b", {}, kg(portion * totalCovers)) : h("span", { class: "muted small" }, portion == null && r ? "set grams" : (totalCovers + "×"))));
         cells.push(h("td", {}, h("div", { class: "pill-list" }, algs.map((a) => h("span", { class: "badge badge--allergen" }, Data.allergenName(a))))));
         tb.appendChild(h("tr", {}, cells));

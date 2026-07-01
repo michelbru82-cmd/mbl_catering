@@ -3,19 +3,16 @@ PAGES.people = {
   icon: "👥", title: () => I18N.t("people"),
   render(view) {
     const t = I18N.t.bind(I18N), h = U.h;
-    let q = "", kind = "", siteF = "", activeOnly = false;
-    const sites = Data.all("sites");
+    let q = "", kind = "", activeOnly = false;
 
     const search = h("input", { class: "input search", placeholder: t("search"), oninput: U.debounce((e) => { q = e.target.value.toLowerCase(); draw(); }) });
     const kindSel = h("select", { class: "input", onChange: (e) => { kind = e.target.value; draw(); } },
       [h("option", { value: "" }, t("kind") + ": " + t("all")), ...["kid", "employee", "guest"].map((k) => h("option", { value: k }, t(k)))]);
-    const siteSel = h("select", { class: "input", onChange: (e) => { siteF = e.target.value; draw(); } },
-      [h("option", { value: "" }, t("site") + ": " + t("all")), ...sites.map((s) => h("option", { value: s.id }, Data.siteName(s.id)))]);
     const actChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [
       h("input", { type: "checkbox", onChange: (e) => { activeOnly = e.target.checked; draw(); } }), t("active"),
     ]);
     view.appendChild(h("div", { class: "toolbar" }, [
-      search, kindSel, siteSel, actChk, h("span", { class: "muted small", id: "pp-count" }),
+      search, kindSel, actChk, h("span", { class: "muted small", id: "pp-count" }),
       h("div", { style: "flex:1" }),
       h("button", { class: "btn btn--primary", onClick: () => personForm(null) }, "＋ " + t("add")),
     ]));
@@ -26,7 +23,6 @@ PAGES.people = {
     function draw() {
       let list = Data.all("people").slice();
       if (kind) list = list.filter((p) => p.kind === kind);
-      if (siteF) list = list.filter((p) => p.site_id === siteF);
       if (activeOnly) list = list.filter(isActive);
       if (q) list = list.filter((p) => p.name.toLowerCase().includes(q));
       list.sort((a, b) => a.name.localeCompare(b.name));
@@ -34,7 +30,7 @@ PAGES.people = {
       host.innerHTML = "";
       const tbl = h("table", { class: "data" });
       tbl.appendChild(h("thead", {}, h("tr", {}, [
-        h("th", {}, t("name")), h("th", {}, t("kind")), h("th", {}, t("site")),
+        h("th", {}, t("name")), h("th", {}, t("kind")),
         h("th", {}, t("dateIn")), h("th", {}, t("dateOut")), h("th", {}, t("allergensLabel")), h("th", {}, ""),
       ])));
       const tb = h("tbody", {});
@@ -42,7 +38,6 @@ PAGES.people = {
         tb.appendChild(h("tr", { class: "clickable", onClick: () => personForm(p) }, [
           h("td", {}, [h("b", {}, p.name), " ", isActive(p) ? h("span", { class: "badge badge--ok" }, t("active")) : h("span", { class: "badge badge--off" }, t("inactive"))]),
           h("td", {}, h("span", { class: "badge" }, t(p.kind || "kid"))),
-          h("td", { class: "small muted" }, Data.siteName(p.site_id) || "—"),
           h("td", { class: "small" }, p.date_in || "—"),
           h("td", { class: "small" }, p.date_out || "—"),
           h("td", {}, h("div", { class: "pill-list" }, (p.allergen_ids || []).map((a) => h("span", { class: "badge badge--allergen" }, Data.allergenName(a))))),
@@ -59,10 +54,9 @@ PAGES.people = {
 function personForm(p) {
   const t = I18N.t.bind(I18N), h = U.h;
   const isNew = !p;
-  p = p || { name: "", kind: "kid", site_id: (Data.all("sites")[0] || {}).id, date_in: "", date_out: "", allergen_ids: [] };
+  p = p || { name: "", kind: "kid", date_in: "", date_out: "", allergen_ids: [] };
   const name = h("input", { class: "input", value: p.name });
   const kindSel = h("select", { class: "input" }, ["kid", "employee", "guest"].map((k) => h("option", { value: k, selected: k === p.kind }, t(k))));
-  const siteSel = h("select", { class: "input" }, Data.all("sites").map((s) => h("option", { value: s.id, selected: s.id === p.site_id }, Data.siteName(s.id))));
   const dIn = h("input", { class: "input", type: "date", value: p.date_in || "" });
   const dOut = h("input", { class: "input", type: "date", value: p.date_out || "" });
   const picker = allergenPicker(p.allergen_ids, 3);
@@ -70,9 +64,6 @@ function personForm(p) {
     h("div", { class: "field" }, [h("label", {}, t("name")), name]),
     h("div", { class: "row" }, [
       h("div", { class: "field" }, [h("label", {}, t("kind")), kindSel]),
-      h("div", { class: "field" }, [h("label", {}, t("site")), siteSel]),
-    ]),
-    h("div", { class: "row" }, [
       h("div", { class: "field" }, [h("label", {}, t("dateIn")), dIn]),
       h("div", { class: "field" }, [h("label", {}, t("dateOut")), dOut]),
     ]),
@@ -81,7 +72,7 @@ function personForm(p) {
   ]);
   U.modal(isNew ? t("add") + " · " + t("people") : p.name, form, {
     async onSave() {
-      const payload = { name: name.value.trim(), kind: kindSel.value, site_id: siteSel.value, date_in: dIn.value || null, date_out: dOut.value || null, allergen_ids: picker._get().slice(0, 3) };
+      const payload = { name: name.value.trim(), kind: kindSel.value, date_in: dIn.value || null, date_out: dOut.value || null, allergen_ids: picker._get().slice(0, 3) };
       if (!payload.name) { U.toast(t("name") + "?", true); return false; }
       if (isNew) await Data.create("people", payload); else await Data.update("people", p.id, payload);
       U.toast(t("saved")); Router.rerender();

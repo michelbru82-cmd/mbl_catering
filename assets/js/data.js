@@ -20,9 +20,30 @@
      Data.source                       -> "local" | "supabase"
    ============================================================ */
 (function () {
-  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers", "settings"];
+  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers", "settings", "places"];
+  // Collections that belong to ONE catering place (filtered by the active place).
+  // ingredients / recipes / allergens are shared master data (not scoped).
+  const PLACE_COLLS = ["menu_days", "people", "subscribers", "settings"];
+  const APKEY = "mbl_active_place";
+  let activePlaceId = null;
   const cfg = window.MBL_CONFIG || {};
   const useSupabase = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+
+  // Seed the default catering places + tag any legacy (place-less) records.
+  function ensurePlaces() {
+    if (!Array.isArray(cache.places)) cache.places = [];
+    if (!cache.places.length) cache.places = [
+      { id: "place_school_abc", name: "School ABC", name_zh: "", covers: 100 },
+      { id: "place_corp_zac", name: "Corporate ZAC", name_zh: "", covers: 50 },
+      { id: "place_corp_fgh", name: "Corporate FGH", name_zh: "", covers: 50 },
+    ];
+  }
+  function migratePlaces() {
+    const def = (cache.places[0] || {}).id; if (!def) return;
+    PLACE_COLLS.forEach((c) => (cache[c] || []).forEach((r) => { if (r.place_id == null) r.place_id = def; }));
+    // legacy single menu-builder config -> place-scoped id
+    (cache.settings || []).forEach((s) => { if (s.id === "menu_config") s.id = "menu_config__" + def; });
+  }
 
   const cache = {}; COLLS.forEach((c) => (cache[c] = []));
   let readyResolve; const readyPromise = new Promise((r) => (readyResolve = r));
@@ -88,14 +109,22 @@
 
   const Data = {
     source: useSupabase ? "supabase" : "local",
-    COLLS,
+    COLLS, PLACE_COLLS,
     ready: () => readyPromise,
-    all: (c) => cache[c] || [],
+    // all() auto-scopes per-place collections to the active place; allRaw() is unscoped.
+    all: (c) => PLACE_COLLS.includes(c) ? (cache[c] || []).filter((x) => x.place_id === activePlaceId) : (cache[c] || []),
+    allRaw: (c) => cache[c] || [],
     get: (c, id) => (cache[c] || []).find((x) => x.id === id) || null,
-    create: (c, o) => adapter.create(c, o),
+    create: (c, o) => { if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId; return adapter.create(c, o); },
     update: (c, id, p) => adapter.update(c, id, p),
     remove: (c, id) => adapter.remove(c, id),
     resetLocal: () => { if (!useSupabase) Local.reset(); },
+
+    // ---------- catering places ----------
+    places: () => cache.places || [],
+    activePlaceId: () => activePlaceId,
+    activePlace: () => (cache.places || []).find((p) => p.id === activePlaceId) || null,
+    setActivePlace(id) { if ((cache.places || []).some((p) => p.id === id)) { activePlaceId = id; try { localStorage.setItem(APKEY, id); } catch (e) {} } },
 
     // Replace ingredients + recipes with the bundled MBL dataset (window.MBL_SEED),
     // re-linking existing menu-day slots to the new recipes by name. Keeps menus,
@@ -126,10 +155,9 @@
 
     // total covers across all sites (active people fallback to sites.covers)
     totalCovers() {
-      const sites = this.all("sites");
-      const byPeople = this.activePeople().length;
-      const byCfg = sites.reduce((n, s) => n + (s.covers || 0), 0);
-      return byCfg || byPeople;
+      const p = this.activePlace();
+      const byPlace = p ? (p.covers || 0) : 0;
+      return byPlace || this.activePeople().length;
     },
     coversForSite(siteId) { const s = this.get("sites", siteId); return s ? (s.covers || 0) : 0; },
 
@@ -196,6 +224,11 @@
   (async function () {
     if (useSupabase) { try { await Supa.load(); } catch (e) { console.error(e); } }
     else Local.load();
+    ensurePlaces(); migratePlaces();
+    if (!useSupabase) Local.persist();
+    // resolve the active place (persisted choice, else the first place)
+    let stored = null; try { stored = localStorage.getItem(APKEY); } catch (e) {}
+    activePlaceId = (stored && (cache.places || []).some((p) => p.id === stored)) ? stored : ((cache.places[0] || {}).id || null);
     const badge = document.getElementById("dataSrc"); if (badge) badge.textContent = Data.source;
     readyResolve();
   })();

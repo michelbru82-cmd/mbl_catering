@@ -19,7 +19,8 @@ window.MenuBuilder = (function () {
 
   function open(currentMonth, profileId) {
     const T = t(), H = h();
-    const curId = profileId || "menu_config";
+    const defId = MenuGen.defaultConfigId();
+    const curId = profileId || defId;
     const cfg = MenuGen.getConfig(curId);
     const profiles = MenuGen.listProfiles();
     const monthsAvail = [...new Set([].concat(nextMonths(6), Data.all("menu_days").map((d) => d.date.slice(0, 7))))].sort();
@@ -101,7 +102,7 @@ window.MenuBuilder = (function () {
       const nutrition = {};
       MenuGen.NUTRIENTS.forEach(([key]) => { const r = nutRows[key], o = {}; if (r.mn.value !== "") o.min = Number(r.mn.value); if (r.mx.value !== "") o.max = Number(r.mx.value); if (r.req.checked) o.required = true; if (Object.keys(o).length) nutrition[key] = o; });
       return {
-        id: curId, name: cfg.name || (curId === "menu_config" ? "Default" : curId),
+        id: curId, name: cfg.name || (curId === defId ? "Default" : curId),
         months, service_days, weekday, nutrition,
         rotation_max: Number(rot.value) || 4, rotation_window_days: cfg.rotation_window_days || 60,
         min_repeat_gap: Number(gap.value) || 0, spread_allergens: spread.checked, keep_existing: keep.checked,
@@ -269,7 +270,7 @@ window.MenuBuilder = (function () {
           if (d.kept) continue; // existing menu left untouched
           const existing = Data.menuForDate(d.date);
           if (existing) await Data.update("menu_days", existing.id, { slots: d.slots });
-          else await Data.create("menu_days", { id: "menu_" + d.date, date: d.date, site: "Liu-Gong Campus + Yongchun", slots: d.slots, notes: "" });
+          else await Data.create("menu_days", { id: "menu_" + Data.activePlaceId() + "_" + d.date, date: d.date, slots: d.slots, notes: "" });
           n++;
         }
         U.toast(`${n} ${T("daysBuilt")}`);

@@ -21,6 +21,15 @@ create table if not exists sites (
   covers    int default 0
 );
 
+-- catering places (multi-tenant). Each place has its own menus, people,
+-- subscribers and menu-builder config; recipes/ingredients/allergens are shared.
+create table if not exists places (
+  id        text primary key,
+  name      text not null,
+  name_zh   text,
+  covers    int default 0
+);
+
 create table if not exists ingredients (
   id        text primary key,
   name_en   text not null,
@@ -63,6 +72,7 @@ create table if not exists recipes (
 
 create table if not exists menu_days (
   id        text primary key,
+  place_id  text references places(id) on delete cascade,
   date      date not null,
   site      text,
   -- slots: { meat|veg1|veg2|carb|dairy|fruit|side : { name_en, recipe_id } | null }
@@ -73,6 +83,7 @@ create index if not exists menu_days_date_idx on menu_days(date);
 
 create table if not exists people (
   id        text primary key,
+  place_id  text references places(id) on delete cascade,
   name      text not null,
   kind      text default 'kid',     -- kid | employee | guest
   site_id   text references sites(id) on delete set null,
@@ -84,6 +95,7 @@ create table if not exists people (
 
 create table if not exists subscribers (
   id         text primary key,
+  place_id  text references places(id) on delete cascade,
   email      text not null,
   name       text,
   active     boolean default true,
@@ -93,6 +105,7 @@ create table if not exists subscribers (
 -- app settings (e.g. the menu-builder configuration, id = 'menu_config')
 create table if not exists settings (
   id        text primary key,
+  place_id  text references places(id) on delete cascade,
   name      text,
   months    jsonb,
   service_days jsonb,
@@ -127,7 +140,7 @@ create table if not exists newsletter_log (
 do $$
 declare t text;
 begin
-  foreach t in array array['allergens','sites','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
+  foreach t in array array['allergens','sites','places','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
   loop
     execute format('alter table %I enable row level security;', t);
     execute format($p$create policy %1$I on %1$I for all using (true) with check (true);$p$, t);
