@@ -16,6 +16,8 @@ PAGES.labels = {
     const scopeSel = h("select", { class: "input", onChange: (e) => { state.scope = e.target.value; render(); } },
       [h("option", { value: "day", selected: true }, t("scopeDay")), h("option", { value: "week" }, t("scopeWeek"))]);
     const dateI = h("input", { class: "input", type: "date", value: state.date, onChange: (e) => { state.date = e.target.value; loadDay(); } });
+    // Shop / restaurant: no menu days — just choose the production date for the labels.
+    const shopDateI = h("input", { class: "input", type: "date", value: state.date, onChange: (e) => { state.date = e.target.value; render(); } });
 
     // Monday of the week containing an ISO date
     function monday(iso) { const [y, m, d] = iso.split("-").map(Number); const dt = new Date(Date.UTC(y, m - 1, d)); const wd = (dt.getUTCDay() + 6) % 7; dt.setUTCDate(dt.getUTCDate() - wd); return dt.toISOString().slice(0, 10); }
@@ -51,7 +53,7 @@ PAGES.labels = {
     const isShop = Data.activePlaceType() === "shop";
     view.appendChild(searchList);
     view.appendChild(h("div", { class: "toolbar no-print" }, [
-      ...(isShop ? [] : [scopeSel, dateI]),
+      ...(isShop ? [h("span", { class: "small muted" }, t("preparedOn")), shopDateI] : [scopeSel, dateI]),
       h("span", { class: "small muted" }, t("orientation")), orientSel, presetSel,
       h("span", { class: "small muted" }, t("widthCm")), widthI,
       h("span", { class: "small muted" }, t("heightCm")), heightI,
@@ -63,6 +65,29 @@ PAGES.labels = {
       h("span", { class: "small muted" }, t("search") + ":"), search,
       h("div", { id: "lbl-selected", class: "pill-list", style: "flex:1" }),
     ]));
+
+    // Shop / restaurant product picker (no menu days): tick which products to print.
+    const shopPicker = isShop ? h("div", { class: "no-print", style: "margin:0 0 10px" }) : null;
+    if (shopPicker) view.appendChild(shopPicker);
+
+    function renderShopPicker() {
+      if (!shopPicker) return;
+      shopPicker.innerHTML = "";
+      const recs = Data.all("recipes").slice().sort((a, b) => a.name_en.localeCompare(b.name_en));
+      shopPicker.appendChild(h("div", { class: "toolbar no-print", style: "gap:8px" }, [
+        h("span", { class: "small muted" }, t("chooseProducts")),
+        h("button", { class: "btn btn--sm", onClick: () => { recs.forEach((r) => state.selected.add(r.id)); render(); } }, t("selectAll")),
+        h("button", { class: "btn btn--sm", onClick: () => { state.selected.clear(); render(); } }, t("clearSel")),
+      ]));
+      const grid = h("div", { class: "pill-list", style: "display:flex;flex-wrap:wrap;gap:6px;margin-top:6px" });
+      recs.forEach((r) => {
+        const on = state.selected.has(r.id);
+        grid.appendChild(h("button", { type: "button", class: "badge" + (on ? " badge--cat" : ""), style: "cursor:pointer",
+          onClick: () => { on ? state.selected.delete(r.id) : state.selected.add(r.id); render(); } },
+          [(on ? "✓ " : "") + r.name_en]));
+      });
+      shopPicker.appendChild(grid);
+    }
 
     const labelArea = h("div", { class: "print-area" }); view.appendChild(labelArea);
 
@@ -88,6 +113,7 @@ PAGES.labels = {
     }
 
     function render() {
+      renderShopPicker();
       const searchRow = document.getElementById("lbl-search-row"); if (searchRow) searchRow.style.display = state.scope === "week" ? "none" : "";
       labelArea.innerHTML = "";
       if (state.scope === "week") { renderWeek(); return; }
@@ -95,7 +121,8 @@ PAGES.labels = {
       renderSelectedChips();
       const recs = [...state.selected].map((id) => Data.get("recipes", id)).filter(Boolean);
       if (!recs.length) {
-        labelArea.appendChild(h("div", { class: "empty no-print" }, [h("div", { class: "big" }, "🏷️"), h("div", {}, Data.menuForDate(state.date) ? t("chooseDishes") : t("noMenu"))]));
+        const prompt = isShop ? t("chooseProducts") : (Data.menuForDate(state.date) ? t("chooseDishes") : t("noMenu"));
+        labelArea.appendChild(h("div", { class: "empty no-print" }, [h("div", { class: "big" }, "🏷️"), h("div", {}, prompt)]));
         return;
       }
       labelArea.appendChild(labelGrid(recs.map((r) => ({ recipe: r, date: state.date }))));
