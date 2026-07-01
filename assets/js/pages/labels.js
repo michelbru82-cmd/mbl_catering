@@ -153,7 +153,13 @@ PAGES.labels = {
       const body = [left];
       if (state.showNut) body.push(nutritionPanel(nut, portion));
       card.appendChild(h("div", { class: "fl-body" }, body));
-      card.appendChild(h("div", { class: "fl-foot" }, [h("span", {}, place.name || ""), h("span", {}, U.fmtDate(dateStr))]));
+      const useBy = U.isoAddDays(dateStr, 2); // 48 h
+      card.appendChild(h("div", { class: "fl-dates" }, [
+        h("span", {}, [h("b", {}, t("preparedOn") + ": "), U.fmtDate(dateStr)]),
+        h("span", {}, [h("b", {}, t("useBy") + ": "), U.fmtDate(useBy)]),
+      ]));
+      card.appendChild(h("div", { class: "fl-fresh" }, "❄ " + t("freshNote")));
+      card.appendChild(h("div", { class: "fl-foot" }, [h("span", {}, place.name || ""), h("span", {}, t("keepRefrigerated"))]));
       return card;
     }
 
