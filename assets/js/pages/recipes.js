@@ -111,6 +111,13 @@ function recipeForm(r) {
   const catList = h("datalist", { id: "rf-cats" }, cats.map((c) => h("option", { value: c })));
   const ingList = h("datalist", { id: "rf-ings" }, Data.all("ingredients").map((i) => h("option", { value: i.name_en }, i.name_zh || "")));
 
+  // Builder tags (auto-derived if not yet set; editable so the menu builder can use them)
+  const tg = MenuGen.tags(r);
+  const courseSel = h("select", { class: "input" }, MenuGen.COURSES.map((c) => h("option", { value: c, selected: c === tg.course }, c)));
+  const proteinSel = h("select", { class: "input" }, ["chicken", "beef", "pork", "fish", "duck", "vegetarian", "vegan", "other"].map((p) => h("option", { value: p, selected: p === tg.protein }, p)));
+  const cuisineSel = h("select", { class: "input" }, ["western", "asian"].map((c) => h("option", { value: c, selected: c === tg.cuisine }, t(c))));
+  const carbChk = h("input", { type: "checkbox", checked: tg.contains_carb });
+
   const rows = h("div", {});
   function addRow(it) {
     it = it || { name_en: "", grams: "" };
@@ -137,6 +144,12 @@ function recipeForm(r) {
       h("div", { class: "field" }, [h("label", {}, t("name_zh")), nameZh]),
       h("div", { class: "field", style: "flex:0 0 180px" }, [h("label", {}, t("category")), catInput]),
     ]),
+    h("div", { class: "row" }, [
+      h("div", { class: "field" }, [h("label", {}, t("course")), courseSel]),
+      h("div", { class: "field" }, [h("label", {}, t("proteinLabel")), proteinSel]),
+      h("div", { class: "field" }, [h("label", {}, t("cuisineTag")), cuisineSel]),
+      h("div", { class: "field", style: "justify-content:flex-end" }, [h("label", { style: "display:flex;gap:7px;align-items:center;cursor:pointer" }, [carbChk, t("containsCarb")])]),
+    ]),
     h("label", { class: "small", style: "font-weight:600;color:var(--text-soft)" }, t("ingredientsInRecipe")),
     rows,
     h("button", { class: "btn btn--sm", onClick: () => addRow() }, "＋ " + t("addIngredientRow")),
@@ -146,7 +159,8 @@ function recipeForm(r) {
     wide: true,
     async onSave() {
       const items = [...rows.children].map((x) => x._collect && x._collect()).filter(Boolean);
-      const payload = { name_en: nameEn.value.trim(), name_zh: nameZh.value.trim(), category: catInput.value.trim(), items };
+      const payload = { name_en: nameEn.value.trim(), name_zh: nameZh.value.trim(), category: catInput.value.trim(), items,
+        course: courseSel.value, protein: proteinSel.value, cuisine: cuisineSel.value, contains_carb: carbChk.checked };
       if (!payload.name_en) { U.toast(t("name_en") + "?", true); return false; }
       // recompute allergen union
       const set = new Set();

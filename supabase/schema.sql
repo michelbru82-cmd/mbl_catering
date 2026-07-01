@@ -42,6 +42,11 @@ create table if not exists recipes (
   name_zh   text,
   category  text,
   yield_portions numeric,
+  -- menu-builder tags
+  course    text,            -- main | vegetable | carb | dairy | fruit | side
+  protein   text,            -- chicken | beef | pork | fish | duck | vegetarian | vegan | other
+  cuisine   text,            -- western | asian
+  contains_carb boolean default false,
   -- items: [{ ingredient_id, name_en, name_zh, grams }]
   items     jsonb default '[]'::jsonb,
   allergen_ids jsonb default '[]'::jsonb
@@ -76,6 +81,18 @@ create table if not exists subscribers (
   created_at date default current_date
 );
 
+-- app settings (e.g. the menu-builder configuration, id = 'menu_config')
+create table if not exists settings (
+  id        text primary key,
+  months    jsonb,
+  service_days jsonb,
+  weekday   jsonb,
+  nutrition jsonb,
+  rotation_max int,
+  rotation_window_days int,
+  updated_at timestamptz default now()
+);
+
 -- optional log of newsletter sends (written by the edge function)
 create table if not exists newsletter_log (
   id         uuid primary key default gen_random_uuid(),
@@ -96,7 +113,7 @@ create table if not exists newsletter_log (
 do $$
 declare t text;
 begin
-  foreach t in array array['allergens','sites','ingredients','recipes','menu_days','people','subscribers','newsletter_log']
+  foreach t in array array['allergens','sites','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
   loop
     execute format('alter table %I enable row level security;', t);
     execute format($p$create policy %1$I on %1$I for all using (true) with check (true);$p$, t);

@@ -20,7 +20,7 @@
      Data.source                       -> "local" | "supabase"
    ============================================================ */
 (function () {
-  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers"];
+  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers", "settings"];
   const cfg = window.MBL_CONFIG || {};
   const useSupabase = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
 

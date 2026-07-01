@@ -17,6 +17,7 @@ PAGES.menu = {
       h("label", { class: "small muted" }, t("month") + ":"), monthSel,
       h("div", { style: "flex:1" }),
       h("a", { class: "btn", href: "#/printMenu" }, "🖨 " + t("printMenu")),
+      h("button", { class: "btn btn--accent", onClick: () => MenuBuilder.open(month) }, "⚙️ " + t("config")),
       h("button", { class: "btn btn--primary", onClick: () => addDay(month) }, "＋ " + t("date")),
     ]));
 

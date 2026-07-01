@@ -16,7 +16,8 @@ you're ready to go live — no code changes, just keys.
 | Page | What it does |
 |------|--------------|
 | **Dashboard** | Today's menu at a glance + allergen alert + quick stats |
-| **Monthly Menu** | Month grid, one row per service day, **7 slots**: Meat · Vegetable 1 · Vegetable 2 · Carb · Dairy · Fruit/Cake · Side. Edit each day; dishes auto-link to recipes by name |
+| **Monthly Menu** | Day-card grid, **7 slots**: Meat · Vegetable 1 · Vegetable 2 · Carb · Dairy · Fruit/Cake · Side. Edit each day; dishes auto-link to recipes by name. **⚙️ Configuration** opens the Menu Builder (below) |
+| **Menu Builder** (⚙️ on Menu page) | Auto-generates menus for chosen months **using only recipes already in the database — no invention**. Rules: per-weekday **protein** (chicken/beef/pork/fish/duck/vegetarian/vegan) and **cuisine** (Western/Asian), **nutrition min/max** per nutrient with a *compulsory* toggle, and a **rotation cap** (max times per 2 months). If a main already contains the carb (e.g. Carbonara) the **Carb slot becomes "Not applicable."** Offers variety, shows a bilingual preview, and if the pool is too small it reports **exactly how many recipes to add** per type. Apply writes the month to the menu |
 | **Recipes** | All recipes with ingredients & grams, **macro-nutrition computed from ingredients**, allergen union. Full add/edit |
 | **Ingredients** | Master list with per-100 g macros (kcal/protein/carbs/fat/sugar/fibre/salt) and allergens. Edit any field |
 | **Kitchen Production** | Dish-by-dish for **today + next day**, quantities per site (Liu-Gong 66 / Yongchun 80) and total, plus **allergens of the day** and the list of people affected |
