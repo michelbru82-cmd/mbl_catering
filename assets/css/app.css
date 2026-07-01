@@ -251,3 +251,5 @@ table.data tr.clickable { cursor: pointer; }
 .food-label .fl-foot{display:flex;justify-content:space-between;font-size:clamp(6px,2mm,9px);color:#777;margin-top:1mm;border-top:0.2mm solid #dcdcdc;padding-top:.6mm}
 .food-label.fl-portrait .fl-body{flex-direction:column;gap:1.5mm}
 .food-label.fl-portrait .fl-nutri{min-width:0}
+.food-label .fl-ingr{font-size:clamp(6.5px,2.3mm,10.5px);color:#333;line-height:1.2;overflow:hidden}
+.food-label .fl-ingr b{color:#111}
