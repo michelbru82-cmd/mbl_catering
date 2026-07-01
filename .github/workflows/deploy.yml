@@ -104,6 +104,21 @@ jobs:
           echo -n "ORIGIN index.html asset version: "; grep -o 'ingredients.js?v=[0-9]*' /tmp/live_index.html | head -1 || echo "(none)"
           echo -n "live ingredients.js bytes: "; wc -c < /tmp/live_ingredients.js 2>/dev/null || echo "?"
 
+      - name: Probe LIVE fbws.tw (identify the real origin / CDN)
+        run: |
+          echo "=== DNS: where does fbws.tw resolve? ==="
+          getent hosts fbws.tw || true
+          getent hosts www.fbws.tw || true
+          echo
+          echo "=== LIVE response headers: brand-new marker file ==="
+          curl -sS -o /dev/null -D - "https://fbws.tw/mbl_catering/assets/DEPLOY_CHECK.txt?cb=$RANDOM$RANDOM" || true
+          echo
+          echo "=== LIVE index.html asset version (mbl_catering) ==="
+          curl -sS "https://fbws.tw/mbl_catering/index.html?cb=$RANDOM$RANDOM" | grep -o 'ingredients.js?v=[0-9]*' | head -1 || echo "(none / not found)"
+          echo
+          echo "=== LIVE response headers: site root '/' (Server + CDN hints) ==="
+          curl -sS -o /dev/null -D - "https://fbws.tw/?cb=$RANDOM$RANDOM" || true
+
       - name: Note if unconfigured
         if: ${{ env.FTP_SERVER == '' }}
         run: echo "FTP secrets not set yet — skipping deploy. Add FTP_SERVER / FTP_USERNAME / FTP_PASSWORD (+ FTP_SERVER_DIR) in repo Settings → Secrets."
