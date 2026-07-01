@@ -6,10 +6,15 @@
    browser's localStorage) so you can use & demo it immediately.
    ============================================================ */
 
+// Supabase credentials can be set here OR entered in-app (Sidebar → the data-source
+// badge → Connect cloud database), which stores them in localStorage below.
+var _sbUrl = "", _sbKey = "";
+try { _sbUrl = localStorage.getItem("mbl_sb_url") || ""; _sbKey = localStorage.getItem("mbl_sb_key") || ""; } catch (e) {}
+
 window.MBL_CONFIG = {
-  // ---- Supabase (leave blank to use local demo mode) ----
-  SUPABASE_URL:      "",   // e.g. https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: "",   // public anon key
+  // ---- Supabase (blank = local demo mode; filled = cloud) ----
+  SUPABASE_URL:      _sbUrl,   // e.g. https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: _sbKey,   // public anon key
 
   // ---- Branding (also editable in assets/css/theme.css) ----
   ORG_NAME:    "MBL Catering",
