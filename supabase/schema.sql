@@ -80,7 +80,9 @@ create table if not exists recipes (
   contains_carb boolean default false,
   -- items: [{ ingredient_id, name_en, name_zh, grams }]
   items     jsonb default '[]'::jsonb,
-  allergen_ids jsonb default '[]'::jsonb
+  allergen_ids jsonb default '[]'::jsonb,
+  -- shop / restaurant places own their recipes; catering recipes are shared (null)
+  place_id  text references places(id) on delete cascade
 );
 
 create table if not exists menu_days (

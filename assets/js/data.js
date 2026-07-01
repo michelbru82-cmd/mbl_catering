@@ -114,10 +114,24 @@
     COLLS, PLACE_COLLS,
     ready: () => readyPromise,
     // all() auto-scopes per-place collections to the active place; allRaw() is unscoped.
-    all: (c) => PLACE_COLLS.includes(c) ? (cache[c] || []).filter((x) => x.place_id === activePlaceId) : (cache[c] || []),
+    // Recipes: shop places have their OWN catalogue (place_id === active shop); catering
+    // places share the master recipes (place_id null). This keeps a pastry shop's products
+    // separate from the catering menus.
+    all: (c) => {
+      if (c === "recipes") {
+        const shop = Data.activePlaceType() === "shop";
+        return (cache.recipes || []).filter((r) => shop ? r.place_id === activePlaceId : (r.place_id == null));
+      }
+      return PLACE_COLLS.includes(c) ? (cache[c] || []).filter((x) => x.place_id === activePlaceId) : (cache[c] || []);
+    },
     allRaw: (c) => cache[c] || [],
     get: (c, id) => (cache[c] || []).find((x) => x.id === id) || null,
-    create: (c, o) => { if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId; return adapter.create(c, o); },
+    create: (c, o) => {
+      if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId;
+      // new recipes created inside a shop place belong to that shop
+      if (c === "recipes" && o && o.place_id == null && Data.activePlaceType() === "shop") o.place_id = activePlaceId;
+      return adapter.create(c, o);
+    },
     update: (c, id, p) => adapter.update(c, id, p),
     remove: (c, id) => adapter.remove(c, id),
     resetLocal: () => { if (!useSupabase) Local.reset(); },
