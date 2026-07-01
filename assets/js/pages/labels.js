@@ -10,10 +10,15 @@ PAGES.labels = {
     const menuDates = Data.all("menu_days").map((d) => d.date).sort();
     const initDate = menuDates.includes(U.TODAY) ? U.TODAY : (menuDates.find((d) => d >= U.TODAY) || U.TODAY);
     // default: landscape 12 cm × 5.2 cm
-    const state = { date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, selected: new Set() };
+    const state = { scope: "day", date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, selected: new Set() };
 
     // ---- controls ----
+    const scopeSel = h("select", { class: "input", onChange: (e) => { state.scope = e.target.value; render(); } },
+      [h("option", { value: "day", selected: true }, t("scopeDay")), h("option", { value: "week" }, t("scopeWeek"))]);
     const dateI = h("input", { class: "input", type: "date", value: state.date, onChange: (e) => { state.date = e.target.value; loadDay(); } });
+
+    // Monday of the week containing an ISO date
+    function monday(iso) { const [y, m, d] = iso.split("-").map(Number); const dt = new Date(Date.UTC(y, m - 1, d)); const wd = (dt.getUTCDay() + 6) % 7; dt.setUTCDate(dt.getUTCDate() - wd); return dt.toISOString().slice(0, 10); }
 
     const orientSel = h("select", { class: "input", onChange: (e) => {
       state.orientation = e.target.value;
@@ -43,7 +48,7 @@ PAGES.labels = {
 
     view.appendChild(searchList);
     view.appendChild(h("div", { class: "toolbar no-print" }, [
-      h("span", { class: "small muted" }, t("labelDay")), dateI,
+      scopeSel, dateI,
       h("span", { class: "small muted" }, t("orientation")), orientSel, presetSel,
       h("span", { class: "small muted" }, t("widthCm")), widthI,
       h("span", { class: "small muted" }, t("heightCm")), heightI,
@@ -51,7 +56,7 @@ PAGES.labels = {
       h("div", { style: "flex:1" }),
       h("button", { class: "btn btn--primary", onClick: () => window.print() }, "🖨 " + t("print")),
     ]));
-    view.appendChild(h("div", { class: "toolbar no-print", style: "margin-top:0" }, [
+    view.appendChild(h("div", { id: "lbl-search-row", class: "toolbar no-print", style: "margin-top:0" }, [
       h("span", { class: "small muted" }, t("search") + ":"), search,
       h("div", { id: "lbl-selected", class: "pill-list", style: "flex:1" }),
     ]));
@@ -72,17 +77,39 @@ PAGES.labels = {
       });
     }
 
+    function labelGrid(pairs) {
+      // pairs: [{recipe, date}]
+      const grid = h("div", { style: "display:flex;flex-wrap:wrap;gap:6mm;align-items:flex-start" });
+      pairs.forEach(({ recipe, date }) => grid.appendChild(labelEl(recipe, date)));
+      return grid;
+    }
+
     function render() {
-      renderSelectedChips();
+      const searchRow = document.getElementById("lbl-search-row"); if (searchRow) searchRow.style.display = state.scope === "week" ? "none" : "";
       labelArea.innerHTML = "";
+      if (state.scope === "week") { renderWeek(); return; }
+      // ---- single day ----
+      renderSelectedChips();
       const recs = [...state.selected].map((id) => Data.get("recipes", id)).filter(Boolean);
       if (!recs.length) {
         labelArea.appendChild(h("div", { class: "empty no-print" }, [h("div", { class: "big" }, "🏷️"), h("div", {}, Data.menuForDate(state.date) ? t("chooseDishes") : t("noMenu"))]));
         return;
       }
-      const grid = h("div", { style: "display:flex;flex-wrap:wrap;gap:6mm;align-items:flex-start" });
-      recs.forEach((r) => grid.appendChild(labelEl(r)));
-      labelArea.appendChild(grid);
+      labelArea.appendChild(labelGrid(recs.map((r) => ({ recipe: r, date: state.date }))));
+    }
+
+    function renderWeek() {
+      const wk = monday(state.date);
+      const wdays = Data.all("menu_days").filter((d) => monday(d.date) === wk).sort((a, b) => a.date.localeCompare(b.date));
+      if (!wdays.length) { labelArea.appendChild(h("div", { class: "empty no-print" }, [h("div", { class: "big" }, "🏷️"), h("div", {}, t("noMenu"))])); return; }
+      wdays.forEach((d, i) => {
+        const recs = SLOTS.map((k) => { const s = d.slots[k]; return s && s.recipe_id ? Data.get("recipes", s.recipe_id) : null; }).filter(Boolean);
+        if (!recs.length) return;
+        labelArea.appendChild(h("div", { class: "lbl-day-head", style: "margin:" + (i ? "16px" : "2px") + " 0 8px;font-weight:700;color:var(--brand-primary-dark);page-break-before:" + (i ? "always" : "auto") }, [
+          U.weekdayName(d.date) + " · " + U.fmtDate(d.date, true),
+        ]));
+        labelArea.appendChild(labelGrid(recs.map((r) => ({ recipe: r, date: d.date }))));
+      });
     }
 
     function nutritionPanel(nut, portion) {
@@ -102,7 +129,8 @@ PAGES.labels = {
       return box;
     }
 
-    function labelEl(r) {
+    function labelEl(r, dateStr) {
+      dateStr = dateStr || state.date;
       const nut = Data.recipeNutrition(r);
       const algs = Data.recipeAllergens(r);
       const portion = (r.items || []).reduce((s, it) => s + (it.grams != null ? it.grams : 0), 0);
@@ -122,7 +150,7 @@ PAGES.labels = {
       const body = [left];
       if (state.showNut) body.push(nutritionPanel(nut, portion));
       card.appendChild(h("div", { class: "fl-body" }, body));
-      card.appendChild(h("div", { class: "fl-foot" }, [h("span", {}, place.name || ""), h("span", {}, U.fmtDate(state.date))]));
+      card.appendChild(h("div", { class: "fl-foot" }, [h("span", {}, place.name || ""), h("span", {}, U.fmtDate(dateStr))]));
       return card;
     }
 
