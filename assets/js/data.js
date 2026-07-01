@@ -39,12 +39,25 @@
       let stored = null;
       try { stored = JSON.parse(localStorage.getItem(this.LSKEY) || "null"); } catch (e) {}
       const seed = window.MBL_SEED || {};
+      const seedVer = window.MBL_SEED_VERSION || 0;
       COLLS.forEach((c) => {
         cache[c] = (stored && Array.isArray(stored[c])) ? stored[c] : JSON.parse(JSON.stringify(seed[c] || []));
       });
-      if (!stored) this.persist();
+      // Auto-refresh reference data (ingredients + recipes) when a newer dataset
+      // ships, re-linking menu slots by name. Keeps menus, people & subscribers.
+      if (stored && (stored._seedVersion || 0) !== seedVer) {
+        cache.ingredients = JSON.parse(JSON.stringify(seed.ingredients || []));
+        cache.recipes = JSON.parse(JSON.stringify(seed.recipes || []));
+        this.relinkMenus();
+      }
+      this.persist();
     },
-    persist() { try { const o = {}; COLLS.forEach((c) => (o[c] = cache[c])); localStorage.setItem(this.LSKEY, JSON.stringify(o)); } catch (e) {} },
+    relinkMenus() {
+      const norm = (s) => (s || "").toString().trim().toLowerCase().replace(/\s+/g, " ");
+      const byName = {}; cache.recipes.forEach((r) => { if (r.name_en) byName[norm(r.name_en)] = r.id; });
+      cache.menu_days.forEach((d) => { if (!d.slots) return; Object.keys(d.slots).forEach((k) => { const s = d.slots[k]; if (s) s.recipe_id = byName[norm(s.name_en)] || null; }); });
+    },
+    persist() { try { const o = {}; COLLS.forEach((c) => (o[c] = cache[c])); o._seedVersion = window.MBL_SEED_VERSION || 0; localStorage.setItem(this.LSKEY, JSON.stringify(o)); } catch (e) {} },
     reset() { try { localStorage.removeItem(this.LSKEY); } catch (e) {} this.load(); },
     async create(coll, obj) { obj.id = obj.id || newId(coll.slice(0, 3)); cache[coll].push(obj); this.persist(); return obj; },
     async update(coll, id, patch) { const i = cache[coll].findIndex((x) => x.id === id); if (i < 0) return null; cache[coll][i] = Object.assign({}, cache[coll][i], patch); this.persist(); return cache[coll][i]; },
