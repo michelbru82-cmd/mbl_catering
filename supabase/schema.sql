@@ -34,6 +34,8 @@ create table if not exists ingredients (
   fiber     numeric,
   salt      numeric,
   price_per_kg numeric,        -- ingredient cost per kg (for recipe costing)
+  unit_weight  numeric,        -- weight (g) of one purchase unit (from MBL import)
+  unit_label   text,           -- purchase unit label (e.g. 公斤 / 包 (500g))
   allergen_ids jsonb default '[]'::jsonb
 );
 
@@ -43,6 +45,7 @@ create table if not exists recipes (
   name_zh   text,
   category  text,
   yield_portions numeric,
+  portion_weight numeric,      -- portion weight (g) per cover (from MBL import)
   -- menu-builder tags
   course    text,            -- main | vegetable | carb | dairy | fruit | side
   protein   text,            -- chicken | beef | pork | fish | duck | vegetarian | vegan | other

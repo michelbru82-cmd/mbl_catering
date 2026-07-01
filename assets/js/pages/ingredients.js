@@ -17,6 +17,7 @@ PAGES.ingredients = {
     view.appendChild(h("div", { class: "toolbar" }, [
       search, suppSel, algChk, h("span", { class: "muted small", id: "ig-count" }),
       h("div", { style: "flex:1" }),
+      h("button", { class: "btn", title: "Replace recipes & ingredients with the MBL dataset (real grams)", onClick: importMblData }, "⤓ Load MBL data"),
       h("button", { class: "btn btn--primary", onClick: () => ingredientForm(null) }, "＋ " + t("add")),
     ]));
 
@@ -85,6 +86,18 @@ function ingredientDetail(view, id) {
     h("span", { class: "small muted" }, t("allergensLabel") + ": "),
     algs.length ? h("span", { class: "pill-list", style: "display:inline-flex" }, algs.map((a) => h("span", { class: "badge badge--allergen" }, Data.allergenName(a)))) : h("span", { class: "muted" }, t("noAllergens")),
   ]));
+}
+
+/* Import the bundled MBL dataset (real grams) — replaces recipes + ingredients */
+async function importMblData() {
+  const t = I18N.t.bind(I18N);
+  const ok = await U.confirmDelete("Replace ALL recipes and ingredients with the MBL dataset (with real gram weights)? Your menus, people and subscribers are kept. Any manual recipe/ingredient edits in this browser will be overwritten.");
+  if (!ok) return;
+  try {
+    const r = await Data.importMbl();
+    U.toast(`Imported ${r.recipes} recipes · ${r.ingredients} ingredients`);
+    Router.rerender();
+  } catch (e) { U.toast(String(e.message || e), true); }
 }
 
 /* allergen multi-select pill widget (reused by people page too) */

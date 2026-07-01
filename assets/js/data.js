@@ -83,6 +83,24 @@
     update: (c, id, p) => adapter.update(c, id, p),
     remove: (c, id) => adapter.remove(c, id),
     resetLocal: () => { if (!useSupabase) Local.reset(); },
+
+    // Replace ingredients + recipes with the bundled MBL dataset (window.MBL_SEED),
+    // re-linking existing menu-day slots to the new recipes by name. Keeps menus,
+    // people and subscribers. Local mode only (Supabase: run supabase/seed.sql).
+    async importMbl() {
+      if (useSupabase) throw new Error("Connected to Supabase — import via supabase/seed.sql instead.");
+      const seed = window.MBL_SEED || {};
+      cache.ingredients = JSON.parse(JSON.stringify(seed.ingredients || []));
+      cache.recipes = JSON.parse(JSON.stringify(seed.recipes || []));
+      const norm = (s) => (s || "").toString().trim().toLowerCase().replace(/\s+/g, " ");
+      const byName = {}; cache.recipes.forEach((r) => { if (r.name_en) byName[norm(r.name_en)] = r.id; });
+      cache.menu_days.forEach((d) => {
+        if (!d.slots) return;
+        Object.keys(d.slots).forEach((k) => { const s = d.slots[k]; if (s) s.recipe_id = byName[norm(s.name_en)] || null; });
+      });
+      Local.persist();
+      return { ingredients: cache.ingredients.length, recipes: cache.recipes.length };
+    },
     async sendNewsletter(payload) {
       if (useSupabase) return Supa.sendNewsletter(payload);
       // local mode: pretend-queue

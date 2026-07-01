@@ -14,6 +14,7 @@ PAGES.recipes = {
     view.appendChild(h("div", { class: "toolbar" }, [
       search, catSel, h("span", { class: "muted small", id: "rc-count" }),
       h("div", { style: "flex:1" }),
+      h("button", { class: "btn", title: "Replace recipes & ingredients with the MBL dataset (real grams)", onClick: importMblData }, "⤓ Load MBL data"),
       h("button", { class: "btn btn--primary", onClick: () => edit(null) }, "＋ " + t("add")),
     ]));
     const host = h("div", {}); view.appendChild(host);
