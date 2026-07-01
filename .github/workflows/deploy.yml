@@ -106,6 +106,11 @@ jobs:
           echo -n "ORIGIN index.html asset version: "; grep -o 'ingredients.js?v=[0-9]*' /tmp/live_index.html | head -1 || echo "(none)"
           echo -n "live ingredients.js bytes: "; wc -c < /tmp/live_ingredients.js 2>/dev/null || echo "?"
 
+      - name: Probe CSP on /mbl_catering (does the .htaccess override reach the browser?)
+        run: |
+          echo "=== CSP header served for the app ==="
+          curl -sS -o /dev/null -D - "https://fbws.tw/mbl_catering/?cb=$RANDOM$RANDOM" | tr -d '\r' | grep -i "content-security-policy" || echo "(no CSP header)"
+
       - name: Probe Supabase (temporary)
         run: |
           SB="https://mmmjpkkvqfjegyawrisg.supabase.co/rest/v1"
