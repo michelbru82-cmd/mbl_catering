@@ -22,6 +22,7 @@
       kcal: "Energy (kcal)", protein: "Protein", carbs: "Carbs", fat: "Fat",
       sugar: "Sugar", fiber: "Fibre", salt: "Salt", per100: "per 100 g", perPortion: "per portion",
       addedSugar: "Added sugar", sodium: "Sodium", calcium: "Calcium", origin: "Origin",
+      kcalShort: "kcal", totalKcalHint: "Total calories of this menu (per cover)",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -93,6 +94,7 @@
       kcal: "熱量 (大卡)", protein: "蛋白質", carbs: "碳水化合物", fat: "脂肪",
       sugar: "糖", fiber: "膳食纖維", salt: "鹽", per100: "每 100 公克", perPortion: "每份",
       addedSugar: "添加糖", sodium: "鈉", calcium: "鈣", origin: "產地",
+      kcalShort: "大卡", totalKcalHint: "此菜單總熱量（每份）",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",

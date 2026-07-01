@@ -24,10 +24,22 @@ PAGES.menu = {
     const monthDays = days.filter((d) => d.date.startsWith(month));
     if (!monthDays.length) { view.appendChild(h("div", { class: "empty" }, [h("div", { class: "big" }, "🍽️"), h("div", {}, t("noMenu"))])); return; }
 
+    // total calories for a day's menu (sum of each slot's per-portion recipe kcal)
+    function dayKcal(d) {
+      let total = 0, any = false;
+      SLOTS.forEach(([k]) => {
+        const s = d.slots && d.slots[k];
+        const r = s && s.recipe_id && Data.get("recipes", s.recipe_id);
+        if (r) { const n = Data.recipeNutrition(r); if (n && n.kcal != null) { total += n.kcal; any = true; } }
+      });
+      return any ? Math.round(total) : null;
+    }
+
     // Day-card grid: every one of the 7 slots is always visible (no horizontal scroll)
     const grid = h("div", { style: "display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))" });
     monthDays.forEach((d) => {
       const algs = Data.dayAllergens(d);
+      const kc = dayKcal(d);
       const rows = SLOTS.map(([k, label]) => {
         const s = d.slots[k];
         return h("div", { style: "display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px" }, [
@@ -41,6 +53,7 @@ PAGES.menu = {
         h("div", { class: "section-head", style: "margin:0 0 8px" }, [
           h("div", {}, [h("b", {}, U.fmtDate(d.date)), h("span", { class: "small muted" }, " · " + U.weekdayName(d.date))]),
           h("div", { class: "spacer" }),
+          kc != null ? h("span", { class: "badge", title: t("totalKcalHint"), style: "font-weight:700" }, "🔥 " + kc + " " + t("kcalShort")) : null,
           h("button", { class: "btn btn--sm btn--ghost", onClick: (e) => { e.stopPropagation(); editDay(d.id); } }, "✏️"),
         ]),
         ...rows,
