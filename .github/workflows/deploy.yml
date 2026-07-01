@@ -1,0 +1,56 @@
+name: Deploy to fbws.tw
+
+# Auto-deploys the web app to your hosting over FTP on every push to main.
+# One-time setup — add these in GitHub → Settings → Secrets and variables →
+# Actions → "New repository secret":
+#   FTP_SERVER        e.g.  ftp.fbws.tw   (host only, no ftp:// and no path)
+#   FTP_USERNAME      your FTP account user
+#   FTP_PASSWORD      your FTP account password
+# Optional (have sensible defaults):
+#   FTP_SERVER_DIR    target folder, must end with /   (default: /public_html/mbl_catering/)
+#   FTP_PROTOCOL      ftps | ftp                        (default: ftps)
+#
+# Until FTP_SERVER is set the deploy step is skipped (the run stays green),
+# so adding the workflow now causes no failures.
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+
+concurrency:
+  group: deploy-fbws
+  cancel-in-progress: true
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        if: ${{ env.FTP_SERVER != '' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/public_html/mbl_catering/' }}
+          protocol: ${{ secrets.FTP_PROTOCOL != '' && secrets.FTP_PROTOCOL || 'ftps' }}
+          # Upload only the web app — skip source, data and docs.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            data/**
+            supabase/**
+            README.md
+            .gitignore
+            .cpanel.yml
+
+      - name: Note when unconfigured
+        if: ${{ env.FTP_SERVER == '' }}
+        run: echo "FTP secrets not set yet — skipping deploy. Add FTP_SERVER / FTP_USERNAME / FTP_PASSWORD in repo Settings → Secrets."
