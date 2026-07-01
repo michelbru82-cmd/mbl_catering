@@ -1,29 +1,31 @@
-name: Deploy to fbws.tw
+name: Deploy to fbws.tw (SFTP)
 
-# Auto-deploys the web app to your hosting over FTP on every push to main.
-# One-time setup — add these in GitHub → Settings → Secrets and variables →
-# Actions → "New repository secret":
-#   FTP_SERVER        e.g.  ftp.fbws.tw   (host only, no ftp:// and no path)
-#   FTP_USERNAME      your FTP account user
-#   FTP_PASSWORD      your FTP account password
-# Optional (have sensible defaults):
-#   FTP_SERVER_DIR    target folder, must end with /   (default: /public_html/mbl_catering/)
-#   FTP_PROTOCOL      ftps | ftp                        (default: ftps)
+# Auto-deploys the web app to Gandi Simple Hosting over SFTP (port 22, password/
+# token auth) on every push to main. Runs on GitHub's runners, which can reach
+# Gandi — so no manual uploads.
 #
-# Until FTP_SERVER is set the deploy step is skipped (the run stays green),
-# so adding the workflow now causes no failures.
+# One-time setup — GitHub → Settings → Secrets and variables → Actions → New secret:
+#   FTP_SERVER      sftp.sd3.gpaas.net
+#   FTP_USERNAME    your Gandi hosting user (the UUID)
+#   FTP_PASSWORD    a Gandi personal access token
+#                   (Gandi admin → Web Hosting → your hosting → "Create a token")
+#   FTP_SERVER_DIR  web folder — default /htdocs/mbl_catering  (fbws.tw is primary → /htdocs is root)
+# Optional:
+#   FTP_PORT        default 22
+#
+# Until FTP_SERVER is set the deploy step is skipped (run stays green).
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+  workflow_dispatch: {}
 
 concurrency:
   group: deploy-fbws
   cancel-in-progress: true
 
 jobs:
-  ftp-deploy:
+  sftp-deploy:
     runs-on: ubuntu-latest
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
@@ -31,26 +33,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy via FTP
-        if: ${{ env.FTP_SERVER != '' }}
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/public_html/mbl_catering/' }}
-          protocol: ${{ secrets.FTP_PROTOCOL != '' && secrets.FTP_PROTOCOL || 'ftps' }}
-          # Upload only the web app — skip source, data and docs.
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            data/**
-            supabase/**
-            README.md
-            .gitignore
-            .cpanel.yml
+      - name: Stage web files (only what the site serves)
+        run: |
+          mkdir -p dist
+          cp index.html .htaccess dist/
+          cp -r assets dist/
+          echo "Staged files:" && find dist -type f | wc -l
 
-      - name: Note when unconfigured
+      - name: Install lftp
+        if: ${{ env.FTP_SERVER != '' }}
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy via SFTP
+        if: ${{ env.FTP_SERVER != '' }}
+        env:
+          HOST: ${{ secrets.FTP_SERVER }}
+          USER: ${{ secrets.FTP_USERNAME }}
+          PASS: ${{ secrets.FTP_PASSWORD }}
+          PORT: ${{ secrets.FTP_PORT != '' && secrets.FTP_PORT || '22' }}
+          DIR:  ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/htdocs/mbl_catering' }}
+        run: |
+          lftp <<EOF
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 25
+          set net:persist-retries 2
+          open sftp://$HOST:$PORT
+          user "$USER" "$PASS"
+          mirror -R --no-perms --verbose --parallel=3 ./dist/ "$DIR"
+          bye
+          EOF
+
+      - name: Note if unconfigured
         if: ${{ env.FTP_SERVER == '' }}
-        run: echo "FTP secrets not set yet — skipping deploy. Add FTP_SERVER / FTP_USERNAME / FTP_PASSWORD in repo Settings → Secrets."
+        run: echo "FTP secrets not set yet — skipping deploy. Add FTP_SERVER / FTP_USERNAME / FTP_PASSWORD (+ FTP_SERVER_DIR) in repo Settings → Secrets."
