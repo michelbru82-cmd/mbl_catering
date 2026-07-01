@@ -184,32 +184,39 @@ window.MenuGen = (function () {
     const slotObj = (r) => r ? { name_en: r.name_en, recipe_id: r.id } : null;
     const countSlots = (slots, iso, idx) => ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((k) => { const s = slots[k]; if (s && s.recipe_id) use(Data.get("recipes", s.recipe_id), iso, idx); });
 
-    // ---- max-calorie enforcement ----
+    // ---- calorie-range enforcement (min + max) ----
     const RK = ["meat", "carb", "veg1", "veg2", "dairy", "fruit", "side"];
     const recipeKcal = (r) => { if (!r) return 0; const n = Data.recipeNutrition(r); return n && n.kcal != null ? n.kcal : 0; };
-    const maxKcal = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.max != null) ? Number(cfg.nutrition.kcal.max) : null;
-    // Greedily swap dishes for lower-kcal alternatives (from each slot's pool) until
-    // the day's total kcal is within `limit`, or no further reduction is possible.
-    function repairKcal(chosen, pools, limit) {
+    const kcalMin = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.min != null) ? Number(cfg.nutrition.kcal.min) : null;
+    const kcalMax = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.max != null) ? Number(cfg.nutrition.kcal.max) : null;
+    // Greedily swap dishes (per slot) toward the [min,max] kcal range: each step makes
+    // the single swap that most reduces the day's distance to the range, until inside
+    // it or no swap improves. Handles both an over-max and an under-min day.
+    function repairKcal(chosen, pools, min, max) {
+      const lo = min == null ? -Infinity : min, hi = max == null ? Infinity : max;
       const total = () => RK.reduce((s, k) => s + recipeKcal(chosen[k]), 0);
-      let t = total(), guard = 0;
-      while (t > limit && guard++ < 40) {
+      const dist = (t) => (t < lo ? lo - t : t > hi ? t - hi : 0);
+      let guard = 0;
+      while (guard++ < 60) {
+        const t = total(), d0 = dist(t);
+        if (d0 === 0) break;
         let best = null;
         RK.forEach((k) => {
           const cur = chosen[k]; if (!cur) return;
           const pool = pools[k]; if (!pool || !pool.length) return;
           const other = k === "veg1" ? "veg2" : k === "veg2" ? "veg1" : null;
           const otherId = other && chosen[other] ? chosen[other].id : null;
-          let low = null, lowk = recipeKcal(cur);
-          pool.forEach((r) => { if (r.id === cur.id || r.id === otherId) return; const v = recipeKcal(r); if (v < lowk) { lowk = v; low = r; } });
-          if (!low) return;
-          const nt = t - (recipeKcal(cur) - lowk);
-          if (!best || nt < best.nt) best = { key: k, cand: low, nt };
+          const ck = recipeKcal(cur);
+          pool.forEach((r) => {
+            if (r.id === cur.id || r.id === otherId) return;
+            const nt = t - ck + recipeKcal(r), nd = dist(nt);
+            if (nd < d0 && (!best || nd < best.nd)) best = { key: k, cand: r, nd };
+          });
         });
         if (!best) break;
-        chosen[best.key] = best.cand; t = best.nt;
+        chosen[best.key] = best.cand;
       }
-      return t;
+      return total();
     }
 
     let prevAlg = [];
@@ -249,11 +256,11 @@ window.MenuGen = (function () {
       chosen.fruit = pick(fruitPool, iso, null, [], prevAlg); if (!chosen.fruit) addShort("fruit/cake");
       chosen.side = pick(sidePool, iso, null, [], prevAlg);
 
-      // enforce a max total-kcal rule by swapping in lower-kcal dishes
-      if (maxKcal != null) repairKcal(chosen, {
+      // enforce the min/max total-kcal rule by swapping dishes toward the range
+      if (kcalMin != null || kcalMax != null) repairKcal(chosen, {
         meat: mains.filter(mainFilter), carb: carbNA ? [] : carbPool, veg1: vegPool, veg2: vegPool,
         dairy: dairyPool, fruit: fruitPool, side: sidePool,
-      }, maxKcal);
+      }, kcalMin, kcalMax);
 
       const slots = {};
       slots.meat = slotObj(chosen.meat);

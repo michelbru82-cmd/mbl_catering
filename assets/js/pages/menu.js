@@ -64,10 +64,13 @@ PAGES.menu = {
       });
       const card = h("div", { class: "card card--link", style: "cursor:pointer", onClick: () => editDay(d.id) }, [
         h("div", { class: "section-head", style: "margin:0 0 8px" }, [
-          h("div", {}, [h("b", {}, U.fmtDate(d.date)), h("span", { class: "small muted" }, " · " + U.weekdayName(d.date))]),
+          h("div", {}, [
+            h("div", {}, [h("b", {}, U.fmtDate(d.date)), h("span", { class: "small muted" }, " · " + U.weekdayName(d.date))]),
+            kc ? h("div", { class: "small", title: kc.filled < kc.slots ? t("partialKcalHint") : t("totalKcalHint"),
+              style: "font-weight:700;margin-top:2px;text-align:left;color:var(--text)" },
+              "🔥 " + (kc.filled < kc.slots ? "~" : "") + kc.kcal + " " + t("kcalShort")) : null,
+          ]),
           h("div", { class: "spacer" }),
-          kc ? h("span", { class: "badge", title: kc.filled < kc.slots ? t("partialKcalHint") : t("totalKcalHint"), style: "font-weight:700" },
-            "🔥 " + (kc.filled < kc.slots ? "~" : "") + kc.kcal + " " + t("kcalShort")) : null,
           h("button", { class: "btn btn--sm btn--ghost", onClick: (e) => { e.stopPropagation(); editDay(d.id); } }, "✏️"),
         ]),
         ...rows,
