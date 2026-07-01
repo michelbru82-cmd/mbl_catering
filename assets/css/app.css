@@ -225,3 +225,29 @@ table.data tr.clickable { cursor: pointer; }
 }
 .print-only { display: none; }
 @media print { .print-only { display: block; } }
+
+/* ---- Professional food-packaging labels (Print Labels page) ---- */
+.food-label{box-sizing:border-box;border:0.5mm solid #111;border-radius:2mm;background:#fff;color:#111;
+  padding:2.5mm 3mm;display:flex;flex-direction:column;overflow:hidden;page-break-inside:avoid;
+  font-family:'Inter','Noto Sans TC',sans-serif;}
+.food-label .fl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:2mm}
+.food-label .fl-name{font-weight:800;font-size:clamp(9px,3.6mm,16px);line-height:1.08;letter-spacing:.2px}
+.food-label .fl-name-zh{font-size:clamp(8px,3mm,13px);color:#333;margin-top:.4mm}
+.food-label .fl-brand{font-size:clamp(6px,2.2mm,10px);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#666;text-align:right;max-width:42%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.food-label .fl-rule{height:0.4mm;background:#111;margin:1.2mm 0}
+.food-label .fl-body{display:flex;gap:3mm;flex:1;min-height:0}
+.food-label .fl-left{flex:1;display:flex;flex-direction:column;gap:1mm;font-size:clamp(7px,2.5mm,11px);min-width:0}
+.food-label .fl-portion{color:#333}
+.food-label .fl-allergens{border:0.3mm solid #b5341f;color:#b5341f;border-radius:1mm;padding:1mm 1.5mm;font-size:clamp(7px,2.4mm,11px);line-height:1.22}
+.food-label .fl-allergens--none{border-color:#c4c4c4;color:#8a8a8a}
+.food-label .fl-nutri{flex:0 0 auto;min-width:34mm;border:0.4mm solid #111;border-radius:1mm;padding:1mm 1.5mm;display:flex;flex-direction:column}
+.food-label .fl-nutri-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:0.35mm solid #111;padding-bottom:.6mm;margin-bottom:.5mm;gap:2mm}
+.food-label .fl-nutri-head>span:first-child{font-weight:800;text-transform:uppercase;font-size:clamp(7px,2.5mm,11px);letter-spacing:.3px}
+.food-label .fl-nutri-sub{font-size:clamp(6px,2mm,9px);color:#555;white-space:nowrap}
+.food-label .fl-nutri-tbl{width:100%;border-collapse:collapse;font-size:clamp(7px,2.4mm,11px)}
+.food-label .fl-nutri-tbl td{padding:.25mm 0;border-bottom:0.2mm dotted #cfcfcf}
+.food-label .fl-nutri-tbl tr:last-child td{border-bottom:none}
+.food-label .fl-num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.food-label .fl-foot{display:flex;justify-content:space-between;font-size:clamp(6px,2mm,9px);color:#777;margin-top:1mm;border-top:0.2mm solid #dcdcdc;padding-top:.6mm}
+.food-label.fl-portrait .fl-body{flex-direction:column;gap:1.5mm}
+.food-label.fl-portrait .fl-nutri{min-width:0}
