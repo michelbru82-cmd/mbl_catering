@@ -14,3 +14,9 @@ deployment:
     - /bin/cp -R index.html $DEPLOYPATH/
     - /bin/cp -R .htaccess $DEPLOYPATH/
     - /bin/cp -R assets/. $DEPLOYPATH/assets/
+    # MBL CRM — deployed to https://fbws.tw/mbl_crm/
+    - export CRMPATH=$HOME/public_html/mbl_crm
+    - /bin/mkdir -p $CRMPATH/assets
+    - /bin/cp -R mbl_crm/index.html $CRMPATH/
+    - /bin/cp -R mbl_crm/.htaccess $CRMPATH/
+    - /bin/cp -R mbl_crm/assets/. $CRMPATH/assets/

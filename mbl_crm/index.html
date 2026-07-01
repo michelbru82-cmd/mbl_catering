@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBL — CRM</title>
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <meta name="description" content="MBL Customer Relationship Management: contacts, companies, deals, follow-ups, AI business-card scanning and company enrichment." />
+
+  <!-- Fonts (match the fbws.tw / MBL Catering charte graphique) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/theme.css?v=1" />
+  <link rel="stylesheet" href="assets/css/app.css?v=1" />
+
+  <!-- Supabase JS (used only when configured in config.js / connected in-app) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand__logo" src="assets/img/logo.svg" alt="MBL" onerror="this.style.display='none'" />
+        <div class="brand__text">
+          <span class="brand__name">MBL</span>
+          <span class="brand__sub">CRM</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav"><!-- built by app.js --></nav>
+
+      <div class="sidebar__footer">
+        <button class="lang-toggle" id="langToggle" title="Switch language">
+          <span data-lang="en">中文</span><span data-lang="zh">EN</span>
+        </button>
+        <span class="datasrc" id="dataSrc" title="Active data source">local</span>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn" id="menuBtn" aria-label="Menu">&#9776;</button>
+        <h1 class="topbar__title" id="pageTitle">Dashboard</h1>
+        <div class="topbar__actions" id="topbarActions"></div>
+        <button class="btn btn--ghost" id="userBtn" title="Account" style="display:none">👤</button>
+      </header>
+      <section class="content" id="view"><!-- pages render here --></section>
+    </main>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Config first (Supabase keys, brand text) -->
+  <script src="assets/js/config.js?v=1"></script>
+  <!-- Core -->
+  <script src="assets/js/i18n.js?v=1"></script>
+  <script src="assets/js/utils.js?v=1"></script>
+  <script src="assets/js/seed.js?v=1"></script>
+  <script src="assets/js/data.js?v=1"></script>
+  <script src="assets/js/ai.js?v=1"></script>
+  <script src="assets/js/auth.js?v=1"></script>
+  <script src="assets/js/crm_ui.js?v=1"></script>
+  <script src="assets/js/router.js?v=1"></script>
+  <!-- Pages -->
+  <script src="assets/js/pages/dashboard.js?v=1"></script>
+  <script src="assets/js/pages/contacts.js?v=1"></script>
+  <script src="assets/js/pages/companies.js?v=1"></script>
+  <script src="assets/js/pages/deals.js?v=1"></script>
+  <script src="assets/js/pages/tasks.js?v=1"></script>
+  <script src="assets/js/pages/cardscan.js?v=1"></script>
+  <script src="assets/js/pages/settings.js?v=1"></script>
+  <!-- Boot -->
+  <script src="assets/js/app.js?v=1"></script>
+</body>
+</html>

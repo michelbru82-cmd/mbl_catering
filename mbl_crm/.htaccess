@@ -1,0 +1,22 @@
+# MBL CRM — serve index.html as the folder's default page
+# (Apache / cPanel / most shared hosting). Lets https://fbws.tw/mbl_crm/
+# open the app without typing index.html.
+DirectoryIndex index.html
+
+# Declare UTF-8 so English + 繁體中文 render correctly
+AddDefaultCharset utf-8
+AddCharset utf-8 .html .css .js .json .svg
+
+# Always fetch index.html fresh so new ?v= asset versions are picked up.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # The main fbws.tw site may send a Content-Security-Policy whose connect-src
+  # doesn't include Supabase, which would block cloud calls. Replace it for this
+  # folder with one that allows the CDNs + any Supabase project (https/wss).
+  Header always unset Content-Security-Policy
+  Header unset Content-Security-Policy
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'"
+</IfModule>
