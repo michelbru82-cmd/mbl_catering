@@ -60,6 +60,7 @@ jobs:
           set net:persist-retries 2
           open sftp://$HOST:$PORT
           user "$USER" "$PASS"
+          mkdir -f -p "$DIR"
           mirror -R --no-perms --verbose --parallel=3 ./dist/ "$DIR"
           bye
           EOF
