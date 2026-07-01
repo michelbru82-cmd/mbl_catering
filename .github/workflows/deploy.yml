@@ -65,10 +65,12 @@ jobs:
           pwd
           echo "--- listing of SFTP root '/' ---"
           cls -l /
-          echo "--- /vhosts/ (vhost folders) ---"
-          cls -l /vhosts/
-          echo "--- inside each vhost (look for htdocs / index files) ---"
-          cls -l /vhosts/*/
+          echo "--- /vhosts/fbws.tw/ (web root candidates) ---"
+          cls -l /vhosts/fbws.tw/
+          echo "--- /vhosts/fbws.tw/htdocs/ (if it exists) ---"
+          cls -l /vhosts/fbws.tw/htdocs/
+          echo "--- recursive tree under /vhosts/fbws.tw/ (find every index.html copy) ---"
+          find /vhosts/fbws.tw/
           echo "--- attempting mkdir target ($DIR) ---"
           mkdir -p "$DIR"
           bye
