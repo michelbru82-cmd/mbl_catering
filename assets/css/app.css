@@ -256,3 +256,5 @@ table.data tr.clickable { cursor: pointer; }
 .food-label .fl-dates{display:flex;justify-content:space-between;gap:2mm;font-size:clamp(6.5px,2.3mm,11px);margin-top:1mm}
 .food-label .fl-dates b{color:#111}
 .food-label .fl-fresh{font-size:clamp(6px,2.1mm,10px);color:#0a6b52;font-weight:600;margin-top:.4mm;line-height:1.15}
+.food-label .fl-allergens{font-weight:700}
+.food-label .fl-ingr{margin-top:1mm}

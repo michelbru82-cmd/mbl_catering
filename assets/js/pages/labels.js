@@ -143,16 +143,17 @@ PAGES.labels = {
       ]));
       card.appendChild(h("div", { class: "fl-rule" }));
       const ingrNames = (r.items || []).slice().sort((a, b) => (b.grams || 0) - (a.grams || 0)).map((it) => it.name_en).filter(Boolean);
+      // body: allergens (bold) on the left, nutrition panel on the right
       const left = h("div", { class: "fl-left" }, [
-        (state.showIngr && ingrNames.length) ? h("div", { class: "fl-ingr" }, [h("b", {}, t("ingredients") + ": "), ingrNames.join(", ")]) : null,
-        portion ? h("div", { class: "fl-portion" }, t("portionWeight") + ": " + portion + " g") : null,
         state.showAlg ? (algs.length
-          ? h("div", { class: "fl-allergens" }, [h("b", {}, t("contains").toUpperCase() + ": "), algs.map((a) => Data.allergenName(a)).join(", ")])
+          ? h("div", { class: "fl-allergens" }, [h("b", {}, t("contains").toUpperCase() + ": " + algs.map((a) => Data.allergenName(a)).join(", "))])
           : h("div", { class: "fl-allergens fl-allergens--none" }, t("noAllergens"))) : null,
       ]);
       const body = [left];
       if (state.showNut) body.push(nutritionPanel(nut, portion));
       card.appendChild(h("div", { class: "fl-body" }, body));
+      // ingredients: full-width line below the allergens (always has room to wrap)
+      if (state.showIngr && ingrNames.length) card.appendChild(h("div", { class: "fl-ingr" }, [h("b", {}, t("ingredients") + ": "), ingrNames.join(", ")]));
       const useBy = U.isoAddDays(dateStr, 2); // 48 h
       card.appendChild(h("div", { class: "fl-dates" }, [
         h("span", {}, [h("b", {}, t("preparedOn") + ": "), U.fmtDate(dateStr)]),
