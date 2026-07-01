@@ -42,7 +42,7 @@ PAGES.menu = {
         slotsWithDish++;
         const r = slotRecipe(s);
         const n = r && Data.recipeNutrition(r);
-        if (n && n.kcal != null) { total += n.kcal; filled++; }
+        if (n && n.kcal != null) { total += n.kcal * (s.factor || 1); filled++; }
       });
       if (!filled) return null;
       return { kcal: Math.round(total), filled, slots: slotsWithDish };

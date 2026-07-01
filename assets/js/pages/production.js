@@ -46,7 +46,8 @@ PAGES.production = {
       SLOTS.forEach(([k, slabel]) => {
         const slot = menu.slots[k]; if (!slot) return;
         const r = slot.recipe_id && Data.get("recipes", slot.recipe_id);
-        const portion = r ? portionGrams(r) : null;
+        const pg = r ? portionGrams(r) : null;
+        const portion = pg == null ? null : pg * (slot.factor || 1);   // honour reduced-portion days
         const algs = r ? Data.recipeAllergens(r) : [];
         const cells = [
           h("td", {}, [h("span", { class: "badge badge--cat", style: "margin-right:6px" }, slabel), slot.name_en]),

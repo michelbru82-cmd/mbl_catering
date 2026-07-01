@@ -199,15 +199,37 @@ window.MenuBuilder = (function () {
         },
       });
     }
+    // reduce portion sizes on days still over the max (permission-gated, guaranteed fix)
+    function reducePortions() {
+      const over = result.days.filter((d) => (d.violations || []).some((v) => v.key === "kcal" && v.type === "max"));
+      if (!over.length) { U.toast(T("noOverMax"), true); return; }
+      const mx = cfg.nutrition && cfg.nutrition.kcal ? cfg.nutrition.kcal.max : "";
+      const list = H("div", {}, over.map((d) => H("div", { style: "padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:baseline" }, [
+        H("b", {}, U.fmtDate(d.date)), H("div", { style: "flex:1" }),
+        H("span", { class: "small muted" }, Math.round(d.nutrition.kcal) + " → "), H("span", { class: "badge", style: "font-weight:700" }, "🔥 " + mx + " kcal"),
+      ])));
+      U.modal("📉 " + T("reducePortions"), H("div", {}, [H("div", { class: "small", style: "margin-bottom:8px" }, T("reduceIntro")), list]), {
+        wide: true, saveText: "✅ " + T("reduceApply"),
+        async onSave() {
+          const backs = document.querySelectorAll(".modal-backdrop");
+          if (backs[0]) backs[0].remove();   // close the underlying preview modal
+          setTimeout(() => preview(MenuGen.generate(cfg.months, cfg, { lockedDays: locked, allowScale: true }), cfg, locked), 40);
+          return true;
+        },
+      });
+    }
     let gapBox = null;
     const gapDays = MenuGen.kcalGapDays(result);
-    if (gapDays.length && MenuGen.boosterProposals().length) {
+    const overMaxDays = result.days.filter((d) => (d.violations || []).some((v) => v.key === "kcal" && v.type === "max"));
+    if (gapDays.length) {
+      const btns = [];
+      if (MenuGen.boosterProposals().length) btns.push(H("button", { class: "btn btn--sm btn--accent", onClick: () => proposeRecipes() }, "➕ " + T("proposeRecipes")));
+      if (overMaxDays.length) btns.push(H("button", { class: "btn btn--sm btn--accent", onClick: () => reducePortions() }, "📉 " + T("reducePortions")));
       gapBox = H("div", { class: "card", style: "margin-bottom:14px;border-color:var(--warn)" }, [
         H("div", { style: "display:flex;align-items:center;gap:10px;flex-wrap:wrap" }, [
           H("div", { style: "font-weight:700;color:var(--warn)" }, "🎯 " + T("kcalGapTitle")),
           H("div", { class: "small muted" }, gapDays.length + " " + T("kcalGapDays")),
-          H("div", { style: "flex:1" }),
-          H("button", { class: "btn btn--sm btn--accent", onClick: () => proposeRecipes() }, "➕ " + T("proposeRecipes")),
+          H("div", { style: "flex:1" }), ...btns,
         ]),
         H("div", { class: "small muted", style: "margin-top:6px" }, T("kcalGapHint")),
       ]);
@@ -221,6 +243,7 @@ window.MenuBuilder = (function () {
           H("div", { style: "display:flex;align-items:center;gap:6px" }, [
             H("b", {}, U.fmtDate(d.date)), H("span", { class: "small muted" }, U.weekdayName(d.date)),
             d.kept ? H("span", { class: "badge", style: "margin-left:4px" }, T("kept")) : null,
+            d.scaled ? H("span", { class: "badge", style: "margin-left:4px", title: T("scaledHint") }, "📉 ×" + d.scaled) : null,
             H("div", { style: "flex:1" }),
             d.cost != null ? H("span", { class: "small muted" }, CUR() + d.cost) : null,
             H("label", { class: "small", style: "display:flex;gap:4px;align-items:center;cursor:pointer" }, [lockCb, "🔒"]),

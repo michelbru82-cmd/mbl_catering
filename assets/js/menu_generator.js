@@ -180,6 +180,7 @@ window.MenuGen = (function () {
     cfg = cfg || getConfig();
     opts = opts || {};
     const locked = opts.lockedDays || {};
+    const allowScale = !!opts.allowScale;   // permission granted to shrink portions to meet a hard max
     const service = cfg.service_days || ["mon", "tue", "wed", "thu", "fri"];
     const dates = [].concat(...months.map(datesInMonth)).filter((iso) => service.includes(weekdayKey(iso))).sort();
 
@@ -270,13 +271,18 @@ window.MenuGen = (function () {
     const days = dates.map((iso, idx) => {
       const wk = weekdayKey(iso);
 
-      // keep an existing menu untouched
+      // keep an existing menu — but only if it already complies (min/max are
+      // non-negotiable, so a kept day that breaks a rule is regenerated instead).
       if (cfg.keep_existing && !locked[iso]) {
         const ex = Data.menuForDate(iso);
         if (ex && ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].some((k) => ex.slots[k])) {
-          countSlots(ex.slots, iso, idx); prevAlg = Data.dayAllergens(ex);
           const exNut = dayNutrition(ex.slots);
-          return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: exNut, cost: dayCost(ex.slots), violations: checkNutrition(exNut, cfg.nutrition) };
+          const exViol = checkNutrition(exNut, cfg.nutrition);
+          if (!exViol.length) {
+            countSlots(ex.slots, iso, idx); prevAlg = Data.dayAllergens(ex);
+            return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: exNut, cost: dayCost(ex.slots), violations: exViol };
+          }
+          // otherwise fall through and rebuild this day to enforce the rules
         }
       }
       // a day the user locked in the preview
@@ -316,11 +322,19 @@ window.MenuGen = (function () {
       slots.dairy = slotObj(chosen.dairy); slots.fruit = slotObj(chosen.fruit); slots.side = slotObj(chosen.side);
       RK.forEach((k) => { if (chosen[k]) use(chosen[k], iso, idx); });
 
-      const nut = dayNutrition(slots); const viol = checkNutrition(nut, cfg.nutrition);
+      let nut = dayNutrition(slots), scaled = null;
+      // portion-scaling finisher (permission-gated): if a constrained day is still over
+      // the max after dish-swapping, shrink its portions uniformly to hit the max exactly.
+      if (allowScale && kcalMax != null && nut._hasData && nut.kcal > kcalMax) {
+        scaled = Math.max(0.1, Math.floor((kcalMax / nut.kcal) * 100) / 100);
+        RK.forEach((k) => { const s = slots[k]; if (s && s.recipe_id) s.factor = scaled; });
+        nut = dayNutrition(slots);
+      }
+      const viol = checkNutrition(nut, cfg.nutrition);
       const cost = dayCost(slots);
       if (cfg.max_cost != null && cost != null && cost > cfg.max_cost) viol.push({ key: "cost", type: "max", value: Math.round(cost), limit: cfg.max_cost, required: true });
       prevAlg = unionAllergens(slots);
-      return { date: iso, weekday: wk, slots, nutrition: nut, cost, violations: viol };
+      return { date: iso, weekday: wk, slots, nutrition: nut, cost, violations: viol, scaled };
     });
 
     const filledCount = (d) => ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].filter((k) => { const s = d.slots[k]; return s && (s.na || s.recipe_id || s.name_en); }).length;
@@ -388,7 +402,8 @@ window.MenuGen = (function () {
       const s = slots[k]; if (!s || !s.recipe_id) return;
       const r = Data.get("recipes", s.recipe_id); if (!r) return;
       const n = Data.recipeNutrition(r); if (!n) return; any = true;
-      ["kcal", "protein", "fat", "carbs", "sugar", "added_sugar", "sodium", "calcium"].forEach((m) => (out[m] += n[m] || 0));
+      const f = s.factor || 1;
+      ["kcal", "protein", "fat", "carbs", "sugar", "added_sugar", "sodium", "calcium"].forEach((m) => (out[m] += (n[m] || 0) * f));
     });
     out._hasData = any;
     return out;

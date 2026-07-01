@@ -29,6 +29,9 @@
       kcalGapHint: "Some days couldn't reach your calorie min/max with the current recipes. I can add balanced dishes (built from your ingredients) to close the gap — you approve them first.",
       proposeIntro: "These new recipes will be added to your database (with real ingredient macros), then the menus regenerate to meet your calorie range:",
       addAndRegen: "Add recipes & regenerate", recipesAdded: "recipes added",
+      reducePortions: "Reduce portions to meet max", noOverMax: "No days are over the maximum",
+      reduceIntro: "For these days no dish combination fits the maximum, so the serving sizes (grams) will be reduced just enough to meet it. Production quantities scale down accordingly:",
+      reduceApply: "Reduce portions & regenerate", scaledHint: "Portions reduced to meet the calorie maximum",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -107,6 +110,9 @@
       kcalGapHint: "部分日期以現有食譜無法達到您的熱量上下限。我可以新增均衡菜餚（以您的食材製作）來補足——需先經您核准。",
       proposeIntro: "以下新食譜將加入資料庫（含真實食材營養），接著重新產生菜單以符合您的熱量範圍：",
       addAndRegen: "新增食譜並重新產生", recipesAdded: "已新增食譜",
+      reducePortions: "減少份量以符合上限", noOverMax: "沒有超過上限的日期",
+      reduceIntro: "這些日期無法以任何菜餚組合符合上限，因此將適度減少份量（公克）以達標，生產份量也會隨之調整：",
+      reduceApply: "減少份量並重新產生", scaledHint: "已減少份量以符合熱量上限",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",
