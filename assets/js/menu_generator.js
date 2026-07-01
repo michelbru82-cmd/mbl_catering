@@ -90,7 +90,7 @@ window.MenuGen = (function () {
       rotation_window_days: 60, // ~2 months
       min_repeat_gap: 7,        // min days before a dish may repeat
       spread_allergens: true,   // avoid same allergen on consecutive days
-      keep_existing: true,      // don't overwrite days that already have a menu
+      keep_existing: false,     // regenerate all days so nutrition/cost rules are enforced (toggle on to preserve existing menus)
       max_cost: null,           // optional max ingredient cost per cover (NT$)
     };
   }
@@ -184,6 +184,34 @@ window.MenuGen = (function () {
     const slotObj = (r) => r ? { name_en: r.name_en, recipe_id: r.id } : null;
     const countSlots = (slots, iso, idx) => ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((k) => { const s = slots[k]; if (s && s.recipe_id) use(Data.get("recipes", s.recipe_id), iso, idx); });
 
+    // ---- max-calorie enforcement ----
+    const RK = ["meat", "carb", "veg1", "veg2", "dairy", "fruit", "side"];
+    const recipeKcal = (r) => { if (!r) return 0; const n = Data.recipeNutrition(r); return n && n.kcal != null ? n.kcal : 0; };
+    const maxKcal = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.max != null) ? Number(cfg.nutrition.kcal.max) : null;
+    // Greedily swap dishes for lower-kcal alternatives (from each slot's pool) until
+    // the day's total kcal is within `limit`, or no further reduction is possible.
+    function repairKcal(chosen, pools, limit) {
+      const total = () => RK.reduce((s, k) => s + recipeKcal(chosen[k]), 0);
+      let t = total(), guard = 0;
+      while (t > limit && guard++ < 40) {
+        let best = null;
+        RK.forEach((k) => {
+          const cur = chosen[k]; if (!cur) return;
+          const pool = pools[k]; if (!pool || !pool.length) return;
+          const other = k === "veg1" ? "veg2" : k === "veg2" ? "veg1" : null;
+          const otherId = other && chosen[other] ? chosen[other].id : null;
+          let low = null, lowk = recipeKcal(cur);
+          pool.forEach((r) => { if (r.id === cur.id || r.id === otherId) return; const v = recipeKcal(r); if (v < lowk) { lowk = v; low = r; } });
+          if (!low) return;
+          const nt = t - (recipeKcal(cur) - lowk);
+          if (!best || nt < best.nt) best = { key: k, cand: low, nt };
+        });
+        if (!best) break;
+        chosen[best.key] = best.cand; t = best.nt;
+      }
+      return t;
+    }
+
     let prevAlg = [];
     const days = dates.map((iso, idx) => {
       const wk = weekdayKey(iso);
@@ -193,7 +221,8 @@ window.MenuGen = (function () {
         const ex = Data.menuForDate(iso);
         if (ex && ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].some((k) => ex.slots[k])) {
           countSlots(ex.slots, iso, idx); prevAlg = Data.dayAllergens(ex);
-          return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: dayNutrition(ex.slots), violations: [] };
+          const exNut = dayNutrition(ex.slots);
+          return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: exNut, cost: dayCost(ex.slots), violations: checkNutrition(exNut, cfg.nutrition) };
         }
       }
       // a day the user locked in the preview
@@ -203,24 +232,35 @@ window.MenuGen = (function () {
       }
 
       const rule = (cfg.weekday && cfg.weekday[wk]) || { protein: "any", cuisine: "any" };
-      const slots = {};
       const mainFilter = (r) => {
         const tg = tags(r);
         if (rule.protein && rule.protein !== "any" && tg.protein !== rule.protein) return false;
         if (rule.cuisine && rule.cuisine !== "any" && tg.cuisine !== rule.cuisine) return false;
         return true;
       };
-      const main = pick(mains, iso, mainFilter, [], prevAlg);
-      slots.meat = slotObj(main); if (!main) addShort(`main · ${rule.protein}/${rule.cuisine}`); use(main, iso, idx);
+      const chosen = {};
+      chosen.meat = pick(mains, iso, mainFilter, [], prevAlg);
+      if (!chosen.meat) addShort(`main · ${rule.protein}/${rule.cuisine}`);
+      const carbNA = !!(chosen.meat && tags(chosen.meat).contains_carb);
+      if (!carbNA) { chosen.carb = pick(carbPool, iso, null, [], prevAlg); if (!chosen.carb) addShort("carb"); }
+      chosen.veg1 = pick(vegPool, iso, null, [], prevAlg); if (!chosen.veg1) addShort("vegetable");
+      chosen.veg2 = pick(vegPool, iso, null, chosen.veg1 ? [chosen.veg1.id] : [], prevAlg); if (!chosen.veg2) addShort("vegetable");
+      chosen.dairy = pick(dairyPool, iso, null, [], prevAlg); if (!chosen.dairy) addShort("dairy");
+      chosen.fruit = pick(fruitPool, iso, null, [], prevAlg); if (!chosen.fruit) addShort("fruit/cake");
+      chosen.side = pick(sidePool, iso, null, [], prevAlg);
 
-      if (main && tags(main).contains_carb) slots.carb = { name_en: "Not applicable", recipe_id: null, na: true };
-      else { const carb = pick(carbPool, iso, null, [], prevAlg); slots.carb = slotObj(carb); if (!carb) addShort("carb"); use(carb, iso, idx); }
+      // enforce a max total-kcal rule by swapping in lower-kcal dishes
+      if (maxKcal != null) repairKcal(chosen, {
+        meat: mains.filter(mainFilter), carb: carbNA ? [] : carbPool, veg1: vegPool, veg2: vegPool,
+        dairy: dairyPool, fruit: fruitPool, side: sidePool,
+      }, maxKcal);
 
-      const v1 = pick(vegPool, iso, null, [], prevAlg); slots.veg1 = slotObj(v1); if (!v1) addShort("vegetable"); use(v1, iso, idx);
-      const v2 = pick(vegPool, iso, null, v1 ? [v1.id] : [], prevAlg); slots.veg2 = slotObj(v2); if (!v2) addShort("vegetable"); use(v2, iso, idx);
-      const da = pick(dairyPool, iso, null, [], prevAlg); slots.dairy = slotObj(da); if (!da) addShort("dairy"); use(da, iso, idx);
-      const fr = pick(fruitPool, iso, null, [], prevAlg); slots.fruit = slotObj(fr); if (!fr) addShort("fruit/cake"); use(fr, iso, idx);
-      const si = pick(sidePool, iso, null, [], prevAlg); slots.side = slotObj(si); if (si) use(si, iso, idx);
+      const slots = {};
+      slots.meat = slotObj(chosen.meat);
+      slots.carb = carbNA ? { name_en: "Not applicable", recipe_id: null, na: true } : slotObj(chosen.carb);
+      slots.veg1 = slotObj(chosen.veg1); slots.veg2 = slotObj(chosen.veg2);
+      slots.dairy = slotObj(chosen.dairy); slots.fruit = slotObj(chosen.fruit); slots.side = slotObj(chosen.side);
+      RK.forEach((k) => { if (chosen[k]) use(chosen[k], iso, idx); });
 
       const nut = dayNutrition(slots); const viol = checkNutrition(nut, cfg.nutrition);
       const cost = dayCost(slots);
