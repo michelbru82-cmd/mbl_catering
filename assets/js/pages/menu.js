@@ -23,28 +23,33 @@ PAGES.menu = {
     const monthDays = days.filter((d) => d.date.startsWith(month));
     if (!monthDays.length) { view.appendChild(h("div", { class: "empty" }, [h("div", { class: "big" }, "🍽️"), h("div", {}, t("noMenu"))])); return; }
 
-    const tbl = h("table", { class: "data" });
-    tbl.appendChild(h("thead", {}, h("tr", {}, [
-      h("th", {}, t("date")),
-      ...SLOTS.map(([, label]) => h("th", {}, label)),
-      h("th", {}, t("allergensLabel")),
-      h("th", {}, ""),
-    ])));
-    const tb = h("tbody", {});
+    // Day-card grid: every one of the 7 slots is always visible (no horizontal scroll)
+    const grid = h("div", { style: "display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))" });
     monthDays.forEach((d) => {
       const algs = Data.dayAllergens(d);
-      tb.appendChild(h("tr", { class: "clickable", onClick: () => editDay(d.id) }, [
-        h("td", {}, [h("b", {}, U.fmtDate(d.date)), h("br"), h("span", { class: "small muted" }, U.weekdayName(d.date))]),
-        ...SLOTS.map(([k]) => {
-          const s = d.slots[k];
-          return h("td", {}, s ? (s.recipe_id ? h("span", {}, [s.name_en, " ", h("span", { class: "small", title: "linked recipe" }, "🔗")]) : s.name_en) : h("span", { class: "muted" }, "—"));
-        }),
-        h("td", {}, algs.length ? h("span", { class: "small" }, algs.slice(0, 3).map((a) => Data.allergenName(a)).join(", ") + (algs.length > 3 ? "…" : "")) : h("span", { class: "muted" }, "—")),
-        h("td", {}, h("button", { class: "btn btn--sm", onClick: (e) => { e.stopPropagation(); editDay(d.id); } }, "✏️")),
-      ]));
+      const rows = SLOTS.map(([k, label]) => {
+        const s = d.slots[k];
+        return h("div", { style: "display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px" }, [
+          h("span", { class: "badge badge--cat", style: "flex:0 0 74px;justify-content:center;align-self:flex-start" }, label),
+          h("div", { style: "flex:1;min-width:0" }, s
+            ? [h("span", {}, s.name_en), s.recipe_id ? h("span", { class: "small", title: "linked recipe" }, " 🔗") : null]
+            : h("span", { class: "muted" }, "—")),
+        ]);
+      });
+      const card = h("div", { class: "card card--link", style: "cursor:pointer", onClick: () => editDay(d.id) }, [
+        h("div", { class: "section-head", style: "margin:0 0 8px" }, [
+          h("div", {}, [h("b", {}, U.fmtDate(d.date)), h("span", { class: "small muted" }, " · " + U.weekdayName(d.date))]),
+          h("div", { class: "spacer" }),
+          h("button", { class: "btn btn--sm btn--ghost", onClick: (e) => { e.stopPropagation(); editDay(d.id); } }, "✏️"),
+        ]),
+        ...rows,
+        h("div", { style: "margin-top:9px;min-height:20px" }, algs.length
+          ? h("div", { class: "pill-list" }, algs.map((a) => h("span", { class: "badge badge--allergen" }, Data.allergenName(a))))
+          : h("span", { class: "small muted" }, t("noAllergens"))),
+      ]);
+      grid.appendChild(card);
     });
-    tbl.appendChild(tb);
-    view.appendChild(h("div", { class: "table-wrap" }, tbl));
+    view.appendChild(grid);
 
     // recipe datalist (shared)
     function recipeDatalist(id) {
