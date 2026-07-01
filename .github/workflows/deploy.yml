@@ -86,6 +86,23 @@ jobs:
           mirror -R --no-perms --verbose --parallel=3 ./dist/ "$DIR"
           bye
           EOF
+          # 3) Read the file back off the server to prove what origin now serves
+          lftp <<EOF || true
+          set sftp:auto-confirm yes
+          open sftp://$HOST:$PORT
+          user "$USER" "$PASS"
+          get "$DIR/assets/js/pages/ingredients.js" -o /tmp/live_ingredients.js
+          get "$DIR/index.html" -o /tmp/live_index.html
+          bye
+          EOF
+          echo "=== ORIGIN VERIFICATION ==="
+          if grep -q "imported from the" /tmp/live_ingredients.js 2>/dev/null; then
+            echo "ORIGIN ingredients.js = NEW (macro build present)"
+          else
+            echo "ORIGIN ingredients.js = OLD (macro build NOT present)"
+          fi
+          echo -n "ORIGIN index.html asset version: "; grep -o 'ingredients.js?v=[0-9]*' /tmp/live_index.html | head -1 || echo "(none)"
+          echo -n "live ingredients.js bytes: "; wc -c < /tmp/live_ingredients.js 2>/dev/null || echo "?"
 
       - name: Note if unconfigured
         if: ${{ env.FTP_SERVER == '' }}
