@@ -3,16 +3,28 @@
    ============================================================ */
 (function () {
   // navigation layout: [groupLabelKey, [pageKey,...]]
-  const NAV = [
+  const NAV_CATERING = [
     ["grp_planning", ["dashboard", "menu"]],
     ["grp_kitchen", ["recipes", "ingredients", "production", "people"]],
     ["grp_print", ["printMenu", "labels", "newsletter"]],
     ["grp_admin", ["places", "allergens"]],
   ];
+  const NAV_SHOP = [
+    ["grp_kitchen", ["recipes", "ingredients"]],
+    ["grp_print", ["recipeCards", "priceList", "labels", "newsletter"]],
+    ["grp_admin", ["places", "allergens"]],
+  ];
+  function currentNav() { return Data.activePlaceType() === "shop" ? NAV_SHOP : NAV_CATERING; }
 
   function buildPlaceSwitcher() {
     const places = Data.places();
-    const sel = U.h("select", { class: "input", style: "width:100%;font-weight:600", onChange: (e) => { Data.setActivePlace(e.target.value); buildNav(); Router.rerender(); } },
+    const sel = U.h("select", { class: "input", style: "width:100%;font-weight:600", onChange: (e) => {
+      Data.setActivePlace(e.target.value); buildNav();
+      const key = (location.hash.replace(/^#\//, "").split("/")[0]) || "";
+      const allowed = new Set(currentNav().flatMap(([, ks]) => ks).concat("dashboard"));
+      if (!allowed.has(key)) { location.hash = "#/" + currentNav()[0][1][0]; }
+      Router.rerender();
+    } },
       places.map((p) => U.h("option", { value: p.id, selected: p.id === Data.activePlaceId() }, (I18N.lang === "zh" && p.name_zh) ? p.name_zh : p.name)));
     return U.h("div", { style: "padding:10px 12px 12px" }, [
       U.h("div", { style: "font-size:11px;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin-bottom:4px" }, "🏢 " + I18N.t("place")),
@@ -24,7 +36,7 @@
     const nav = document.getElementById("nav");
     nav.innerHTML = "";
     nav.appendChild(buildPlaceSwitcher());
-    NAV.forEach(([grp, keys]) => {
+    currentNav().forEach(([grp, keys]) => {
       nav.appendChild(U.h("div", { class: "nav__group-label" }, I18N.t(grp)));
       keys.forEach((key) => {
         const p = PAGES[key]; if (!p) return;

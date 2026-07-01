@@ -40,6 +40,10 @@
       scopeDay: "Single day", scopeWeek: "Whole week", showIngredients: "Ingredients",
       preparedOn: "Prepared", useBy: "Use by", keepRefrigerated: "Keep refrigerated", useByDays: "Use-by (days)",
       freshNote: "Prepared fresh today — consume within {d} day(s)",
+      placeType: "Type", typeCatering: "Catering", typeShop: "Shop / Restaurant", foodCostPct: "Target food cost %",
+      recipeCards: "Recipe cards", priceList: "Menu / price list", batchQty: "Batch (qty)", qtyForBatch: "Qty for batch", onlyPriced: "Only priced items",
+      shopFields: "Shop / restaurant", yieldPortions: "Yield (portions)", prepMin: "Prep (min)", cookMin: "Cook (min)", salePrice: "Sale price", method: "Method / steps",
+      methodHint: "One step per line…", costPortion: "Cost / portion", suggestedPrice: "Suggested price", margin: "Margin",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -129,6 +133,10 @@
       scopeDay: "單日", scopeWeek: "整週", showIngredients: "成分",
       preparedOn: "製造日期", useBy: "有效期限", keepRefrigerated: "請冷藏保存", useByDays: "有效天數",
       freshNote: "本產品為當日新鮮製作，請於{d}天內食用",
+      placeType: "類型", typeCatering: "餐飲外燴", typeShop: "商店／餐廳", foodCostPct: "目標食材成本 %",
+      recipeCards: "食譜卡", priceList: "菜單／價目表", batchQty: "批量（數量）", qtyForBatch: "批量用量", onlyPriced: "僅顯示有定價",
+      shopFields: "商店／餐廳", yieldPortions: "產出（份）", prepMin: "準備（分）", cookMin: "烹調（分）", salePrice: "售價", method: "作法／步驟",
+      methodHint: "每行一個步驟…", costPortion: "每份成本", suggestedPrice: "建議售價", margin: "毛利",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",

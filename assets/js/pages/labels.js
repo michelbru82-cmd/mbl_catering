@@ -47,9 +47,10 @@ PAGES.labels = {
     const algChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showAlg, onChange: (e) => { state.showAlg = e.target.checked; render(); } }), t("showAllergens")]);
     const ingrChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showIngr, onChange: (e) => { state.showIngr = e.target.checked; render(); } }), t("showIngredients")]);
 
+    const isShop = Data.activePlaceType() === "shop";
     view.appendChild(searchList);
     view.appendChild(h("div", { class: "toolbar no-print" }, [
-      scopeSel, dateI,
+      ...(isShop ? [] : [scopeSel, dateI]),
       h("span", { class: "small muted" }, t("orientation")), orientSel, presetSel,
       h("span", { class: "small muted" }, t("widthCm")), widthI,
       h("span", { class: "small muted" }, t("heightCm")), heightI,
@@ -165,6 +166,6 @@ PAGES.labels = {
       return card;
     }
 
-    loadDay();
+    if (isShop) { state.selected = new Set(); render(); } else { loadDay(); }
   },
 };

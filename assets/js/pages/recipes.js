@@ -75,6 +75,29 @@ function recipeDetail(view, id) {
   ]);
   view.appendChild(nutBox);
 
+  // shop / restaurant: yield · times · cost → suggested price → margin · method
+  const cost = Data.recipeCost(r);
+  const place = Data.activePlace() || {};
+  const fcp = (place.food_cost_pct || 30) / 100;
+  const suggested = cost != null && fcp > 0 ? Math.round(cost / fcp * 100) / 100 : null;
+  const price = r.sale_price;
+  const marginPct = (price != null && cost != null && price > 0) ? Math.round((price - cost) / price * 100) : null;
+  const CUR = window.MBL_CONFIG.CURRENCY || "NT$";
+  const metaBits = [];
+  if (r.yield_portions) metaBits.push(t("yieldPortions") + ": " + r.yield_portions);
+  if (r.prep_min != null) metaBits.push(t("prepMin") + ": " + r.prep_min + "′");
+  if (r.cook_min != null) metaBits.push(t("cookMin") + ": " + r.cook_min + "′");
+  view.appendChild(h("div", { class: "card", style: "margin-bottom:16px" }, [
+    metaBits.length ? h("div", { class: "small muted", style: "margin-bottom:8px" }, metaBits.join("  ·  ")) : null,
+    h("div", { class: "macros" }, [
+      macro(t("costPortion"), cost != null ? CUR + cost : "—"),
+      macro(t("suggestedPrice"), suggested != null ? CUR + suggested : "—"),
+      macro(t("salePrice"), price != null ? CUR + price : "—"),
+      macro(t("margin"), marginPct != null ? marginPct + "%" : "—"),
+    ]),
+    r.method ? h("div", { style: "margin-top:12px" }, [h("div", { class: "small muted", style: "margin-bottom:4px;font-weight:600" }, t("method")), h("div", { style: "white-space:pre-wrap;font-size:14px;line-height:1.5" }, r.method)]) : null,
+  ]));
+
   // allergens
   const algs = Data.recipeAllergens(r);
   view.appendChild(h("div", { style: "margin-bottom:16px" }, [
@@ -120,6 +143,13 @@ function recipeForm(r) {
   const cuisineSel = h("select", { class: "input" }, ["western", "asian"].map((c) => h("option", { value: c, selected: c === tg.cuisine }, t(c))));
   const carbChk = h("input", { type: "checkbox", checked: tg.contains_carb });
 
+  // shop / restaurant fields
+  const yieldI = h("input", { class: "input num", type: "number", min: "1", step: "1", value: r.yield_portions == null ? "" : r.yield_portions, placeholder: "1" });
+  const prepI = h("input", { class: "input num", type: "number", min: "0", step: "1", value: r.prep_min == null ? "" : r.prep_min });
+  const cookI = h("input", { class: "input num", type: "number", min: "0", step: "1", value: r.cook_min == null ? "" : r.cook_min });
+  const priceI = h("input", { class: "input num", type: "number", min: "0", step: "any", value: r.sale_price == null ? "" : r.sale_price });
+  const methodI = h("textarea", { class: "input", rows: 5, placeholder: t("methodHint") }, r.method || "");
+
   const rows = h("div", {});
   function addRow(it) {
     it = it || { name_en: "", grams: "" };
@@ -155,14 +185,24 @@ function recipeForm(r) {
     h("label", { class: "small", style: "font-weight:600;color:var(--text-soft)" }, t("ingredientsInRecipe")),
     rows,
     h("button", { class: "btn btn--sm", onClick: () => addRow() }, "＋ " + t("addIngredientRow")),
+    h("div", { class: "small", style: "font-weight:600;color:var(--text-soft);margin-top:12px" }, t("shopFields")),
+    h("div", { class: "row" }, [
+      h("div", { class: "field", style: "flex:0 0 120px" }, [h("label", {}, t("yieldPortions")), yieldI]),
+      h("div", { class: "field", style: "flex:0 0 120px" }, [h("label", {}, t("prepMin")), prepI]),
+      h("div", { class: "field", style: "flex:0 0 120px" }, [h("label", {}, t("cookMin")), cookI]),
+      h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, (window.MBL_CONFIG.CURRENCY || "NT$") + " " + t("salePrice")), priceI]),
+    ]),
+    h("div", { class: "field" }, [h("label", {}, t("method")), methodI]),
   ]);
 
   U.modal(isNew ? t("add") + " · " + t("recipes") : t("edit"), form, {
     wide: true,
     async onSave() {
       const items = [...rows.children].map((x) => x._collect && x._collect()).filter(Boolean);
+      const numOrNull = (el) => el.value === "" ? null : Number(el.value);
       const payload = { name_en: nameEn.value.trim(), name_zh: nameZh.value.trim(), category: catInput.value.trim(), items,
-        course: courseSel.value, protein: proteinSel.value, cuisine: cuisineSel.value, contains_carb: carbChk.checked };
+        course: courseSel.value, protein: proteinSel.value, cuisine: cuisineSel.value, contains_carb: carbChk.checked,
+        yield_portions: numOrNull(yieldI), prep_min: numOrNull(prepI), cook_min: numOrNull(cookI), sale_price: numOrNull(priceI), method: methodI.value.trim() };
       if (!payload.name_en) { U.toast(t("name_en") + "?", true); return false; }
       // recompute allergen union
       const set = new Set();

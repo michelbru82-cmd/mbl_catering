@@ -33,9 +33,9 @@
   function ensurePlaces() {
     if (!Array.isArray(cache.places)) cache.places = [];
     if (!cache.places.length) cache.places = [
-      { id: "place_school_abc", name: "School ABC", name_zh: "", covers: 100, use_by_days: 2 },
-      { id: "place_corp_zac", name: "Corporate ZAC", name_zh: "", covers: 50, use_by_days: 2 },
-      { id: "place_corp_fgh", name: "Corporate FGH", name_zh: "", covers: 50, use_by_days: 2 },
+      { id: "place_school_abc", name: "School ABC", name_zh: "", type: "catering", covers: 100, use_by_days: 2, food_cost_pct: 30 },
+      { id: "place_corp_zac", name: "Corporate ZAC", name_zh: "", type: "catering", covers: 50, use_by_days: 2, food_cost_pct: 30 },
+      { id: "place_corp_fgh", name: "Corporate FGH", name_zh: "", type: "catering", covers: 50, use_by_days: 2, food_cost_pct: 30 },
     ];
   }
   function migratePlaces() {
@@ -43,6 +43,8 @@
     PLACE_COLLS.forEach((c) => (cache[c] || []).forEach((r) => { if (r.place_id == null) r.place_id = def; }));
     // legacy single menu-builder config -> place-scoped id
     (cache.settings || []).forEach((s) => { if (s.id === "menu_config") s.id = "menu_config__" + def; });
+    // default type/margin on any older place records
+    (cache.places || []).forEach((p) => { if (p.type == null) p.type = "catering"; if (p.food_cost_pct == null) p.food_cost_pct = 30; });
   }
 
   const cache = {}; COLLS.forEach((c) => (cache[c] = []));
@@ -124,6 +126,7 @@
     places: () => cache.places || [],
     activePlaceId: () => activePlaceId,
     activePlace: () => (cache.places || []).find((p) => p.id === activePlaceId) || null,
+    activePlaceType() { const p = this.activePlace(); return (p && p.type) || "catering"; },
     setActivePlace(id) { if ((cache.places || []).some((p) => p.id === id)) { activePlaceId = id; try { localStorage.setItem(APKEY, id); } catch (e) {} } },
 
     // Replace ingredients + recipes with the bundled MBL dataset (window.MBL_SEED),

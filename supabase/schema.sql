@@ -27,8 +27,10 @@ create table if not exists places (
   id             text primary key,
   name           text not null,
   name_zh        text,
+  type           text default 'catering',  -- catering | shop
   covers         int default 0,
   use_by_days    int default 2,   -- label "use by" = production date + N days
+  food_cost_pct  int default 30,  -- target food-cost % for suggested price
   representative text,
   tax_number     text,
   email          text,
@@ -67,6 +69,10 @@ create table if not exists recipes (
   category  text,
   yield_portions numeric,
   portion_weight numeric,      -- portion weight (g) per cover (from MBL import)
+  method    text,              -- recipe steps (shop / restaurant recipe cards)
+  prep_min  int,
+  cook_min  int,
+  sale_price numeric,          -- retail price (shop / restaurant)
   -- menu-builder tags
   course    text,            -- main | vegetable | carb | dairy | fruit | side
   protein   text,            -- chicken | beef | pork | fish | duck | vegetarian | vegan | other

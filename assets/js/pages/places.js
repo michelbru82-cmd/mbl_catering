@@ -29,7 +29,7 @@ PAGES.places = {
         const isActive = p.id === Data.activePlaceId();
         const nMenus = Data.allRaw("menu_days").filter((m) => m.place_id === p.id).length;
         tb.appendChild(h("tr", { class: isActive ? "" : "clickable", onClick: () => { if (!isActive) { Data.setActivePlace(p.id); refresh(); U.toast(p.name); } } }, [
-          h("td", {}, [h("b", {}, p.name), p.name_zh ? h("div", { class: "bilingual-zh zh" }, p.name_zh) : null, isActive ? h("span", { class: "badge badge--ok", style: "margin-left:6px" }, t("active")) : null]),
+          h("td", {}, [h("b", {}, p.name), h("span", { class: "badge", style: "margin-left:6px" }, t(p.type === "shop" ? "typeShop" : "typeCatering")), p.name_zh ? h("div", { class: "bilingual-zh zh" }, p.name_zh) : null, isActive ? h("span", { class: "badge badge--ok", style: "margin-left:6px" }, t("active")) : null]),
           h("td", { class: "num" }, p.covers || 0),
           h("td", { class: "num" }, nMenus),
           h("td", {}, [
@@ -52,12 +52,21 @@ PAGES.places = {
       const nameZh = h("input", { class: "input zh", value: p.name_zh || "" }); f.name_zh = nameZh;
       const covers = mk("covers", { class: "input num", type: "number", min: "0", step: "1" });
       const useByDays = h("input", { class: "input num", type: "number", min: "0", step: "1", value: p.use_by_days == null ? 2 : p.use_by_days }); f.use_by_days = useByDays;
+      const typeSel = h("select", { class: "input" }, [
+        h("option", { value: "catering", selected: (p.type || "catering") === "catering" }, t("typeCatering")),
+        h("option", { value: "shop", selected: p.type === "shop" }, t("typeShop")),
+      ]); f.type = typeSel;
+      const foodCost = h("input", { class: "input num", type: "number", min: "1", max: "100", step: "1", value: p.food_cost_pct == null ? 30 : p.food_cost_pct }); f.food_cost_pct = foodCost;
       const fld = (label, node) => h("div", { class: "field" }, [h("label", {}, label), node]);
       const form = h("div", {}, [
         h("div", { class: "row" }, [
           fld(t("name"), nameEn), fld(t("name_zh"), nameZh),
+          h("div", { class: "field", style: "flex:0 0 170px" }, [h("label", {}, t("placeType")), typeSel]),
+        ]),
+        h("div", { class: "row" }, [
           h("div", { class: "field", style: "flex:0 0 110px" }, [h("label", {}, t("covers")), covers]),
           h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, t("useByDays")), useByDays]),
+          h("div", { class: "field", style: "flex:0 0 170px" }, [h("label", {}, t("foodCostPct")), foodCost]),
         ]),
         h("div", { class: "small muted", style: "margin:8px 0 2px;font-weight:600" }, t("companyInfo")),
         h("div", { class: "row" }, [
@@ -79,8 +88,10 @@ PAGES.places = {
         wide: true,
         async onSave() {
           const payload = {
-            name: f.name.value.trim(), name_zh: f.name_zh.value.trim(), covers: f.covers.value === "" ? 0 : Number(f.covers.value),
+            name: f.name.value.trim(), name_zh: f.name_zh.value.trim(), type: f.type.value,
+            covers: f.covers.value === "" ? 0 : Number(f.covers.value),
             use_by_days: f.use_by_days.value === "" ? 2 : Number(f.use_by_days.value),
+            food_cost_pct: f.food_cost_pct.value === "" ? 30 : Number(f.food_cost_pct.value),
             representative: f.representative.value.trim(), tax_number: f.tax_number.value.trim(), email: f.email.value.trim(),
             phone: f.phone.value.trim(), address: f.address.value.trim(), delivery_site: f.delivery_site.value.trim(),
           };
