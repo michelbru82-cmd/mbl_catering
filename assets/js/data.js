@@ -124,6 +124,17 @@
       return out;
     },
 
+    // ingredient cost per cover for a recipe (needs ingredient.price_per_kg + item grams)
+    recipeCost(recipe) {
+      if (!recipe) return null;
+      let c = 0, any = false;
+      (recipe.items || []).forEach((it) => {
+        const ing = it.ingredient_id && this.get("ingredients", it.ingredient_id);
+        if (ing && ing.price_per_kg != null && it.grams != null) { c += (it.grams / 1000) * ing.price_per_kg; any = true; }
+      });
+      return any ? Math.round(c * 100) / 100 : null;
+    },
+
     recipeAllergens(recipe) {
       const set = new Set(recipe.allergen_ids || []);
       (recipe.items || []).forEach((it) => {

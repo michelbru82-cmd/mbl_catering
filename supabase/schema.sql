@@ -33,6 +33,7 @@ create table if not exists ingredients (
   sugar     numeric,
   fiber     numeric,
   salt      numeric,
+  price_per_kg numeric,        -- ingredient cost per kg (for recipe costing)
   allergen_ids jsonb default '[]'::jsonb
 );
 
@@ -84,12 +85,17 @@ create table if not exists subscribers (
 -- app settings (e.g. the menu-builder configuration, id = 'menu_config')
 create table if not exists settings (
   id        text primary key,
+  name      text,
   months    jsonb,
   service_days jsonb,
   weekday   jsonb,
   nutrition jsonb,
   rotation_max int,
   rotation_window_days int,
+  min_repeat_gap int,
+  spread_allergens boolean,
+  keep_existing boolean,
+  max_cost  numeric,
   updated_at timestamptz default now()
 );
 

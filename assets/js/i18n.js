@@ -68,7 +68,10 @@
       shortfall: "Missing recipes", daysBuilt: "days built", slotsUnfilled: "slots unfilled", notApplicable: "Not applicable",
       addRecipesHint: "Add recipes of these types to fill the gaps, then regenerate", builderIntro: "Set the rules, then generate menus for the selected months using only recipes already in your database.",
       chicken: "Chicken", beef: "Beef", pork: "Pork", fish: "Fish", duck: "Duck", vegetarianP: "Vegetarian", veganP: "Vegan", otherP: "Other",
-      course: "Course", cuisineTag: "Cuisine", containsCarb: "Contains carb (carb slot = N/A)", overwriteWarn: "This replaces existing menus for those days.",
+      course: "Course", cuisineTag: "Cuisine", containsCarb: "Contains carb (carb slot = N/A)", overwriteWarn: "This replaces existing menus for those days (unless locked or kept).",
+      profile: "Profile", newProfile: "New profile", optionsLbl: "Options", minGap: "Min days between repeats",
+      spreadAllergens: "Spread allergens (avoid same allergen back-to-back)", keepExisting: "Keep existing menus (only fill empty days)",
+      maxCostLbl: "Max cost / cover", importDishes: "Import past-menu dishes as recipes", lockDay: "Lock", imported: "recipes imported", kept: "kept",
       localMode: "Local demo mode — edits are saved in this browser only. Connect Supabase in config.js to go live.",
     },
     zh: {
@@ -128,7 +131,10 @@
       shortfall: "缺少的食譜", daysBuilt: "天已建立", slotsUnfilled: "空格未填", notApplicable: "不適用",
       addRecipesHint: "請新增這些類型的食譜以補齊缺口，然後重新產生", builderIntro: "設定規則後，系統只會使用資料庫中既有的食譜為所選月份產生菜單。",
       chicken: "雞肉", beef: "牛肉", pork: "豬肉", fish: "魚", duck: "鴨肉", vegetarianP: "素食", veganP: "純素", otherP: "其他",
-      course: "餐別", cuisineTag: "菜系", containsCarb: "含澱粉（澱粉格 = 不適用）", overwriteWarn: "這將取代這些日期既有的菜單。",
+      course: "餐別", cuisineTag: "菜系", containsCarb: "含澱粉（澱粉格 = 不適用）", overwriteWarn: "這將取代這些日期既有的菜單（已鎖定或保留者除外）。",
+      profile: "設定檔", newProfile: "新增設定檔", optionsLbl: "選項", minGap: "重複間隔最少天數",
+      spreadAllergens: "分散過敏原（避免連續兩天相同）", keepExisting: "保留現有菜單（僅填補空白日）",
+      maxCostLbl: "每份最高成本", importDishes: "將過往菜單餐點匯入為食譜", lockDay: "鎖定", imported: "道食譜已匯入", kept: "保留",
       localMode: "本機示範模式 — 編輯僅儲存於此瀏覽器。請於 config.js 連接 Supabase 以正式上線。",
     }
   };

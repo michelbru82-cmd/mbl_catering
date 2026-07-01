@@ -74,7 +74,7 @@ window.MenuGen = (function () {
   // ---------- config ----------
   function defaultConfig() {
     return {
-      id: "menu_config",
+      id: "menu_config", name: "Default",
       weekday: {
         mon: { protein: "chicken", cuisine: "western" },
         tue: { protein: "beef", cuisine: "western" },
@@ -85,21 +85,31 @@ window.MenuGen = (function () {
         sun: { protein: "any", cuisine: "any" },
       },
       service_days: ["mon", "tue", "wed", "thu", "fri"],
-      nutrition: {}, // { kcal:{min,max,required}, ... }
+      nutrition: {},            // { kcal:{min,max,required}, ... }
       rotation_max: 4,          // max appearances within the window
       rotation_window_days: 60, // ~2 months
+      min_repeat_gap: 7,        // min days before a dish may repeat
+      spread_allergens: true,   // avoid same allergen on consecutive days
+      keep_existing: true,      // don't overwrite days that already have a menu
+      max_cost: null,           // optional max ingredient cost per cover (NT$)
     };
   }
-  function getConfig() {
-    const c = Data.get("settings", "menu_config");
-    if (!c) return defaultConfig();
-    // merge to be resilient to new fields
+  function mergeConfig(c) {
     const d = defaultConfig();
     return Object.assign(d, c, { weekday: Object.assign(d.weekday, c.weekday || {}), nutrition: c.nutrition || {} });
   }
-  async function saveConfig(cfg) {
-    cfg.id = "menu_config";
-    if (Data.get("settings", "menu_config")) return Data.update("settings", "menu_config", cfg);
+  function getConfig(id) {
+    const c = Data.get("settings", id || "menu_config");
+    return c ? mergeConfig(c) : defaultConfig();
+  }
+  function listProfiles() {
+    const rows = Data.all("settings").filter((s) => s.id === "menu_config" || String(s.id).startsWith("cfg_"));
+    if (!rows.some((r) => r.id === "menu_config")) rows.unshift(defaultConfig());
+    return rows.map((r) => ({ id: r.id, name: r.name || (r.id === "menu_config" ? "Default" : r.id) }));
+  }
+  async function saveConfig(cfg, id) {
+    cfg.id = id || cfg.id || "menu_config";
+    if (Data.get("settings", cfg.id)) return Data.update("settings", cfg.id, cfg);
     return Data.create("settings", cfg);
   }
 
@@ -118,8 +128,11 @@ window.MenuGen = (function () {
 
   // ---------- generation ----------
   // months: array of "YYYY-MM"; cfg: config object; returns {days, shortfalls, report}
-  function generate(months, cfg) {
+  // months: ["YYYY-MM"]; opts.lockedDays: {date: slots} kept verbatim on regenerate
+  function generate(months, cfg, opts) {
     cfg = cfg || getConfig();
+    opts = opts || {};
+    const locked = opts.lockedDays || {};
     const service = cfg.service_days || ["mon", "tue", "wed", "thu", "fri"];
     const dates = [].concat(...months.map(datesInMonth)).filter((iso) => service.includes(weekdayKey(iso))).sort();
 
@@ -127,28 +140,29 @@ window.MenuGen = (function () {
     const lastUsed = {};     // recipeId -> index (variety)
     const cap = cfg.rotation_max || 999;
     const windowMs = (cfg.rotation_window_days || 60) * 86400000;
+    const gapMs = (cfg.min_repeat_gap || 0) * 86400000;
 
-    const mains = poolFor("main");
-    const vegPool = poolFor("vegetable");
-    const carbPool = poolFor("carb");
-    const dairyPool = poolFor("dairy");
-    const fruitPool = poolFor("fruit");
-    const sidePool = poolFor("side");
+    const mains = poolFor("main"), vegPool = poolFor("vegetable"), carbPool = poolFor("carb"),
+      dairyPool = poolFor("dairy"), fruitPool = poolFor("fruit"), sidePool = poolFor("side");
 
-    const shortfalls = {}; // key -> count of days that couldn't be filled
+    const shortfalls = {};
     const addShort = (k) => (shortfalls[k] = (shortfalls[k] || 0) + 1);
 
-    function withinCap(r, iso) {
-      const list = usage[r.id] || [];
-      const t = Date.parse(iso);
-      const recent = list.filter((d) => Math.abs(Date.parse(d) - t) <= windowMs);
-      return recent.length < cap;
-    }
-    // pick best candidate: satisfies filter, under cap, most "rested" (least/oldest use), avoid `avoid` ids
-    function pick(pool, iso, filterFn, avoid, idx) {
-      let cands = pool.filter((r) => (!filterFn || filterFn(r)) && withinCap(r, iso) && !(avoid || []).includes(r.id));
+    const recentUse = (r, iso) => { const t = Date.parse(iso); return (usage[r.id] || []).filter((d) => Math.abs(Date.parse(d) - t) <= windowMs).length; };
+    const withinCap = (r, iso) => recentUse(r, iso) < cap;
+    const tooSoon = (r, iso) => { if (!gapMs) return false; const t = Date.parse(iso); return (usage[r.id] || []).some((d) => Math.abs(Date.parse(d) - t) < gapMs); };
+    const allergensOf = (r) => r ? Data.recipeAllergens(r) : [];
+
+    // pick best candidate: satisfies filter, under cap, respects repeat-gap, spreads allergens, most "rested"
+    function pick(pool, iso, filterFn, avoid, prevAlg) {
+      let cands = pool.filter((r) => (!filterFn || filterFn(r)) && withinCap(r, iso) && !tooSoon(r, iso) && !(avoid || []).includes(r.id));
+      if (!cands.length) cands = pool.filter((r) => (!filterFn || filterFn(r)) && withinCap(r, iso) && !(avoid || []).includes(r.id)); // relax gap
       if (!cands.length) return null;
       cands.sort((a, b) => {
+        if (cfg.spread_allergens && prevAlg && prevAlg.length) {
+          const oa = allergensOf(a).filter((x) => prevAlg.includes(x)).length, ob = allergensOf(b).filter((x) => prevAlg.includes(x)).length;
+          if (oa !== ob) return oa - ob;
+        }
         const ua = (usage[a.id] || []).length, ub = (usage[b.id] || []).length;
         if (ua !== ub) return ua - ub;
         const la = lastUsed[a.id] == null ? -1 : lastUsed[a.id], lb = lastUsed[b.id] == null ? -1 : lastUsed[b.id];
@@ -159,57 +173,96 @@ window.MenuGen = (function () {
     }
     function use(r, iso, idx) { if (!r) return; (usage[r.id] = usage[r.id] || []).push(iso); lastUsed[r.id] = idx; }
     const slotObj = (r) => r ? { name_en: r.name_en, recipe_id: r.id } : null;
+    const countSlots = (slots, iso, idx) => ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((k) => { const s = slots[k]; if (s && s.recipe_id) use(Data.get("recipes", s.recipe_id), iso, idx); });
 
+    let prevAlg = [];
     const days = dates.map((iso, idx) => {
       const wk = weekdayKey(iso);
+
+      // keep an existing menu untouched
+      if (cfg.keep_existing && !locked[iso]) {
+        const ex = Data.menuForDate(iso);
+        if (ex && ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].some((k) => ex.slots[k])) {
+          countSlots(ex.slots, iso, idx); prevAlg = Data.dayAllergens(ex);
+          return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: dayNutrition(ex.slots), violations: [] };
+        }
+      }
+      // a day the user locked in the preview
+      if (locked[iso]) {
+        countSlots(locked[iso], iso, idx); const nut = dayNutrition(locked[iso]); prevAlg = unionAllergens(locked[iso]);
+        return { date: iso, weekday: wk, slots: locked[iso], locked: true, nutrition: nut, cost: dayCost(locked[iso]), violations: checkNutrition(nut, cfg.nutrition) };
+      }
+
       const rule = (cfg.weekday && cfg.weekday[wk]) || { protein: "any", cuisine: "any" };
       const slots = {};
-
-      // MAIN by protein + cuisine
       const mainFilter = (r) => {
         const tg = tags(r);
         if (rule.protein && rule.protein !== "any" && tg.protein !== rule.protein) return false;
         if (rule.cuisine && rule.cuisine !== "any" && tg.cuisine !== rule.cuisine) return false;
         return true;
       };
-      const main = pick(mains, iso, mainFilter, [], idx);
-      slots.meat = slotObj(main);
-      if (!main) addShort(`main · ${rule.protein}/${rule.cuisine}`);
-      use(main, iso, idx);
+      const main = pick(mains, iso, mainFilter, [], prevAlg);
+      slots.meat = slotObj(main); if (!main) addShort(`main · ${rule.protein}/${rule.cuisine}`); use(main, iso, idx);
 
-      // CARB — "not applicable" if the main already includes a carb
-      if (main && tags(main).contains_carb) {
-        slots.carb = { name_en: "Not applicable", recipe_id: null, na: true };
-      } else {
-        const carb = pick(carbPool, iso, null, [], idx);
-        slots.carb = slotObj(carb); if (!carb) addShort("carb"); use(carb, iso, idx);
-      }
+      if (main && tags(main).contains_carb) slots.carb = { name_en: "Not applicable", recipe_id: null, na: true };
+      else { const carb = pick(carbPool, iso, null, [], prevAlg); slots.carb = slotObj(carb); if (!carb) addShort("carb"); use(carb, iso, idx); }
 
-      // VEG 1 & 2 (distinct)
-      const v1 = pick(vegPool, iso, null, [], idx); slots.veg1 = slotObj(v1); if (!v1) addShort("vegetable"); use(v1, iso, idx);
-      const v2 = pick(vegPool, iso, null, v1 ? [v1.id] : [], idx); slots.veg2 = slotObj(v2); if (!v2) addShort("vegetable"); use(v2, iso, idx);
+      const v1 = pick(vegPool, iso, null, [], prevAlg); slots.veg1 = slotObj(v1); if (!v1) addShort("vegetable"); use(v1, iso, idx);
+      const v2 = pick(vegPool, iso, null, v1 ? [v1.id] : [], prevAlg); slots.veg2 = slotObj(v2); if (!v2) addShort("vegetable"); use(v2, iso, idx);
+      const da = pick(dairyPool, iso, null, [], prevAlg); slots.dairy = slotObj(da); if (!da) addShort("dairy"); use(da, iso, idx);
+      const fr = pick(fruitPool, iso, null, [], prevAlg); slots.fruit = slotObj(fr); if (!fr) addShort("fruit/cake"); use(fr, iso, idx);
+      const si = pick(sidePool, iso, null, [], prevAlg); slots.side = slotObj(si); if (si) use(si, iso, idx);
 
-      // DAIRY, FRUIT, SIDE
-      const da = pick(dairyPool, iso, null, [], idx); slots.dairy = slotObj(da); if (!da) addShort("dairy"); use(da, iso, idx);
-      const fr = pick(fruitPool, iso, null, [], idx); slots.fruit = slotObj(fr); if (!fr) addShort("fruit/cake"); use(fr, iso, idx);
-      const si = pick(sidePool, iso, null, [], idx); slots.side = slotObj(si); if (si) use(si, iso, idx); // side optional
-
-      // nutrition check (only where macro data exists)
-      const nut = dayNutrition(slots);
-      const viol = checkNutrition(nut, cfg.nutrition);
-
-      return { date: iso, weekday: wk, slots, nutrition: nut, violations: viol };
+      const nut = dayNutrition(slots); const viol = checkNutrition(nut, cfg.nutrition);
+      const cost = dayCost(slots);
+      if (cfg.max_cost != null && cost != null && cost > cfg.max_cost) viol.push({ key: "cost", type: "max", value: Math.round(cost), limit: cfg.max_cost, required: true });
+      prevAlg = unionAllergens(slots);
+      return { date: iso, weekday: wk, slots, nutrition: nut, cost, violations: viol };
     });
 
-    // shortfall report
-    const totalSlots = days.length * 6;
-    const unfilled = days.reduce((n, d) => n + ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].filter((k) => !d.slots[k] || (!d.slots[k].recipe_id && !d.slots[k].na)).length, 0);
-    const needed = neededRecipes(shortfalls, cfg);
-
+    const filledCount = (d) => ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].filter((k) => { const s = d.slots[k]; return s && (s.na || s.recipe_id || s.name_en); }).length;
+    const unfilled = days.reduce((n, d) => n + (6 - filledCount(d)), 0);
     return {
       days, shortfalls,
-      report: { days: days.length, totalSlots, unfilled, needed, poolSizes: { main: mains.length, vegetable: vegPool.length, carb: carbPool.length, dairy: dairyPool.length, fruit: fruitPool.length, side: sidePool.length } },
+      report: { days: days.length, totalSlots: days.length * 6, unfilled, needed: neededRecipes(shortfalls, cfg),
+        poolSizes: { main: mains.length, vegetable: vegPool.length, carb: carbPool.length, dairy: dairyPool.length, fruit: fruitPool.length, side: sidePool.length } },
     };
+  }
+
+  function unionAllergens(slots) {
+    const set = new Set();
+    ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((k) => { const s = slots[k]; if (s && s.recipe_id) { const r = Data.get("recipes", s.recipe_id); if (r) Data.recipeAllergens(r).forEach((a) => set.add(a)); } });
+    return [...set];
+  }
+  function dayCost(slots) {
+    let c = 0, any = false;
+    ["meat", "veg1", "veg2", "carb", "dairy", "fruit", "side"].forEach((k) => { const s = slots[k]; if (s && s.recipe_id) { const rc = Data.recipeCost(Data.get("recipes", s.recipe_id)); if (rc != null) { c += rc; any = true; } } });
+    return any ? Math.round(c * 100) / 100 : null;
+  }
+
+  // ---- import past-menu dishes as recipes (fills thin veg/carb/dairy/fruit/side pools) ----
+  async function importMenuDishes() {
+    const SLOT_COURSE = { meat: "main", veg1: "vegetable", veg2: "vegetable", carb: "carb", dairy: "dairy", fruit: "fruit", side: "side" };
+    const existing = new Set(Data.all("recipes").map((r) => norm(r.name_en)));
+    const seen = new Map(); // norm -> {name_en, course}
+    Data.all("menu_days").forEach((d) => {
+      Object.keys(SLOT_COURSE).forEach((k) => {
+        const s = d.slots && d.slots[k];
+        if (!s || !s.name_en || s.na) return;
+        const key = norm(s.name_en);
+        if (existing.has(key) || seen.has(key)) return;
+        seen.set(key, { name_en: s.name_en, course: SLOT_COURSE[k] });
+      });
+    });
+    let created = 0;
+    for (const { name_en, course } of seen.values()) {
+      await Data.create("recipes", {
+        name_en, name_zh: "", category: "", items: [], allergen_ids: [],
+        course, protein: deriveProtein(name_en, ""), cuisine: deriveCuisine(name_en, ""), contains_carb: containsCarb(name_en),
+      });
+      created++;
+    }
+    return { created, byCourse: [...seen.values()].reduce((m, x) => (m[x.course] = (m[x.course] || 0) + 1, m), {}) };
   }
 
   // how many recipes to add, per bucket (distinct days needing that bucket → rough count)
@@ -251,5 +304,5 @@ window.MenuGen = (function () {
     return viol;
   }
 
-  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, getConfig, saveConfig, generate, poolFor, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
+  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, getConfig, listProfiles, saveConfig, generate, importMenuDishes, poolFor, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
 })();

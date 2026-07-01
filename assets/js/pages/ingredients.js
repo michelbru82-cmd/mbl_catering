@@ -117,7 +117,10 @@ function ingredientForm(i) {
       h("div", { class: "field" }, [h("label", {}, t("name_en")), mk("name_en")]),
       h("div", { class: "field" }, [h("label", {}, t("name_zh")), mk("name_zh")]),
     ]),
-    h("div", { class: "field" }, [h("label", {}, t("supplier")), mk("supplier")]),
+    h("div", { class: "row" }, [
+      h("div", { class: "field" }, [h("label", {}, t("supplier")), mk("supplier")]),
+      h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, (window.MBL_CONFIG.CURRENCY || "NT$") + " / kg"), mk("price_per_kg", "number")]),
+    ]),
     h("div", { class: "small muted", style: "margin:6px 0" }, t("per100")),
     h("div", { class: "row" }, [
       fld(t("kcal"), mk("kcal", "number")), fld(t("protein"), mk("protein", "number")),
@@ -137,7 +140,7 @@ function ingredientForm(i) {
       const payload = {
         name_en: f.name_en.value.trim(), name_zh: f.name_zh.value.trim(), supplier: f.supplier.value.trim(),
         kcal: num("kcal"), protein: num("protein"), carbs: num("carbs"), fat: num("fat"),
-        sugar: num("sugar"), fiber: num("fiber"), salt: num("salt"), allergen_ids: picker._get(),
+        sugar: num("sugar"), fiber: num("fiber"), salt: num("salt"), price_per_kg: num("price_per_kg"), allergen_ids: picker._get(),
       };
       if (!payload.name_en) { U.toast(t("name_en") + "?", true); return false; }
       if (isNew) await Data.create("ingredients", payload); else await Data.update("ingredients", i.id, payload);
