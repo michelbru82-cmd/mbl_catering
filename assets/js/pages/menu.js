@@ -30,7 +30,7 @@ PAGES.menu = {
       const rows = SLOTS.map(([k, label]) => {
         const s = d.slots[k];
         return h("div", { style: "display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px" }, [
-          h("span", { class: "badge badge--cat", style: "flex:0 0 74px;justify-content:center;align-self:flex-start" }, label),
+          h("span", { class: "badge badge--cat", style: "flex:0 0 84px;justify-content:flex-start;text-align:left;align-self:flex-start" }, label),
           h("div", { style: "flex:1;min-width:0" }, s
             ? [h("span", {}, s.name_en), s.recipe_id ? h("span", { class: "small", title: "linked recipe" }, " 🔗") : null]
             : h("span", { class: "muted" }, "—")),
