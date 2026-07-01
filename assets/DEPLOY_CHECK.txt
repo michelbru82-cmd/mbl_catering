@@ -1,0 +1,3 @@
+MBL-DEPLOY-OK-7Q2X9
+This file only exists in the macro-import build.
+If you can read this at fbws.tw, the git deploy reaches your live site.
