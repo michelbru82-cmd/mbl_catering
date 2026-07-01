@@ -44,6 +44,7 @@
       recipeCards: "Recipe cards", priceList: "Menu / price list", batchQty: "Batch (qty)", qtyForBatch: "Qty for batch", onlyPriced: "Only priced items",
       shopFields: "Shop / restaurant", yieldPortions: "Yield (portions)", prepMin: "Prep (min)", cookMin: "Cook (min)", salePrice: "Sale price", method: "Method / steps",
       methodHint: "One step per line…", costPortion: "Cost / portion", suggestedPrice: "Suggested price", margin: "Margin",
+      allergenMatrix: "Allergen matrix", showQR: "QR code",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -137,6 +138,7 @@
       recipeCards: "食譜卡", priceList: "菜單／價目表", batchQty: "批量（數量）", qtyForBatch: "批量用量", onlyPriced: "僅顯示有定價",
       shopFields: "商店／餐廳", yieldPortions: "產出（份）", prepMin: "準備（分）", cookMin: "烹調（分）", salePrice: "售價", method: "作法／步驟",
       methodHint: "每行一個步驟…", costPortion: "每份成本", suggestedPrice: "建議售價", margin: "毛利",
+      allergenMatrix: "過敏原對照表", showQR: "QR 碼",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",

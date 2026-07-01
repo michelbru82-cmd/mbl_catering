@@ -10,7 +10,7 @@ PAGES.labels = {
     const menuDates = Data.all("menu_days").map((d) => d.date).sort();
     const initDate = menuDates.includes(U.TODAY) ? U.TODAY : (menuDates.find((d) => d >= U.TODAY) || U.TODAY);
     // default: landscape 12 cm × 5.2 cm
-    const state = { scope: "day", date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, showIngr: true, selected: new Set() };
+    const state = { scope: "day", date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, showIngr: true, showQR: true, selected: new Set() };
 
     // ---- controls ----
     const scopeSel = h("select", { class: "input", onChange: (e) => { state.scope = e.target.value; render(); } },
@@ -46,6 +46,7 @@ PAGES.labels = {
     const nutChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showNut, onChange: (e) => { state.showNut = e.target.checked; render(); } }), t("showNutrition")]);
     const algChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showAlg, onChange: (e) => { state.showAlg = e.target.checked; render(); } }), t("showAllergens")]);
     const ingrChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showIngr, onChange: (e) => { state.showIngr = e.target.checked; render(); } }), t("showIngredients")]);
+    const qrChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [h("input", { type: "checkbox", checked: state.showQR, onChange: (e) => { state.showQR = e.target.checked; render(); } }), t("showQR")]);
 
     const isShop = Data.activePlaceType() === "shop";
     view.appendChild(searchList);
@@ -54,7 +55,7 @@ PAGES.labels = {
       h("span", { class: "small muted" }, t("orientation")), orientSel, presetSel,
       h("span", { class: "small muted" }, t("widthCm")), widthI,
       h("span", { class: "small muted" }, t("heightCm")), heightI,
-      nutChk, algChk, ingrChk,
+      nutChk, algChk, ingrChk, qrChk,
       h("div", { style: "flex:1" }),
       h("button", { class: "btn btn--primary", onClick: () => window.print() }, "🖨 " + t("print")),
     ]));
@@ -131,16 +132,36 @@ PAGES.labels = {
       return box;
     }
 
+    function qrImg(text, mm) {
+      if (!window.qrcode) return null;
+      try {
+        const qr = window.qrcode(0, "M"); qr.addData(text); qr.make();
+        const img = h("img", { class: "fl-qr", alt: "QR", src: qr.createDataURL(4, 0) });
+        img.style.width = mm + "mm"; img.style.height = mm + "mm";
+        return img;
+      } catch (e) { return null; }
+    }
+
     function labelEl(r, dateStr) {
       dateStr = dateStr || state.date;
       const nut = Data.recipeNutrition(r);
       const algs = Data.recipeAllergens(r);
       const portion = (r.items || []).reduce((s, it) => s + (it.grams != null ? it.grams : 0), 0);
       const place = Data.activePlace() || {};
+      const useByDays = place.use_by_days != null ? place.use_by_days : 2;
+      const useBy = U.isoAddDays(dateStr, useByDays);
+      const qrText = [
+        r.name_en, r.name_zh || null,
+        (algs.length ? t("contains") + ": " + algs.map((a) => Data.allergenName(a)).join(", ") : t("noAllergens")),
+        t("preparedOn") + " " + U.fmtDate(dateStr) + " · " + t("useBy") + " " + U.fmtDate(useBy),
+        place.name || null,
+      ].filter(Boolean).join("\n");
+      const qr = state.showQR ? qrImg(qrText, state.hh > state.w ? 16 : 14) : null;
+
       const card = h("div", { class: "food-label" + (state.hh > state.w ? " fl-portrait" : ""), style: `--lw:${state.w}cm;--lh:${state.hh}cm` });
       card.appendChild(h("div", { class: "fl-head" }, [
         h("div", { class: "fl-title" }, [h("div", { class: "fl-name" }, r.name_en), r.name_zh ? h("div", { class: "fl-name-zh zh" }, r.name_zh) : null]),
-        place.name ? h("div", { class: "fl-brand" }, place.name) : null,
+        h("div", { class: "fl-headright" }, [place.name ? h("div", { class: "fl-brand" }, place.name) : null, qr]),
       ]));
       card.appendChild(h("div", { class: "fl-rule" }));
       const ingrNames = (r.items || []).slice().sort((a, b) => (b.grams || 0) - (a.grams || 0)).map((it) => it.name_en).filter(Boolean);
@@ -155,8 +176,6 @@ PAGES.labels = {
       card.appendChild(h("div", { class: "fl-body" }, body));
       // ingredients: full-width line below the allergens (always has room to wrap)
       if (state.showIngr && ingrNames.length) card.appendChild(h("div", { class: "fl-ingr" }, [h("b", {}, t("ingredients") + ": "), ingrNames.join(", ")]));
-      const useByDays = place.use_by_days != null ? place.use_by_days : 2;
-      const useBy = U.isoAddDays(dateStr, useByDays);
       card.appendChild(h("div", { class: "fl-dates" }, [
         h("span", {}, [h("b", {}, t("preparedOn") + ": "), U.fmtDate(dateStr)]),
         h("span", {}, [h("b", {}, t("useBy") + ": "), U.fmtDate(useBy)]),

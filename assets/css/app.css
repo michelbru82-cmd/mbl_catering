@@ -262,3 +262,5 @@ table.data tr.clickable { cursor: pointer; }
 .food-label .fl-fresh{font-size:clamp(6px,2.1mm,10px);color:#0a6b52;font-weight:600;margin-top:.4mm;line-height:1.15}
 .food-label .fl-allergens{font-weight:700}
 .food-label .fl-ingr{margin-top:1mm}
+.food-label .fl-headright{display:flex;flex-direction:column;align-items:flex-end;gap:1mm;flex:0 0 auto}
+.food-label .fl-qr{display:block;image-rendering:pixelated}
