@@ -106,6 +106,20 @@ jobs:
           echo -n "ORIGIN index.html asset version: "; grep -o 'ingredients.js?v=[0-9]*' /tmp/live_index.html | head -1 || echo "(none)"
           echo -n "live ingredients.js bytes: "; wc -c < /tmp/live_ingredients.js 2>/dev/null || echo "?"
 
+      - name: Probe Supabase (temporary)
+        run: |
+          SB="https://mmmjpkkvqfjegyawrisg.supabase.co/rest/v1"
+          KEY="sb_publishable_aBheAvlkuLo_R_ipfO7O1Q_BEEJQ9Zr"
+          for t in places recipes ingredients menu_days allergens sites; do
+            echo "=== $t ==="
+            code=$(curl -sS -m 25 -o /tmp/body -w "%{http_code}" "$SB/$t?select=id" \
+              -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+              -H "Prefer: count=exact" -H "Range: 0-0" -D /tmp/hdr || echo "000")
+            echo "HTTP $code"
+            grep -i "content-range" /tmp/hdr | tr -d '\r' || echo "(no content-range)"
+            echo -n "body: "; head -c 240 /tmp/body; echo
+          done
+
       - name: Probe LIVE fbws.tw (identify the real origin / CDN)
         run: |
           echo "=== DNS: where does fbws.tw resolve? ==="
