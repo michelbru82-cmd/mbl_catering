@@ -53,6 +53,23 @@ jobs:
           PORT: ${{ secrets.FTP_PORT != '' && secrets.FTP_PORT || '22' }}
           DIR:  ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/htdocs/mbl_catering' }}
         run: |
+          echo "==> Deploying to '$DIR' on $HOST:$PORT"
+          # 1) Diagnostics + ensure target dir exists (never fails the job)
+          lftp <<EOF || echo "(mkdir/diagnostic step returned non-zero — continuing)"
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 25
+          open sftp://$HOST:$PORT
+          user "$USER" "$PASS"
+          echo "--- remote pwd (where SFTP lands) ---"
+          pwd
+          echo "--- listing of SFTP root '/' ---"
+          cls -l /
+          echo "--- creating target dir ---"
+          mkdir -p "$DIR"
+          bye
+          EOF
+          # 2) Upload (this step is authoritative — fails the job on real errors)
           lftp <<EOF
           set sftp:auto-confirm yes
           set net:max-retries 2
@@ -60,7 +77,6 @@ jobs:
           set net:persist-retries 2
           open sftp://$HOST:$PORT
           user "$USER" "$PASS"
-          mkdir -f -p "$DIR"
           mirror -R --no-perms --verbose --parallel=3 ./dist/ "$DIR"
           bye
           EOF
