@@ -126,6 +126,53 @@ window.MenuGen = (function () {
   // ---------- pools ----------
   function poolFor(course) { return Data.all("recipes").filter((r) => tags(r).course === course); }
 
+  // ---------- booster library ----------
+  // Balanced dishes (built from real ingredients) spanning a wide calorie range per
+  // course, so the builder can always hit a min/max target. Added to the database only
+  // on explicit user permission (see the menu-builder "add recipes" flow). items: [ingredientId, grams].
+  const BOOSTER = [
+    { name_en: "Herb-Steamed Chicken Breast", name_zh: "香草蒸雞胸肉", course: "main", items: [["chicken-breast-without-skin", 150]] },
+    { name_en: "Seared Beef Sirloin", name_zh: "香煎沙朗牛排", course: "main", items: [["beef-sirloin", 150]] },
+    { name_en: "Chicken & Mushroom Sauté", name_zh: "蘑菇炒雞肉", course: "main", items: [["chicken-breast-without-skin", 130], ["paris-mushrooms", 60], ["olive-oil-evoo", 8]] },
+    { name_en: "Slow-Braised Pork Belly", name_zh: "慢燉五花肉", course: "main", items: [["pork-belly", 150]] },
+    { name_en: "Steamed Brown Rice (small)", name_zh: "糙米飯（小份）", course: "carb", items: [["brown-rice", 55]] },
+    { name_en: "Steamed Brown Rice", name_zh: "糙米飯", course: "carb", items: [["brown-rice", 90]] },
+    { name_en: "Herbed Couscous", name_zh: "香草北非小米", course: "carb", items: [["couscous", 70]] },
+    { name_en: "Buttered Fusilli", name_zh: "奶油螺旋麵", course: "carb", items: [["fusilli", 110], ["butter", 12]] },
+    { name_en: "Steamed Broccoli", name_zh: "清蒸青花菜", course: "vegetable", items: [["broccolis", 120]] },
+    { name_en: "Garden Salad", name_zh: "田園沙拉", course: "vegetable", items: [["green-salad", 100], ["cherry-tomatoes", 30]] },
+    { name_en: "Sautéed Mushrooms in Olive Oil", name_zh: "橄欖油炒蘑菇", course: "vegetable", items: [["paris-mushrooms", 100], ["olive-oil-evoo", 10]] },
+    { name_en: "Plain Yoghurt Cup", name_zh: "原味優格", course: "dairy", items: [["fresh-delight-yoghurt", 100]] },
+    { name_en: "Edam Cheese Portion", name_zh: "艾登起司", course: "dairy", items: [["edam-cheese", 40]] },
+    { name_en: "Comté Cheese Portion", name_zh: "康提起司", course: "dairy", items: [["comte-cheese", 45]] },
+    { name_en: "Fresh Apple", name_zh: "蘋果", course: "fruit", items: [["apples", 130]] },
+    { name_en: "Fresh Banana", name_zh: "香蕉", course: "fruit", items: [["banana-school", 120]] },
+    { name_en: "Pineapple Slices", name_zh: "鳳梨片", course: "fruit", items: [["pineapple", 130]] },
+    { name_en: "Green Side Salad", name_zh: "綠沙拉", course: "side", items: [["green-salad", 120]] },
+    { name_en: "Garlic Baguette", name_zh: "蒜香法棍", course: "side", items: [["french-baguette", 55], ["olive-oil-evoo", 7]] },
+  ];
+  // Resolve booster entries against the current ingredient DB (skipping any whose
+  // ingredient is missing), computing kcal + allergens. Returns ready-to-save recipes.
+  function boosterRecipes() {
+    return BOOSTER.map((b) => {
+      const items = b.items.map(([id, grams]) => { const ing = Data.get("ingredients", id); return ing ? { ingredient_id: id, name_en: ing.name_en, name_zh: ing.name_zh || "", grams } : null; });
+      if (items.some((x) => !x)) return null;
+      const alg = new Set(); items.forEach((it) => { const ing = Data.get("ingredients", it.ingredient_id); (ing.allergen_ids || []).forEach((a) => alg.add(a)); });
+      const rec = { name_en: b.name_en, name_zh: b.name_zh, category: "Balanced (added)", course: b.course, contains_carb: false, items, allergen_ids: [...alg] };
+      const n = Data.recipeNutrition(rec); rec.kcal = n && n.kcal != null ? Math.round(n.kcal) : null;
+      return rec;
+    }).filter(Boolean);
+  }
+  // Booster recipes not already present in the DB (by name) — the ones we'd propose to add.
+  function boosterProposals() {
+    const have = new Set(Data.all("recipes").map((r) => norm(r.name_en)));
+    return boosterRecipes().filter((r) => !have.has(norm(r.name_en)));
+  }
+  // Days in a result that still miss the calorie range (kcal violation remains).
+  function kcalGapDays(result) {
+    return (result && result.days ? result.days : []).filter((d) => (d.violations || []).some((v) => v.key === "kcal"));
+  }
+
   // ---------- generation ----------
   // months: array of "YYYY-MM"; cfg: config object; returns {days, shortfalls, report}
   // months: ["YYYY-MM"]; opts.lockedDays: {date: slots} kept verbatim on regenerate
@@ -358,5 +405,5 @@ window.MenuGen = (function () {
     return viol;
   }
 
-  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, getConfig, listProfiles, saveConfig, generate, importMenuDishes, poolFor, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
+  return { tags, deriveProtein, deriveCuisine, deriveCourse, containsCarb, defaultConfig, getConfig, listProfiles, saveConfig, generate, importMenuDishes, poolFor, boosterRecipes, boosterProposals, kcalGapDays, PROTEINS, NUTRIENTS, COURSES, WD_ORDER };
 })();

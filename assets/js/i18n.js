@@ -24,6 +24,11 @@
       addedSugar: "Added sugar", sodium: "Sodium", calcium: "Calcium", origin: "Origin",
       kcalShort: "kcal", totalKcalHint: "Total calories of this menu (per cover)",
       partialKcalHint: "Partial — some dishes have no recipe/macro data yet (~ = incomplete)",
+      kcalGapTitle: "Calorie target not fully met", kcalGapDays: "day(s) out of range",
+      proposeRecipes: "Add recipes to fix", noProposals: "All suggested recipes are already in your database",
+      kcalGapHint: "Some days couldn't reach your calorie min/max with the current recipes. I can add balanced dishes (built from your ingredients) to close the gap — you approve them first.",
+      proposeIntro: "These new recipes will be added to your database (with real ingredient macros), then the menus regenerate to meet your calorie range:",
+      addAndRegen: "Add recipes & regenerate", recipesAdded: "recipes added",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -97,6 +102,11 @@
       addedSugar: "添加糖", sodium: "鈉", calcium: "鈣", origin: "產地",
       kcalShort: "大卡", totalKcalHint: "此菜單總熱量（每份）",
       partialKcalHint: "部分：部分菜餚尚無食譜／營養資料（~ 表示不完整）",
+      kcalGapTitle: "未完全符合熱量目標", kcalGapDays: "天超出範圍",
+      proposeRecipes: "新增食譜以修正", noProposals: "建議的食譜皆已在資料庫中",
+      kcalGapHint: "部分日期以現有食譜無法達到您的熱量上下限。我可以新增均衡菜餚（以您的食材製作）來補足——需先經您核准。",
+      proposeIntro: "以下新食譜將加入資料庫（含真實食材營養），接著重新產生菜單以符合您的熱量範圍：",
+      addAndRegen: "新增食譜並重新產生", recipesAdded: "已新增食譜",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",

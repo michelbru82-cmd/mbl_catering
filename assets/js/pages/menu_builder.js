@@ -173,6 +173,46 @@ window.MenuBuilder = (function () {
       ]);
     }
 
+    // ---- calorie gap: offer to add balanced recipes (with permission) ----
+    function proposeRecipes() {
+      const props = MenuGen.boosterProposals();
+      if (!props.length) { U.toast(T("noProposals"), true); return; }
+      const list = H("div", {}, props.map((r) => H("div", { style: "padding:7px 0;border-bottom:1px solid var(--border)" }, [
+        H("div", { style: "display:flex;gap:8px;align-items:baseline;flex-wrap:wrap" }, [
+          H("b", {}, r.name_en), r.name_zh ? H("span", { class: "zh small muted" }, r.name_zh) : null,
+          H("div", { style: "flex:1" }),
+          H("span", { class: "badge badge--cat" }, r.course),
+          H("span", { class: "badge", style: "font-weight:700" }, "🔥 " + (r.kcal == null ? "—" : r.kcal) + " kcal"),
+        ]),
+        H("div", { class: "small muted", style: "margin-top:2px" }, r.items.map((it) => it.name_en + " " + it.grams + "g").join(" · ")),
+      ])));
+      U.modal("➕ " + T("proposeRecipes"), H("div", {}, [H("div", { class: "small", style: "margin-bottom:8px" }, T("proposeIntro")), list]), {
+        wide: true, saveText: "✅ " + T("addAndRegen"),
+        async onSave() {
+          let added = 0;
+          for (const r of props) { const payload = Object.assign({}, r); delete payload.kcal; await Data.create("recipes", payload); added++; }
+          U.toast(added + " " + T("recipesAdded"));
+          const backs = document.querySelectorAll(".modal-backdrop");
+          if (backs[0]) backs[0].remove();   // close the underlying preview modal (this proposal modal closes itself)
+          setTimeout(() => preview(MenuGen.generate(cfg.months, cfg, { lockedDays: locked }), cfg, locked), 40);
+          return true;
+        },
+      });
+    }
+    let gapBox = null;
+    const gapDays = MenuGen.kcalGapDays(result);
+    if (gapDays.length && MenuGen.boosterProposals().length) {
+      gapBox = H("div", { class: "card", style: "margin-bottom:14px;border-color:var(--warn)" }, [
+        H("div", { style: "display:flex;align-items:center;gap:10px;flex-wrap:wrap" }, [
+          H("div", { style: "font-weight:700;color:var(--warn)" }, "🎯 " + T("kcalGapTitle")),
+          H("div", { class: "small muted" }, gapDays.length + " " + T("kcalGapDays")),
+          H("div", { style: "flex:1" }),
+          H("button", { class: "btn btn--sm btn--accent", onClick: () => proposeRecipes() }, "➕ " + T("proposeRecipes")),
+        ]),
+        H("div", { class: "small muted", style: "margin-top:6px" }, T("kcalGapHint")),
+      ]);
+    }
+
     const SLOTS = [["meat", T("meat")], ["veg1", T("veg1")], ["veg2", T("veg2")], ["carb", T("carb")], ["dairy", T("dairy")], ["fruit", T("fruit")], ["side", "Side"]];
     const grid = H("div", { style: "display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));max-height:46vh;overflow:auto;padding:2px" },
       result.days.map((d) => {
@@ -196,7 +236,7 @@ window.MenuBuilder = (function () {
         ]);
       }));
 
-    const body = H("div", {}, [summary, shortBox, grid, H("div", { class: "small muted", style: "margin-top:10px" }, "🔒 lock a day to keep it when you regenerate · ⚠ " + T("overwriteWarn"))]);
+    const body = H("div", {}, [summary, shortBox, gapBox, grid, H("div", { class: "small muted", style: "margin-top:10px" }, "🔒 lock a day to keep it when you regenerate · ⚠ " + T("overwriteWarn"))]);
 
     U.modal("▶ " + T("menuBuilder") + " — " + T("applyToMenu"), body, {
       wide: true, saveText: "✅ " + T("applyToMenu"),
