@@ -51,7 +51,7 @@ jobs:
           USER: ${{ secrets.FTP_USERNAME }}
           PASS: ${{ secrets.FTP_PASSWORD }}
           PORT: ${{ secrets.FTP_PORT != '' && secrets.FTP_PORT || '22' }}
-          DIR:  ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/htdocs/mbl_catering' }}
+          DIR:  ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/lamp0/web/vhosts/fbws.tw/mbl_catering' }}
         run: |
           echo "==> Deploying to '$DIR' on $HOST:$PORT"
           # 1) Diagnostics + ensure target dir exists (never fails the job)
@@ -65,7 +65,11 @@ jobs:
           pwd
           echo "--- listing of SFTP root '/' ---"
           cls -l /
-          echo "--- creating target dir ---"
+          echo "--- /vhosts/ (vhost folders) ---"
+          cls -l /vhosts/
+          echo "--- inside each vhost (look for htdocs / index files) ---"
+          cls -l /vhosts/*/
+          echo "--- attempting mkdir target ($DIR) ---"
           mkdir -p "$DIR"
           bye
           EOF
