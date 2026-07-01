@@ -154,12 +154,13 @@ PAGES.labels = {
       card.appendChild(h("div", { class: "fl-body" }, body));
       // ingredients: full-width line below the allergens (always has room to wrap)
       if (state.showIngr && ingrNames.length) card.appendChild(h("div", { class: "fl-ingr" }, [h("b", {}, t("ingredients") + ": "), ingrNames.join(", ")]));
-      const useBy = U.isoAddDays(dateStr, 2); // 48 h
+      const useByDays = place.use_by_days != null ? place.use_by_days : 2;
+      const useBy = U.isoAddDays(dateStr, useByDays);
       card.appendChild(h("div", { class: "fl-dates" }, [
         h("span", {}, [h("b", {}, t("preparedOn") + ": "), U.fmtDate(dateStr)]),
         h("span", {}, [h("b", {}, t("useBy") + ": "), U.fmtDate(useBy)]),
       ]));
-      card.appendChild(h("div", { class: "fl-fresh" }, "❄ " + t("freshNote")));
+      card.appendChild(h("div", { class: "fl-fresh" }, "❄ " + t("freshNote").replace("{d}", useByDays)));
       card.appendChild(h("div", { class: "fl-foot" }, [h("span", {}, place.name || ""), h("span", {}, t("keepRefrigerated"))]));
       return card;
     }

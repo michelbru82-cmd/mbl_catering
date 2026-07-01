@@ -28,6 +28,7 @@ create table if not exists places (
   name           text not null,
   name_zh        text,
   covers         int default 0,
+  use_by_days    int default 2,   -- label "use by" = production date + N days
   representative text,
   tax_number     text,
   email          text,

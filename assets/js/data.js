@@ -33,9 +33,9 @@
   function ensurePlaces() {
     if (!Array.isArray(cache.places)) cache.places = [];
     if (!cache.places.length) cache.places = [
-      { id: "place_school_abc", name: "School ABC", name_zh: "", covers: 100 },
-      { id: "place_corp_zac", name: "Corporate ZAC", name_zh: "", covers: 50 },
-      { id: "place_corp_fgh", name: "Corporate FGH", name_zh: "", covers: 50 },
+      { id: "place_school_abc", name: "School ABC", name_zh: "", covers: 100, use_by_days: 2 },
+      { id: "place_corp_zac", name: "Corporate ZAC", name_zh: "", covers: 50, use_by_days: 2 },
+      { id: "place_corp_fgh", name: "Corporate FGH", name_zh: "", covers: 50, use_by_days: 2 },
     ];
   }
   function migratePlaces() {

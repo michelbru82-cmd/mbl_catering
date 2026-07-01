@@ -51,11 +51,13 @@ PAGES.places = {
       const nameEn = mk("name");
       const nameZh = h("input", { class: "input zh", value: p.name_zh || "" }); f.name_zh = nameZh;
       const covers = mk("covers", { class: "input num", type: "number", min: "0", step: "1" });
+      const useByDays = h("input", { class: "input num", type: "number", min: "0", step: "1", value: p.use_by_days == null ? 2 : p.use_by_days }); f.use_by_days = useByDays;
       const fld = (label, node) => h("div", { class: "field" }, [h("label", {}, label), node]);
       const form = h("div", {}, [
         h("div", { class: "row" }, [
           fld(t("name"), nameEn), fld(t("name_zh"), nameZh),
-          h("div", { class: "field", style: "flex:0 0 120px" }, [h("label", {}, t("covers")), covers]),
+          h("div", { class: "field", style: "flex:0 0 110px" }, [h("label", {}, t("covers")), covers]),
+          h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, t("useByDays")), useByDays]),
         ]),
         h("div", { class: "small muted", style: "margin:8px 0 2px;font-weight:600" }, t("companyInfo")),
         h("div", { class: "row" }, [
@@ -78,6 +80,7 @@ PAGES.places = {
         async onSave() {
           const payload = {
             name: f.name.value.trim(), name_zh: f.name_zh.value.trim(), covers: f.covers.value === "" ? 0 : Number(f.covers.value),
+            use_by_days: f.use_by_days.value === "" ? 2 : Number(f.use_by_days.value),
             representative: f.representative.value.trim(), tax_number: f.tax_number.value.trim(), email: f.email.value.trim(),
             phone: f.phone.value.trim(), address: f.address.value.trim(), delivery_site: f.delivery_site.value.trim(),
           };

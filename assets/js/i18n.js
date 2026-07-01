@@ -38,8 +38,8 @@
       companyInfo: "Company / organisation details", representative: "Representative", taxNumber: "Tax number", email: "Email", phone: "Telephone", companyAddress: "Company address", deliverySite: "Delivery site",
       labelDay: "Day:", orientation: "Orientation", landscape: "Landscape", portrait: "Portrait", sizePreset: "Size", contains: "Contains", nutritionFacts: "Nutrition Facts", portionWeight: "Portion",
       scopeDay: "Single day", scopeWeek: "Whole week", showIngredients: "Ingredients",
-      preparedOn: "Prepared", useBy: "Use by", keepRefrigerated: "Keep refrigerated",
-      freshNote: "Prepared fresh today — consume within 48 h",
+      preparedOn: "Prepared", useBy: "Use by", keepRefrigerated: "Keep refrigerated", useByDays: "Use-by (days)",
+      freshNote: "Prepared fresh today — consume within {d} day(s)",
 
       // menu
       meat: "Meat", veg1: "Vegetable 1", veg2: "Vegetable 2", carb: "Carb",
@@ -127,8 +127,8 @@
       companyInfo: "公司／機構資料", representative: "代表人", taxNumber: "統一編號", email: "電子郵件", phone: "電話", companyAddress: "公司地址", deliverySite: "配送地點",
       labelDay: "日期：", orientation: "方向", landscape: "橫式", portrait: "直式", sizePreset: "尺寸", contains: "含", nutritionFacts: "營養標示", portionWeight: "份量",
       scopeDay: "單日", scopeWeek: "整週", showIngredients: "成分",
-      preparedOn: "製造日期", useBy: "有效期限", keepRefrigerated: "請冷藏保存",
-      freshNote: "本產品為當日新鮮製作，請於48小時內食用",
+      preparedOn: "製造日期", useBy: "有效期限", keepRefrigerated: "請冷藏保存", useByDays: "有效天數",
+      freshNote: "本產品為當日新鮮製作，請於{d}天內食用",
 
       meat: "肉類", veg1: "蔬菜 1", veg2: "蔬菜 2", carb: "澱粉",
       dairy: "乳製品", fruit: "水果／甜點", menuFor: "菜單日期", month: "月",
