@@ -68,8 +68,9 @@ function recipeDetail(view, id) {
   const nutBox = h("div", { class: "card", style: "margin-bottom:16px" }, [
     h("div", { class: "small muted", style: "margin-bottom:8px" }, t("perPortion") + " — " + t("computedFromIngredients")),
     h("div", { class: "macros" }, nut ? [
-      macro(t("kcal"), nut.kcal), macro(t("protein"), nut.protein + " g"), macro(t("carbs"), nut.carbs + " g"),
-      macro(t("fat"), nut.fat + " g"), macro(t("sugar"), nut.sugar + " g"), macro(t("fiber"), nut.fiber + " g"), macro(t("salt"), nut.salt + " g"),
+      macro(t("kcal"), nut.kcal), macro(t("protein"), nut.protein + " g"), macro(t("fat"), nut.fat + " g"),
+      macro(t("carbs"), nut.carbs + " g"), macro(t("sugar"), nut.sugar + " g"), macro(t("addedSugar"), nut.added_sugar + " g"),
+      macro(t("sodium"), nut.sodium + " g"), macro(t("calcium"), nut.calcium + " mg"),
     ] : [h("span", { class: "muted small" }, "— no ingredient macro data yet (add macros on the Ingredients page)")]),
   ]);
   view.appendChild(nutBox);

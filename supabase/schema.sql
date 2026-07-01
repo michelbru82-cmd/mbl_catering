@@ -26,13 +26,18 @@ create table if not exists ingredients (
   name_en   text not null,
   name_zh   text,
   supplier  text,
-  kcal      numeric,         -- per 100 g
+  category  text,            -- MEATS | VEGETABLES / FRUITS | DAIRY | ... (from sheet)
+  origin    text,            -- country of origin (from sheet col K)
+  kcal      numeric,         -- per 100 g (imported from 'full ingredients list' sheet, cols J-S)
   protein   numeric,
   carbs     numeric,
   fat       numeric,
   sugar     numeric,
+  added_sugar numeric,
   fiber     numeric,
-  salt      numeric,
+  sodium    numeric,         -- g per 100 g (source sheet unit)
+  calcium   numeric,         -- mg per 100 g
+  salt      numeric,         -- derived ≈ sodium × 2.5 (legacy field)
   price_per_kg numeric,        -- ingredient cost per kg (for recipe costing)
   unit_weight  numeric,        -- weight (g) of one purchase unit (from MBL import)
   unit_label   text,           -- purchase unit label (e.g. 公斤 / 包 (500g))

@@ -67,7 +67,7 @@ PAGES.labels = {
       const body = h("div", { style: "margin-top:auto;font-size:min(3mm,11px)" });
       if (nut) {
         body.appendChild(h("div", { style: "display:flex;flex-wrap:wrap;gap:1.5mm 3mm;margin-top:1.5mm" }, [
-          ["kcal", nut.kcal], ["P", nut.protein + "g"], ["C", nut.carbs + "g"], ["F", nut.fat + "g"], ["salt", nut.salt + "g"],
+          ["kcal", nut.kcal], ["P", nut.protein + "g"], ["F", nut.fat + "g"], ["C", nut.carbs + "g"], ["Sug", nut.sugar + "g"], ["Na", nut.sodium + "g"], ["Ca", nut.calcium + "mg"],
         ].map(([k, v]) => h("span", {}, [h("b", {}, v), " ", h("span", { style: "color:#555" }, k)]))));
       } else if (state.showNut) {
         body.appendChild(h("div", { style: "color:#999" }, "— nutrition n/a"));

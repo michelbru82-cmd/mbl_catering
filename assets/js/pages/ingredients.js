@@ -23,7 +23,7 @@ PAGES.ingredients = {
 
     const banner = h("div", { class: "banner", style: "margin-bottom:14px" }, [
       h("span", {}, "ℹ️"),
-      h("div", { class: "small" }, "Macro-nutrient values were not present in the source supplier sheet, so they start empty. Edit any ingredient to fill kcal / protein / carbs / fat (per 100 g) and they'll roll up into recipes, menus, production and labels automatically."),
+      h("div", { class: "small" }, "Macro-nutrients (per 100 g) were imported from the 'full ingredients list' sheet — energy, protein, fat, carbs, sugar, added sugar, sodium and calcium — and roll up into recipes, menus, production and labels automatically. Edit any ingredient to adjust."),
     ]);
     view.appendChild(banner);
 
@@ -74,12 +74,17 @@ function ingredientDetail(view, id) {
   view.appendChild(h("div", { class: "section-head" }, [
     h("div", {}, [h("h2", {}, i.name_en), i.name_zh ? h("div", { class: "muted zh" }, i.name_zh) : null]),
     h("div", { class: "spacer" }),
+    i.category ? h("span", { class: "badge badge--cat" }, i.category) : null,
+    i.origin ? h("span", { class: "badge" }, "🌍 " + i.origin) : null,
     i.supplier ? h("span", { class: "badge" }, "🚚 " + i.supplier) : null,
   ]));
-  const M = [["kcal", t("kcal")], ["protein", t("protein")], ["carbs", t("carbs")], ["fat", t("fat")], ["sugar", t("sugar")], ["fiber", t("fiber")], ["salt", t("salt")]];
+  const G = " g";
+  const M = [["kcal", t("kcal"), ""], ["protein", t("protein"), G], ["fat", t("fat"), G], ["carbs", t("carbs"), G],
+    ["sugar", t("sugar"), G], ["added_sugar", t("addedSugar"), G], ["fiber", t("fiber"), G],
+    ["sodium", t("sodium"), G], ["calcium", t("calcium"), " mg"]];
   view.appendChild(h("div", { class: "card", style: "margin-bottom:16px" }, [
     h("div", { class: "small muted", style: "margin-bottom:8px" }, t("per100")),
-    h("div", { class: "macros" }, M.map(([k, label]) => h("div", { class: "macro" }, [h("b", {}, i[k] == null ? "—" : i[k] + (k === "kcal" ? "" : " g")), h("span", {}, label)]))),
+    h("div", { class: "macros" }, M.map(([k, label, unit]) => h("div", { class: "macro" }, [h("b", {}, i[k] == null ? "—" : i[k] + unit), h("span", {}, label)]))),
   ]));
   const algs = i.allergen_ids || [];
   view.appendChild(h("div", {}, [
@@ -91,7 +96,7 @@ function ingredientDetail(view, id) {
 /* Import the bundled MBL dataset (real grams) — replaces recipes + ingredients */
 async function importMblData() {
   const t = I18N.t.bind(I18N);
-  const ok = await U.confirmDelete("Replace ALL recipes and ingredients with the MBL dataset (with real gram weights)? Your menus, people and subscribers are kept. Any manual recipe/ingredient edits in this browser will be overwritten.");
+  const ok = await U.confirmDelete("Replace ALL recipes and ingredients with the MBL dataset (real gram weights + imported macros: energy, protein, fat, carbs, sugar, added sugar, sodium, calcium)? Your menus, people and subscribers are kept. Any manual recipe/ingredient edits in this browser will be overwritten.");
   if (!ok) return;
   try {
     const r = await Data.importMbl();
@@ -132,15 +137,19 @@ function ingredientForm(i) {
     ]),
     h("div", { class: "row" }, [
       h("div", { class: "field" }, [h("label", {}, t("supplier")), mk("supplier")]),
+      h("div", { class: "field", style: "flex:0 0 130px" }, [h("label", {}, t("origin")), mk("origin")]),
       h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, (window.MBL_CONFIG.CURRENCY || "NT$") + " / kg"), mk("price_per_kg", "number")]),
     ]),
     h("div", { class: "small muted", style: "margin:6px 0" }, t("per100")),
     h("div", { class: "row" }, [
       fld(t("kcal"), mk("kcal", "number")), fld(t("protein"), mk("protein", "number")),
-      fld(t("carbs"), mk("carbs", "number")), fld(t("fat"), mk("fat", "number")),
+      fld(t("fat"), mk("fat", "number")), fld(t("carbs"), mk("carbs", "number")),
     ]),
     h("div", { class: "row" }, [
-      fld(t("sugar"), mk("sugar", "number")), fld(t("fiber"), mk("fiber", "number")), fld(t("salt"), mk("salt", "number")),
+      fld(t("sugar"), mk("sugar", "number")), fld(t("addedSugar"), mk("added_sugar", "number")), fld(t("fiber"), mk("fiber", "number")),
+    ]),
+    h("div", { class: "row" }, [
+      fld(t("sodium") + " (g)", mk("sodium", "number")), fld(t("calcium") + " (mg)", mk("calcium", "number")),
     ]),
     h("div", { class: "field" }, [h("label", {}, t("allergensLabel")), picker]),
     isNew ? null : h("button", { class: "btn btn--danger btn--sm", onClick: async () => { if (await U.confirmDelete()) { await Data.remove("ingredients", i.id); U.toast(t("deleted")); document.querySelector(".modal-backdrop").click(); Router.go("#/ingredients"); } } }, "🗑 " + t("delete")),
@@ -152,9 +161,14 @@ function ingredientForm(i) {
       const num = (k) => f[k].value === "" ? null : Number(f[k].value);
       const payload = {
         name_en: f.name_en.value.trim(), name_zh: f.name_zh.value.trim(), supplier: f.supplier.value.trim(),
+        origin: f.origin.value.trim() || null,
         kcal: num("kcal"), protein: num("protein"), carbs: num("carbs"), fat: num("fat"),
-        sugar: num("sugar"), fiber: num("fiber"), salt: num("salt"), price_per_kg: num("price_per_kg"), allergen_ids: picker._get(),
+        sugar: num("sugar"), added_sugar: num("added_sugar"), fiber: num("fiber"),
+        sodium: num("sodium"), calcium: num("calcium"),
+        price_per_kg: num("price_per_kg"), allergen_ids: picker._get(),
       };
+      // keep legacy salt in sync with sodium (≈2.5× by mass) so older views still populate
+      payload.salt = payload.sodium != null ? Math.round(payload.sodium * 2.5 * 100) / 100 : null;
       if (!payload.name_en) { U.toast(t("name_en") + "?", true); return false; }
       if (isNew) await Data.create("ingredients", payload); else await Data.update("ingredients", i.id, payload);
       U.toast(t("saved")); Router.rerender();

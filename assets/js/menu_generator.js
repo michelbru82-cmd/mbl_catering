@@ -13,7 +13,7 @@ window.MenuGen = (function () {
   const NUTRIENTS = [
     ["kcal", "Calories", "kcal"], ["protein", "Proteins", "g"], ["fat", "Lipids", "g"],
     ["carbs", "Carbs", "g"], ["sugar", "Sugar", "g"], ["added_sugar", "Added Sugar", "g"],
-    ["sodium", "Sodium", "mg"], ["calcium", "Calcium", "mg"],
+    ["sodium", "Sodium", "g"], ["calcium", "Calcium", "mg"],
   ];
   const COURSES = ["main", "vegetable", "carb", "dairy", "fruit", "side"];
 
@@ -294,9 +294,7 @@ window.MenuGen = (function () {
       const s = slots[k]; if (!s || !s.recipe_id) return;
       const r = Data.get("recipes", s.recipe_id); if (!r) return;
       const n = Data.recipeNutrition(r); if (!n) return; any = true;
-      ["kcal", "protein", "fat", "carbs", "sugar"].forEach((m) => (out[m] += n[m] || 0));
-      // sodium from salt (1 g salt ≈ 400 mg sodium); calcium/added_sugar not in ingredient model yet
-      if (n.salt != null) out.sodium += n.salt * 400;
+      ["kcal", "protein", "fat", "carbs", "sugar", "added_sugar", "sodium", "calcium"].forEach((m) => (out[m] += n[m] || 0));
     });
     out._hasData = any;
     return out;

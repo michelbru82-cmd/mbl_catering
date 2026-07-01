@@ -19,7 +19,7 @@ you're ready to go live — no code changes, just keys.
 | **Monthly Menu** | Day-card grid, **7 slots**: Meat · Vegetable 1 · Vegetable 2 · Carb · Dairy · Fruit/Cake · Side. Edit each day; dishes auto-link to recipes by name. **⚙️ Configuration** opens the Menu Builder (below) |
 | **Menu Builder** (⚙️ on Menu page) | Auto-generates menus for chosen months **using only recipes already in the database — no invention**. Rules: per-weekday **protein** (chicken/beef/pork/fish/duck/vegetarian/vegan) and **cuisine** (Western/Asian), **nutrition min/max** per nutrient with a *compulsory* toggle, and a **rotation cap** (max times per 2 months). If a main already contains the carb (e.g. Carbonara) the **Carb slot becomes "Not applicable."** Offers variety, shows a bilingual preview, and if the pool is too small it reports **exactly how many recipes to add** per type. Apply writes the month to the menu. Also: **named rule profiles** (term vs. summer), **keep-existing menus / lock a day** when regenerating, **min-days-between-repeats** + **allergen spreading**, **cost/cover** limits (from ingredient prices), and a one-click **"Import past-menu dishes as recipes"** to instantly fill thin veg/carb/dairy/fruit pools |
 | **Recipes** | All recipes with ingredients & grams, **macro-nutrition computed from ingredients**, allergen union. Full add/edit |
-| **Ingredients** | Master list with per-100 g macros (kcal/protein/carbs/fat/sugar/fibre/salt) and allergens. Edit any field |
+| **Ingredients** | Master list with per-100 g macros (kcal/protein/fat/carbs/sugar/added sugar/sodium/calcium), origin, category and allergens. Edit any field |
 | **Kitchen Production** | Dish-by-dish for **today + next day**, quantities per site (Liu-Gong 66 / Yongchun 80) and total, plus **allergens of the day** and the list of people affected |
 | **People** | Diners (kid / employee / guest), in & out dates, up to **3 allergens** each, per site |
 | **Allergens** | Manage the master allergen list (**EU 14 + Mango/Taiwan**), see usage counts |
@@ -105,15 +105,19 @@ I'll wire them in exactly.
 
 Seeded from the three Google Sheets you provided (parsed copies live in `data/`):
 
-- **Ingredients (253)** — the source sheet is a **supplier order list**: it has
-  ingredient names (EN + 中文) and suppliers but **no macros and no allergens**.
-  So macro fields start **empty** and are yours to fill on the Ingredients page —
-  they then roll up automatically into recipes, production and labels. Allergens
-  were **auto-tagged by keyword** (milk→Milk, flour→Gluten, …) as a starting point
-  (75 ingredients tagged); review them on the Allergens / Ingredients pages.
-- **Recipes (147)** — bilingual with ingredient lists. The source only contained
-  gram weights for a couple of recipes, so most `grams` are blank; add them per
-  recipe and production quantities (portion g × covers) compute instantly.
+- **Ingredients (301)** — imported from the **mbl-tools** dataset (EN + 中文 names,
+  suppliers, purchase units, real gram weights). **Macros (per 100 g)** — energy,
+  protein, fat, carbs, sugar, added sugar, sodium and calcium — plus **origin** and
+  **category** were imported from the *"full ingredients list"* Google Sheet
+  (columns J–S) and roll up automatically into recipes, production and labels.
+  *Note:* the sheet's **sodium** column mixes units (most cells are grams per 100 g,
+  a few appear to be mg); values are imported **verbatim** — clean those cells in the
+  sheet and re-import if needed. Allergens were **auto-tagged by keyword**
+  (milk→Milk, flour→Gluten, …) as a starting point; review them on the
+  Allergens / Ingredients pages.
+- **Recipes (523)** — bilingual with ingredient lists and **real per-portion gram
+  weights** from the mbl-tools dataset, so production quantities (portion g × covers)
+  and full nutrition compute instantly.
 - **Menu (23 days, July 2026)** + 2 sites + EU-14+Mango allergens come straight
   from the master planning workbook.
 

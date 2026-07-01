@@ -127,13 +127,14 @@
 
     // recipe nutrition computed from linked ingredients (per portion, where ingredient macros exist)
     recipeNutrition(recipe) {
-      const out = { kcal: 0, protein: 0, carbs: 0, fat: 0, sugar: 0, fiber: 0, salt: 0 };
+      const KEYS = ["kcal", "protein", "carbs", "fat", "sugar", "added_sugar", "fiber", "sodium", "calcium", "salt"];
+      const out = {}; KEYS.forEach((k) => (out[k] = 0));
       let any = false;
       (recipe.items || []).forEach((it) => {
         const ing = it.ingredient_id && this.get("ingredients", it.ingredient_id);
         if (!ing || it.grams == null) return;
         const f = it.grams / 100;
-        ["kcal", "protein", "carbs", "fat", "sugar", "fiber", "salt"].forEach((k) => {
+        KEYS.forEach((k) => {
           if (ing[k] != null) { out[k] += ing[k] * f; any = true; }
         });
       });
