@@ -153,11 +153,20 @@ window.MenuGen = (function () {
     const tooSoon = (r, iso) => { if (!gapMs) return false; const t = Date.parse(iso); return (usage[r.id] || []).some((d) => Math.abs(Date.parse(d) - t) < gapMs); };
     const allergensOf = (r) => r ? Data.recipeAllergens(r) : [];
 
-    // pick best candidate: satisfies filter, under cap, respects repeat-gap, spreads allergens, most "rested"
+    // pick best candidate. Prefer variety (cap + gap + distinct); if that leaves no
+    // option, relax progressively and REUSE a previously-used dish rather than leave
+    // a gap. Only returns null when no dish matches the rule at all (empty pool).
     function pick(pool, iso, filterFn, avoid, prevAlg) {
-      let cands = pool.filter((r) => (!filterFn || filterFn(r)) && withinCap(r, iso) && !tooSoon(r, iso) && !(avoid || []).includes(r.id));
-      if (!cands.length) cands = pool.filter((r) => (!filterFn || filterFn(r)) && withinCap(r, iso) && !(avoid || []).includes(r.id)); // relax gap
-      if (!cands.length) return null;
+      const base = pool.filter((r) => (!filterFn || filterFn(r)));
+      const av = avoid || [];
+      const tiers = [
+        base.filter((r) => withinCap(r, iso) && !tooSoon(r, iso) && !av.includes(r.id)), // ideal: rotation + gap + distinct
+        base.filter((r) => withinCap(r, iso) && !av.includes(r.id)),                      // relax repeat-gap
+        base.filter((r) => !av.includes(r.id)),                                           // relax rotation cap → reuse
+        base,                                                                             // last resort: allow same-day repeat
+      ];
+      const cands = tiers.find((tt) => tt.length) || [];
+      if (!cands.length) return null; // genuinely no dish of this type / rule → real shortfall
       cands.sort((a, b) => {
         if (cfg.spread_allergens && prevAlg && prevAlg.length) {
           const oa = allergensOf(a).filter((x) => prevAlg.includes(x)).length, ob = allergensOf(b).filter((x) => prevAlg.includes(x)).length;
