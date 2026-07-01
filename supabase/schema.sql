@@ -24,10 +24,16 @@ create table if not exists sites (
 -- catering places (multi-tenant). Each place has its own menus, people,
 -- subscribers and menu-builder config; recipes/ingredients/allergens are shared.
 create table if not exists places (
-  id        text primary key,
-  name      text not null,
-  name_zh   text,
-  covers    int default 0
+  id             text primary key,
+  name           text not null,
+  name_zh        text,
+  covers         int default 0,
+  representative text,
+  tax_number     text,
+  email          text,
+  phone          text,
+  address        text,
+  delivery_site  text
 );
 
 create table if not exists ingredients (

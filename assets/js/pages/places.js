@@ -46,23 +46,41 @@ PAGES.places = {
     function placeForm(p) {
       const isNew = !p;
       p = p || { name: "", name_zh: "", covers: 0 };
-      const nameEn = h("input", { class: "input", value: p.name || "" });
-      const nameZh = h("input", { class: "input zh", value: p.name_zh || "" });
-      const covers = h("input", { class: "input num", type: "number", min: "0", step: "1", value: p.covers == null ? "" : p.covers });
+      const f = {};
+      const mk = (k, opts) => (f[k] = h("input", Object.assign({ class: "input", value: p[k] == null ? "" : p[k] }, opts || {})));
+      const nameEn = mk("name");
+      const nameZh = h("input", { class: "input zh", value: p.name_zh || "" }); f.name_zh = nameZh;
+      const covers = mk("covers", { class: "input num", type: "number", min: "0", step: "1" });
+      const fld = (label, node) => h("div", { class: "field" }, [h("label", {}, label), node]);
       const form = h("div", {}, [
         h("div", { class: "row" }, [
-          h("div", { class: "field" }, [h("label", {}, t("name")), nameEn]),
-          h("div", { class: "field" }, [h("label", {}, t("name_zh")), nameZh]),
+          fld(t("name"), nameEn), fld(t("name_zh"), nameZh),
           h("div", { class: "field", style: "flex:0 0 120px" }, [h("label", {}, t("covers")), covers]),
         ]),
+        h("div", { class: "small muted", style: "margin:8px 0 2px;font-weight:600" }, t("companyInfo")),
+        h("div", { class: "row" }, [
+          fld(t("representative"), mk("representative")),
+          fld(t("taxNumber"), mk("tax_number")),
+        ]),
+        h("div", { class: "row" }, [
+          fld(t("email"), mk("email", { type: "email" })),
+          fld(t("phone"), mk("phone")),
+        ]),
+        fld(t("companyAddress"), mk("address")),
+        fld(t("deliverySite"), mk("delivery_site")),
         isNew ? null : h("button", { class: "btn btn--danger btn--sm", onClick: async () => {
           if (Data.places().length <= 1) { U.toast(t("cannotDeleteLast"), true); return; }
           if (await U.confirmDelete(t("deletePlaceWarn"))) { await deletePlace(p); document.querySelector(".modal-backdrop").click(); }
         } }, "🗑 " + t("delete")),
       ]);
       U.modal(isNew ? t("addPlace") : p.name, form, {
+        wide: true,
         async onSave() {
-          const payload = { name: nameEn.value.trim(), name_zh: nameZh.value.trim(), covers: covers.value === "" ? 0 : Number(covers.value) };
+          const payload = {
+            name: f.name.value.trim(), name_zh: f.name_zh.value.trim(), covers: f.covers.value === "" ? 0 : Number(f.covers.value),
+            representative: f.representative.value.trim(), tax_number: f.tax_number.value.trim(), email: f.email.value.trim(),
+            phone: f.phone.value.trim(), address: f.address.value.trim(), delivery_site: f.delivery_site.value.trim(),
+          };
           if (!payload.name) { U.toast(t("name") + "?", true); return false; }
           if (isNew) {
             payload.id = "place_" + (payload.name.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "") || "x") + "_" + Math.round(performance.now()).toString(36);
