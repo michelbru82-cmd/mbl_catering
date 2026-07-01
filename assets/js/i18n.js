@@ -72,7 +72,7 @@
       // labels
       labelSize: "Label size", widthCm: "Width (cm)", heightCm: "Height (cm)",
       perRow: "Per row", chooseDishes: "Choose dishes", showNutrition: "Show nutrition",
-      selectAll: "Select all", clearSel: "Clear", chooseProducts: "Tick the products to print labels for",
+      selectAll: "Select all", clearSel: "Clear", chooseProducts: "Tick the products to print labels for", copies: "Copies",
       showAllergens: "Show allergens",
 
       // newsletter
@@ -162,7 +162,7 @@
 
       labelSize: "標籤尺寸", widthCm: "寬 (公分)", heightCm: "高 (公分)",
       perRow: "每行數量", chooseDishes: "選擇餐點", showNutrition: "顯示營養",
-      selectAll: "全選", clearSel: "清除", chooseProducts: "勾選要列印標籤的產品",
+      selectAll: "全選", clearSel: "清除", chooseProducts: "勾選要列印標籤的產品", copies: "份數",
       showAllergens: "顯示過敏原",
 
       subscribers: "訂閱者", subscriberEmail: "電子郵件", subscribe: "新增訂閱者",

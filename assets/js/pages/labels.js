@@ -10,7 +10,8 @@ PAGES.labels = {
     const menuDates = Data.all("menu_days").map((d) => d.date).sort();
     const initDate = menuDates.includes(U.TODAY) ? U.TODAY : (menuDates.find((d) => d >= U.TODAY) || U.TODAY);
     // default: landscape 12 cm × 5.2 cm
-    const state = { scope: "day", date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, showIngr: true, showQR: true, selected: new Set() };
+    const state = { scope: "day", date: initDate, orientation: "landscape", w: 12, hh: 5.2, showNut: true, showAlg: true, showIngr: true, showQR: true, selected: new Set(), qty: {} };
+    const qtyOf = (id) => Math.max(1, Math.round(state.qty[id] || 1));
 
     // ---- controls ----
     const scopeSel = h("select", { class: "input", onChange: (e) => { state.scope = e.target.value; render(); } },
@@ -82,9 +83,14 @@ PAGES.labels = {
       const grid = h("div", { class: "pill-list", style: "display:flex;flex-wrap:wrap;gap:6px;margin-top:6px" });
       recs.forEach((r) => {
         const on = state.selected.has(r.id);
-        grid.appendChild(h("button", { type: "button", class: "badge" + (on ? " badge--cat" : ""), style: "cursor:pointer",
+        const chip = h("button", { type: "button", class: "badge" + (on ? " badge--cat" : ""), style: "cursor:pointer",
           onClick: () => { on ? state.selected.delete(r.id) : state.selected.add(r.id); render(); } },
-          [(on ? "✓ " : "") + r.name_en]));
+          [(on ? "✓ " : "") + r.name_en]);
+        // when ticked, an inline "× N" input sets how many copies to print
+        const qtyI = on ? h("input", { class: "input num", type: "number", min: "1", step: "1", value: qtyOf(r.id), title: t("copies"),
+          style: "max-width:56px", onClick: (e) => e.stopPropagation(),
+          oninput: (e) => { state.qty[r.id] = Math.max(1, Math.round(Number(e.target.value) || 1)); drawLabels(); } }) : null;
+        grid.appendChild(h("span", { style: "display:inline-flex;align-items:center;gap:3px" }, [chip, on ? h("span", { class: "small muted" }, "×") : null, qtyI]));
       });
       shopPicker.appendChild(grid);
     }
@@ -112,8 +118,9 @@ PAGES.labels = {
       return grid;
     }
 
-    function render() {
-      renderShopPicker();
+    function render() { renderShopPicker(); drawLabels(); }
+
+    function drawLabels() {
       const searchRow = document.getElementById("lbl-search-row"); if (searchRow) searchRow.style.display = state.scope === "week" ? "none" : "";
       labelArea.innerHTML = "";
       if (state.scope === "week") { renderWeek(); return; }
@@ -125,7 +132,10 @@ PAGES.labels = {
         labelArea.appendChild(h("div", { class: "empty no-print" }, [h("div", { class: "big" }, "🏷️"), h("div", {}, prompt)]));
         return;
       }
-      labelArea.appendChild(labelGrid(recs.map((r) => ({ recipe: r, date: state.date }))));
+      // repeat each label by its chosen copy count
+      const pairs = [];
+      recs.forEach((r) => { const n = qtyOf(r.id); for (let i = 0; i < n; i++) pairs.push({ recipe: r, date: state.date }); });
+      labelArea.appendChild(labelGrid(pairs));
     }
 
     function renderWeek() {
