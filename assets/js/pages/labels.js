@@ -136,7 +136,7 @@ PAGES.labels = {
       const algs = Data.recipeAllergens(r);
       const portion = (r.items || []).reduce((s, it) => s + (it.grams != null ? it.grams : 0), 0);
       const place = Data.activePlace() || {};
-      const card = h("div", { class: "food-label" + (state.hh > state.w ? " fl-portrait" : ""), style: `width:${state.w}cm;height:${state.hh}cm` });
+      const card = h("div", { class: "food-label" + (state.hh > state.w ? " fl-portrait" : ""), style: `--lw:${state.w}cm;--lh:${state.hh}cm` });
       card.appendChild(h("div", { class: "fl-head" }, [
         h("div", { class: "fl-title" }, [h("div", { class: "fl-name" }, r.name_en), r.name_zh ? h("div", { class: "fl-name-zh zh" }, r.name_zh) : null]),
         place.name ? h("div", { class: "fl-brand" }, place.name) : null,

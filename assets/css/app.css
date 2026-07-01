@@ -229,7 +229,11 @@ table.data tr.clickable { cursor: pointer; }
 /* ---- Professional food-packaging labels (Print Labels page) ---- */
 .food-label{box-sizing:border-box;border:0.5mm solid #111;border-radius:2mm;background:#fff;color:#111;
   padding:2.5mm 3mm;display:flex;flex-direction:column;overflow:hidden;page-break-inside:avoid;
-  font-family:'Inter','Noto Sans TC',sans-serif;}
+  font-family:'Inter','Noto Sans TC',sans-serif;width:var(--lw);height:var(--lh);}
+/* On screen (incl. mobile) fit the width and let height grow so nothing overlaps;
+   keep the exact physical cm size only when printing. */
+@media screen{ .food-label{width:min(100%,var(--lw));height:auto;min-height:var(--lh);overflow:visible} }
+@media print{ .food-label{width:var(--lw);height:var(--lh);overflow:hidden} }
 .food-label .fl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:2mm}
 .food-label .fl-name{font-weight:800;font-size:clamp(9px,3.6mm,16px);line-height:1.08;letter-spacing:.2px}
 .food-label .fl-name-zh{font-size:clamp(8px,3mm,13px);color:#333;margin-top:.4mm}
