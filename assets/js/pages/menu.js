@@ -24,15 +24,28 @@ PAGES.menu = {
     const monthDays = days.filter((d) => d.date.startsWith(month));
     if (!monthDays.length) { view.appendChild(h("div", { class: "empty" }, [h("div", { class: "big" }, "🍽️"), h("div", {}, t("noMenu"))])); return; }
 
+    // recipe lookup by name (fallback when a slot has no recipe_id link)
+    const _normName = (s) => (s || "").toString().trim().toLowerCase().replace(/\s+/g, " ");
+    const _recipeByName = {};
+    Data.all("recipes").forEach((r) => { if (r.name_en) _recipeByName[_normName(r.name_en)] = r; });
+    function slotRecipe(s) {
+      if (!s) return null;
+      return (s.recipe_id && Data.get("recipes", s.recipe_id)) || (s.name_en && _recipeByName[_normName(s.name_en)]) || null;
+    }
     // total calories for a day's menu (sum of each slot's per-portion recipe kcal)
+    // returns { kcal, filled, total } so we can flag partial data
     function dayKcal(d) {
-      let total = 0, any = false;
+      let total = 0, filled = 0, slotsWithDish = 0;
       SLOTS.forEach(([k]) => {
         const s = d.slots && d.slots[k];
-        const r = s && s.recipe_id && Data.get("recipes", s.recipe_id);
-        if (r) { const n = Data.recipeNutrition(r); if (n && n.kcal != null) { total += n.kcal; any = true; } }
+        if (!s || !s.name_en) return;
+        slotsWithDish++;
+        const r = slotRecipe(s);
+        const n = r && Data.recipeNutrition(r);
+        if (n && n.kcal != null) { total += n.kcal; filled++; }
       });
-      return any ? Math.round(total) : null;
+      if (!filled) return null;
+      return { kcal: Math.round(total), filled, slots: slotsWithDish };
     }
 
     // Day-card grid: every one of the 7 slots is always visible (no horizontal scroll)
@@ -53,7 +66,8 @@ PAGES.menu = {
         h("div", { class: "section-head", style: "margin:0 0 8px" }, [
           h("div", {}, [h("b", {}, U.fmtDate(d.date)), h("span", { class: "small muted" }, " · " + U.weekdayName(d.date))]),
           h("div", { class: "spacer" }),
-          kc != null ? h("span", { class: "badge", title: t("totalKcalHint"), style: "font-weight:700" }, "🔥 " + kc + " " + t("kcalShort")) : null,
+          kc ? h("span", { class: "badge", title: kc.filled < kc.slots ? t("partialKcalHint") : t("totalKcalHint"), style: "font-weight:700" },
+            "🔥 " + (kc.filled < kc.slots ? "~" : "") + kc.kcal + " " + t("kcalShort")) : null,
           h("button", { class: "btn btn--sm btn--ghost", onClick: (e) => { e.stopPropagation(); editDay(d.id); } }, "✏️"),
         ]),
         ...rows,
