@@ -6,3 +6,10 @@ DirectoryIndex index.html
 # Make sure UTF-8 is declared so English + 繁體中文 render correctly
 AddDefaultCharset utf-8
 AddCharset utf-8 .html .css .js .json .svg
+
+# Always fetch index.html fresh so new ?v= asset versions are picked up.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
