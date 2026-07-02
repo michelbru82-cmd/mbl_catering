@@ -68,7 +68,7 @@
     const H = U.h, t = I18N.t.bind(I18N), connected = Data.source === "supabase";
     const cfg = window.MBL_CONFIG || {};
     const url = H("input", { class: "input", placeholder: "https://xxxx.supabase.co", value: (cfg.SUPABASE_URL || "") });
-    const key = H("input", { class: "input", placeholder: "anon public key", value: (cfg.SUPABASE_ANON_KEY || "") });
+    const key = H("input", { class: "input", placeholder: "Legacy JWT anon key — eyJ…", value: (cfg.SUPABASE_ANON_KEY || "") });
     const body = H("div", {}, [
       H("div", { class: "banner " + (connected ? "banner--info" : ""), style: "margin-bottom:12px" }, [
         H("span", {}, connected ? "☁️" : "💾"),
@@ -76,7 +76,8 @@
       ]),
       H("div", { class: "field" }, [H("label", {}, t("supaUrl")), url]),
       H("div", { class: "field" }, [H("label", {}, t("supaKey")), key]),
-      H("div", { class: "small muted", style: "margin:-4px 0 10px" }, "Run supabase/schema.sql (and optionally seed.sql) in your Supabase project first."),
+      H("div", { class: "small", style: "margin:-4px 0 6px;color:var(--warn)" }, "⚠ Use the Legacy JWT anon key (starts with eyJ…), from Settings → API Keys → Legacy. The new sb_publishable_ key does NOT work with Edge Functions (AI card scanning)."),
+      H("div", { class: "small muted", style: "margin:0 0 10px" }, "Run supabase/schema.sql (and optionally seed.sql) in your Supabase project first."),
       H("button", { class: "btn btn--sm", onClick: () => Data.exportJson() }, "⤓ " + t("exportData")),
       connected ? H("button", { class: "btn btn--danger btn--sm", style: "margin-left:8px", onClick: () => { try { localStorage.removeItem("mblcrm_sb_url"); localStorage.removeItem("mblcrm_sb_key"); } catch (e) {} location.reload(); } }, t("disconnect")) : null,
     ]);
@@ -85,6 +86,10 @@
       onSave() {
         const u = url.value.trim(), k = key.value.trim();
         if (!u || !k) { U.toast(t("bothRequired"), true); return false; }
+        if (/^sb_(publishable|secret)_/.test(k)) {
+          U.toast("Use the Legacy JWT anon key (eyJ…), not the sb_publishable_ key — Settings → API Keys → Legacy", true);
+          return false;
+        }
         try { localStorage.setItem("mblcrm_sb_url", u); localStorage.setItem("mblcrm_sb_key", k); } catch (e) {}
         location.reload();
       },

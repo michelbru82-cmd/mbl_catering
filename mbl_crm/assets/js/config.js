@@ -9,7 +9,7 @@
    badge), which stores the keys in localStorage below.
    ============================================================ */
 var _sbUrl = "", _sbKey = "";
-try { _sbUrl = localStorage.getItem("mblcrm_sb_url") || ""; _sbKey = localStorage.getItem("mblcrm_sb_key") || ""; } catch (e) {}
+try { _sbUrl = (localStorage.getItem("mblcrm_sb_url") || "").trim(); _sbKey = (localStorage.getItem("mblcrm_sb_key") || "").trim(); } catch (e) {}
 
 window.MBL_CONFIG = {
   // ---- Supabase (blank = local demo mode; filled = cloud) ----
