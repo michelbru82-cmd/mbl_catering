@@ -62,12 +62,13 @@
               submit.disabled = false; submit.textContent = t("signIn"); mode = "in"; toggle.textContent = t("signUp");
               return;
             }
-            const { data, error } = await sb.auth.signInWithPassword({ email: e, password: p });
+            const { error } = await sb.auth.signInWithPassword({ email: e, password: p });
             if (error) throw error;
-            currentUser = data.user;
-            back.remove();
-            if (app) app.style.display = "";
-            resolve(true);
+            // Data was loaded at boot before a session existed (RLS returned nothing).
+            // Reload so the client re-inits WITH the persisted session and loads the
+            // real rows; the auth gate then sees the existing session and skips login.
+            location.reload();
+            return;
           } catch (err) {
             msg.textContent = (err && err.message) || String(err);
             submit.disabled = false; submit.textContent = mode === "in" ? t("signIn") : t("signUp");
