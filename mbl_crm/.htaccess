@@ -18,5 +18,7 @@ AddCharset utf-8 .html .css .js .json .svg
   # folder with one that allows the CDNs + any Supabase project (https/wss).
   Header always unset Content-Security-Policy
   Header unset Content-Security-Policy
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'"
+  # script-src allows the CDNs, blob: + wasm-unsafe-eval for the Tesseract.js OCR
+  # web worker; worker-src blob: for the same worker.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'"
 </IfModule>

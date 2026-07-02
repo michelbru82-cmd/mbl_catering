@@ -83,6 +83,9 @@
       duplicateFound: "Possible duplicate found", mergeQ: "This looks like someone already in your CRM. Merge into the existing contact, or create a new one?",
       merge: "Merge into existing", createNew: "Create new contact", saveContact: "Save contact",
       scanAnother: "Scan another", mock_note: "Local demo: using a sample extraction (no AI key configured).",
+      ocrNote: "Read on your device (OCR) — check every field before saving. Connect Supabase + AI for higher-accuracy extraction (incl. 中文).",
+      ocrUnavailable: "On-device OCR couldn't load. Connect Supabase + AI to read cards, or enter the details manually below.",
+      cancelScan: "Cancel", discardScan: "Discard", enterManually: "Enter manually",
 
       // settings / auth / data source
       account: "Account", signIn: "Sign in", signOut: "Sign out", signUp: "Create account",
@@ -165,6 +168,9 @@
       duplicateFound: "發現可能重複", mergeQ: "系統中似乎已有此人。要合併到現有聯絡人，還是新增一筆？",
       merge: "合併到現有", createNew: "新增聯絡人", saveContact: "儲存聯絡人",
       scanAnother: "掃描下一張", mock_note: "本機示範：使用範例擷取結果（未設定 AI 金鑰）。",
+      ocrNote: "在您的裝置上辨識 (OCR) — 儲存前請確認每個欄位。連接 Supabase + AI 可獲得更準確的辨識（含中文）。",
+      ocrUnavailable: "無法載入裝置端 OCR。請連接 Supabase + AI 以辨識名片，或於下方手動輸入資料。",
+      cancelScan: "取消", discardScan: "捨棄", enterManually: "手動輸入",
 
       account: "帳戶", signIn: "登入", signOut: "登出", signUp: "建立帳戶",
       password: "密碼", emailAddr: "電子郵件", signInHint: "登入您的 MBL CRM。",
