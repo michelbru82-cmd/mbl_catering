@@ -100,6 +100,43 @@
     };
   }
 
+  // Prepare a photo for OCR: honor EXIF orientation (canvas draw does this),
+  // scale toward ~2000px on the long edge, then grayscale + boost contrast.
+  // Tesseract reads dramatically better on a clean, right-sized, high-contrast
+  // image than on a raw multi-megapixel phone snapshot.
+  function preprocess(dataUrl) {
+    return new Promise((resolve) => {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const longest = Math.max(img.width, img.height) || 1;
+            let s = 2000 / longest;
+            if (s > 1.8) s = 1.8;                 // don't over-upscale tiny images
+            if (s > 1 && longest >= 1400) s = 1;  // already a good size
+            const w = Math.max(1, Math.round(img.width * s));
+            const h = Math.max(1, Math.round(img.height * s));
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            const ctx = c.getContext("2d");
+            ctx.drawImage(img, 0, 0, w, h);
+            const id = ctx.getImageData(0, 0, w, h), d = id.data;
+            const contrast = 1.25, intercept = 128 * (1 - contrast);
+            for (let i = 0; i < d.length; i += 4) {
+              let g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+              g = g * contrast + intercept;
+              d[i] = d[i + 1] = d[i + 2] = g < 0 ? 0 : g > 255 ? 255 : g;
+            }
+            ctx.putImageData(id, 0, 0);
+            resolve(c);
+          } catch (e) { resolve(dataUrl); }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      } catch (e) { resolve(dataUrl); }
+    });
+  }
+
   let _tessLoading = null;
   function ensureTesseract() {
     if (window.Tesseract) return Promise.resolve(window.Tesseract);
@@ -128,9 +165,10 @@
         fields._engine = "ai";
         return fields;
       }
-      // on-device OCR fallback — actually reads the photo
+      // on-device OCR fallback — actually reads the photo (English + 繁體中文)
       const T = await ensureTesseract();
-      const res = await T.recognize(imageDataUrl, "eng", {
+      const prepped = await preprocess(imageDataUrl);
+      const res = await T.recognize(prepped, "eng+chi_tra", {
         logger: (m) => { if (opts.onProgress && m.status === "recognizing text") opts.onProgress(m.progress); },
       });
       const fields = parseCardText(res && res.data && res.data.text);
