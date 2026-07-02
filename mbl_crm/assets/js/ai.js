@@ -137,6 +137,33 @@
     });
   }
 
+  // Shrink a photo before sending to the AI function: downscale to ~1600px on
+  // the long edge and re-encode as JPEG. Keeps colour (Claude reads it fine),
+  // cuts a 3-8 MB phone photo to a few hundred KB — faster, cheaper, and well
+  // within request/image limits. Falls back to the original on any error.
+  function shrinkForUpload(dataUrl, maxEdge, quality) {
+    maxEdge = maxEdge || 1600; quality = quality || 0.85;
+    return new Promise((resolve) => {
+      try {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const longest = Math.max(img.width, img.height) || 1;
+            const s = Math.min(1, maxEdge / longest); // only ever downscale
+            const w = Math.max(1, Math.round(img.width * s));
+            const h = Math.max(1, Math.round(img.height * s));
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            c.getContext("2d").drawImage(img, 0, 0, w, h);
+            resolve(c.toDataURL("image/jpeg", quality));
+          } catch (e) { resolve(dataUrl); }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      } catch (e) { resolve(dataUrl); }
+    });
+  }
+
   let _tessLoading = null;
   function ensureTesseract() {
     if (window.Tesseract) return Promise.resolve(window.Tesseract);
@@ -160,7 +187,8 @@
     async scanCard(imageDataUrl, opts) {
       opts = opts || {};
       if (this.connected) {
-        const out = await Data.invoke(cfg.AI_SCAN_FUNCTION || "scan-card", { image: imageDataUrl });
+        const img = await shrinkForUpload(imageDataUrl);
+        const out = await Data.invoke(cfg.AI_SCAN_FUNCTION || "scan-card", { image: img });
         const fields = (out && (out.fields || out)) || {};
         fields._engine = "ai";
         return fields;
