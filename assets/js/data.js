@@ -20,7 +20,7 @@
      Data.source                       -> "local" | "supabase"
    ============================================================ */
 (function () {
-  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers", "settings", "places"];
+  const COLLS = ["allergens", "ingredients", "recipes", "sites", "menu_days", "people", "subscribers", "settings", "places", "events", "event_registrations", "event_sends"];
   // Collections that belong to ONE catering place (filtered by the active place).
   // ingredients / recipes / allergens are shared master data (not scoped).
   const PLACE_COLLS = ["menu_days", "people", "subscribers", "settings"];
@@ -45,6 +45,65 @@
     (cache.settings || []).forEach((s) => { if (s.id === "menu_config") s.id = "menu_config__" + def; });
     // default type/margin on any older place records
     (cache.places || []).forEach((p) => { if (p.type == null) p.type = "catering"; if (p.food_cost_pct == null) p.food_cost_pct = 30; });
+  }
+
+  // Seed a couple of demo events + registrations (local demo mode only).
+  function ensureEvents() {
+    if (!Array.isArray(cache.events)) cache.events = [];
+    if (!Array.isArray(cache.event_registrations)) cache.event_registrations = [];
+    if (!Array.isArray(cache.event_sends)) cache.event_sends = [];
+    if (cache.events.length) return;
+    cache.events = [
+      {
+        id: "ev_tech_jun", title_en: "MBL Tech Evening — Tools for F&B", title_zh: "MBL 科技之夜 — 餐飲工具",
+        date: "2026-06-18", start_time: "18:30", end_time: "21:30",
+        location: "Taipei · Xinyi", location_zh: "台北 · 信義",
+        description: "An evening about the free software technology we built for F&B, with demos, drinks and industry networking.",
+        description_zh: "一場關於我們為餐飲業打造的免費軟體技術的夜晚，包含實機示範、飲品與業界交流。",
+        schedule: [
+          { time: "18:30", item_en: "Welcome drinks", item_zh: "迎賓飲品" },
+          { time: "19:00", item_en: "Keynote: tech for F&B", item_zh: "主題演講：餐飲科技" },
+          { time: "19:45", item_en: "Live tool demos", item_zh: "工具實機示範" },
+          { time: "20:30", item_en: "Networking & tastings", item_zh: "交流與試吃" },
+        ],
+        speakers: [
+          { name: "Michel Bru", title: "Founder, MBL", bio: "20+ years in F&B operations and technology." },
+          { name: "Guest Speaker", title: "Head of Product", bio: "Building automation tools for kitchens." },
+        ],
+        documents: [
+          { label: "Event slides (PDF)", url: "https://www.fbws.tw/docs/mbl-tech-evening.pdf" },
+          { label: "Tool one-pager", url: "https://www.fbws.tw/docs/mbl-tools.pdf" },
+        ],
+        tool_links: [
+          { label: "MBL Catering app", url: "https://www.fbws.tw/mbl_catering" },
+          { label: "MBL CRM", url: "https://www.fbws.tw/mbl_crm" },
+        ],
+        voucher_code: "MBL_TechnOLOGY_2026",
+        voucher_note: "Can be used only once.",
+        attendees: null, archived_at: null, created_at: "2026-05-20",
+      },
+      {
+        id: "ev_tech_aug", title_en: "MBL Tech Evening — Automation Night", title_zh: "MBL 科技之夜 — 自動化之夜",
+        date: "2026-08-20", start_time: "18:30", end_time: "21:30",
+        location: "Taipei · Xinyi", location_zh: "台北 · 信義",
+        description: "The next evening — kitchen automation, live demos and networking.",
+        description_zh: "下一場夜晚 — 廚房自動化、實機示範與交流。",
+        schedule: [], speakers: [], documents: [], tool_links: [],
+        voucher_code: "", voucher_note: "", attendees: null, archived_at: null, created_at: "2026-06-25",
+      },
+    ];
+    const reg = (id, event_id, name, email, company, job_title, phone) =>
+      ({ id, event_id, name, email, company, job_title, phone, created_at: "2026-06-01" });
+    cache.event_registrations = [
+      reg("reg_1", "ev_tech_jun", "Amélie Chen", "amelie.chen@example.com", "Lumière Bistro", "Owner", "+886 912 000 001"),
+      reg("reg_2", "ev_tech_jun", "David Lin", "david.lin@example.com", "Green Table Co.", "Operations Manager", "+886 912 000 002"),
+      reg("reg_3", "ev_tech_jun", "Sophie Wang", "sophie.wang@example.com", "Harvest Catering", "Chef", "+886 912 000 003"),
+      reg("reg_4", "ev_tech_jun", "Marco Rossi", "marco.rossi@example.com", "Trattoria 88", "Founder", "+886 912 000 004"),
+      reg("reg_5", "ev_tech_jun", "Yuki Tanaka", "yuki.tanaka@example.com", "Sakura F&B", "Marketing Lead", "+886 912 000 005"),
+      reg("reg_6", "ev_tech_jun", "Emma Dubois", "emma.dubois@example.com", "Café Central", "Manager", "+886 912 000 006"),
+      reg("reg_7", "ev_tech_aug", "Liam Murphy", "liam.murphy@example.com", "Northside Grill", "Owner", "+886 912 000 007"),
+      reg("reg_8", "ev_tech_aug", "Chloé Martin", "chloe.martin@example.com", "Bistro Bleu", "Chef", "+886 912 000 008"),
+    ];
   }
 
   const cache = {}; COLLS.forEach((c) => (cache[c] = []));
@@ -223,6 +282,36 @@
 
     menuForDate(date) { return this.all("menu_days").find((m) => m.date === date) || null; },
 
+    /* ---------- events (company-wide) ---------- */
+    eventIsPast(ev) { return !!ev && ev.date < U.TODAY; },
+    eventsByDate() { return this.all("events").slice().sort((a, b) => b.date.localeCompare(a.date)); },
+    upcomingEvents() { return this.eventsByDate().filter((e) => !this.eventIsPast(e)).sort((a, b) => a.date.localeCompare(b.date)); },
+    pastEvents() { return this.eventsByDate().filter((e) => this.eventIsPast(e)); },
+    registrationsForEvent(eventId) {
+      return this.all("event_registrations").filter((r) => r.event_id === eventId)
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    },
+    // The guest list to show. Past events read their frozen snapshot; upcoming
+    // events read the live registrations (which fill up on the website).
+    eventAttendees(ev) {
+      if (!ev) return [];
+      if (Array.isArray(ev.attendees)) return ev.attendees;
+      return this.registrationsForEvent(ev.id).map((r) => ({
+        id: r.id, name: r.name, email: r.email, company: r.company,
+        job_title: r.job_title, phone: r.phone, attended: false, source: "web",
+      }));
+    },
+    // Freeze the live registrations into events.attendees the first time a past
+    // event is opened, so its guest list keeps every detail from then on.
+    async ensureArchived(ev) {
+      if (!ev || !this.eventIsPast(ev) || Array.isArray(ev.attendees)) return ev;
+      const snapshot = this.registrationsForEvent(ev.id).map((r) => ({
+        id: r.id, name: r.name, email: r.email, company: r.company,
+        job_title: r.job_title, phone: r.phone, attended: false, source: "web",
+      }));
+      return await this.update("events", ev.id, { attendees: snapshot, archived_at: U.TODAY });
+    },
+
     // allergens present in a day's menu (union across slots' recipes + any explicit)
     dayAllergens(menuDay) {
       if (!menuDay) return [];
@@ -242,6 +331,7 @@
     if (useSupabase) { try { await Supa.load(); } catch (e) { console.error(e); } }
     else Local.load();
     ensurePlaces(); migratePlaces();
+    if (!useSupabase) ensureEvents();
     if (!useSupabase) Local.persist();
     // resolve the active place (persisted choice, else the first place)
     let stored = null; try { stored = localStorage.getItem(APKEY); } catch (e) {}

@@ -146,6 +146,63 @@ create table if not exists newsletter_log (
 );
 
 -- ------------------------------------------------------------
+-- Events (company-wide — NOT scoped to a catering place)
+-- People register themselves on the website, which writes rows to
+-- event_registrations. When an event's date passes, the app freezes
+-- that live list into events.attendees (a snapshot that keeps every
+-- detail), so the past event's guest list is independent of the live
+-- table afterwards. The "Send Thank You" flow works off that archive.
+-- ------------------------------------------------------------
+create table if not exists events (
+  id            text primary key,
+  title_en      text not null,
+  title_zh      text,
+  date          date not null,
+  start_time    text,           -- "18:30"
+  end_time      text,
+  location      text,
+  location_zh   text,
+  description   text,
+  description_zh text,
+  schedule      jsonb default '[]'::jsonb,  -- [{time, item_en, item_zh}]
+  speakers      jsonb default '[]'::jsonb,  -- [{name, title, bio}]
+  documents     jsonb default '[]'::jsonb,  -- [{label, url}]  (delivered as links)
+  tool_links    jsonb default '[]'::jsonb,  -- [{label, url}]
+  voucher_code  text,
+  voucher_note  text,
+  -- frozen archive snapshot, set once the event is past:
+  -- [{id, name, email, company, job_title, phone, attended, source}]
+  attendees     jsonb,
+  archived_at   timestamptz,
+  created_at    date default current_date
+);
+create index if not exists events_date_idx on events(date);
+
+-- Registrations captured by the public website (event_id links to events).
+create table if not exists event_registrations (
+  id          text primary key,
+  event_id    text references events(id) on delete cascade,
+  name        text,
+  email       text,
+  company     text,
+  job_title   text,
+  phone       text,
+  created_at  timestamptz default now()
+);
+create index if not exists event_registrations_event_idx on event_registrations(event_id);
+
+-- Log of thank-you mailings (one row per email batch sent).
+create table if not exists event_sends (
+  id          text primary key default gen_random_uuid()::text,
+  event_id    text,
+  kind        text,        -- attended | no_show
+  subject     text,
+  recipients  jsonb,       -- ["email", ...]
+  count       int,
+  sent_at     timestamptz default now()
+);
+
+-- ------------------------------------------------------------
 -- Row Level Security
 -- Catering staff app: enable RLS and add policies that match how
 -- you authenticate. Below is a permissive starting point for a
@@ -155,7 +212,7 @@ create table if not exists newsletter_log (
 do $$
 declare t text;
 begin
-  foreach t in array array['allergens','sites','places','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
+  foreach t in array array['allergens','sites','places','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log','events','event_registrations','event_sends']
   loop
     execute format('alter table %I enable row level security;', t);
     execute format($p$create policy %1$I on %1$I for all using (true) with check (true);$p$, t);

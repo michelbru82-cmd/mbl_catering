@@ -89,5 +89,20 @@
   const fmtNum = (n) => n == null ? "—" : (Math.round(n * 10) / 10).toLocaleString();
   const debounce = (fn, ms = 200) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
 
-  window.U = { h, esc, toast, modal, confirmDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY };
+  // Reusable email signature (details block + optional LINE QR), shared by the
+  // newsletter and event mailings. Reads the SIGNATURE_* fields from config.
+  function signature() {
+    const cfg = window.MBL_CONFIG || {};
+    const details = cfg.SIGNATURE_HTML || "";
+    if (!details) return "";
+    const qr = cfg.SIGNATURE_QR_URL
+      ? `<td style="vertical-align:top;padding-left:16px;text-align:center;width:120px">
+           <a href="${esc(cfg.SIGNATURE_LINE_URL || "#")}"><img src="${esc(cfg.SIGNATURE_QR_URL)}" alt="LINE" width="108" style="border:1px solid #e4e1d9;border-radius:8px;display:block" /></a>
+           <div style="font-size:11px;color:#999;margin-top:3px">Scan to add on LINE</div>
+         </td>` : "";
+    return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;border-top:2px solid #23211c;padding-top:14px;width:100%;font-family:Arial,Helvetica,sans-serif;color:#23211c">
+      <tr><td style="vertical-align:top;font-size:13px;line-height:1.6">${details}</td>${qr}</tr></table>`;
+  }
+
+  window.U = { h, esc, toast, modal, confirmDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY, signature };
 })();
