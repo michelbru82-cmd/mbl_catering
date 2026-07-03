@@ -7,12 +7,12 @@
     ["grp_planning", ["dashboard", "menu"]],
     ["grp_kitchen", ["recipes", "ingredients", "production", "people"]],
     ["grp_print", ["printMenu", "labels", "allergenMatrix", "newsletter"]],
-    ["grp_admin", ["places", "allergens"]],
+    ["grp_admin", ["events", "places", "allergens"]],
   ];
   const NAV_SHOP = [
     ["grp_kitchen", ["recipes", "ingredients"]],
     ["grp_print", ["recipeCards", "priceList", "labels", "allergenMatrix", "newsletter"]],
-    ["grp_admin", ["places", "allergens"]],
+    ["grp_admin", ["events", "places", "allergens"]],
   ];
   function currentNav() { return Data.activePlaceType() === "shop" ? NAV_SHOP : NAV_CATERING; }
 

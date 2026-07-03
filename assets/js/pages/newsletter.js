@@ -117,6 +117,7 @@ function buildNewsletter(date) {
         <div style="margin-top:14px;font-size:13px;color:#555">
           <b>Ingredients / 食材:</b><br>${ings.length ? esc(ings.join(", ")) : "—"}
         </div>
+        ${U.signature()}
         <div style="margin-top:16px;font-size:11px;color:#999">Sent by ${esc(cfg.ORG_NAME)} · reply to ${esc(cfg.NEWSLETTER_REPLY_TO || "")}</div>
       </div>
     </div>`;

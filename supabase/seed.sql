@@ -482,4 +482,21 @@ insert into people(id,name,kind,site_id,date_in,date_out,allergen_ids) values('p
 insert into people(id,name,kind,site_id,date_in,date_out,allergen_ids) values('ppl_c7_ppl','Lin Dubois','guest','site_yongchun','2025-08-25',null,'[]'::jsonb);
 insert into subscribers(id,email,name,active,created_at) values('sub_c8_sub','michel.bru82@gmail.com','Michel Bru',true,'2026-06-30');
 insert into subscribers(id,email,name,active,created_at) values('sub_c9_sub','kitchen@fbws.tw','Kitchen',true,'2026-06-30');
+
+-- ---- demo events (company-wide) + website registrations ----
+insert into events(id,title_en,title_zh,date,start_time,end_time,location,location_zh,description,description_zh,schedule,speakers,documents,tool_links,voucher_code,voucher_note,attendees,archived_at,created_at) values
+('ev_tech_jun','MBL Tech Evening — Tools for F&B','MBL 科技之夜 — 餐飲工具','2026-06-18','18:30','21:30','Taipei · Xinyi','台北 · 信義','An evening about the free software technology we built for F&B, with demos, drinks and industry networking.','一場關於我們為餐飲業打造的免費軟體技術的夜晚，包含實機示範、飲品與業界交流。','[{"time":"18:30","item_en":"Welcome drinks","item_zh":"迎賓飲品"},{"time":"19:00","item_en":"Keynote: tech for F&B","item_zh":"主題演講：餐飲科技"},{"time":"19:45","item_en":"Live tool demos","item_zh":"工具實機示範"},{"time":"20:30","item_en":"Networking & tastings","item_zh":"交流與試吃"}]'::jsonb,'[{"name":"Michel Bru","title":"Founder, MBL","bio":"20+ years in F&B operations and technology."},{"name":"Guest Speaker","title":"Head of Product","bio":"Building automation tools for kitchens."}]'::jsonb,'[{"label":"Event slides (PDF)","url":"https://www.fbws.tw/docs/mbl-tech-evening.pdf"},{"label":"Tool one-pager","url":"https://www.fbws.tw/docs/mbl-tools.pdf"}]'::jsonb,'[{"label":"MBL Catering app","url":"https://www.fbws.tw/mbl_catering"},{"label":"MBL CRM","url":"https://www.fbws.tw/mbl_crm"}]'::jsonb,'MBL_TechnOLOGY_2026','Can be used only once.',null,null,'2026-05-20'),
+('ev_tech_aug','MBL Tech Evening — Automation Night','MBL 科技之夜 — 自動化之夜','2026-08-20','18:30','21:30','Taipei · Xinyi','台北 · 信義','The next evening — kitchen automation, live demos and networking.','下一場夜晚 — 廚房自動化、實機示範與交流。','[]'::jsonb,'[]'::jsonb,'[]'::jsonb,'[]'::jsonb,'','',null,null,'2026-06-25')
+on conflict (id) do nothing;
+
+insert into event_registrations(id,event_id,name,email,company,job_title,phone) values
+('reg_1','ev_tech_jun','Amélie Chen','amelie.chen@example.com','Lumière Bistro','Owner','+886 912 000 001'),
+('reg_2','ev_tech_jun','David Lin','david.lin@example.com','Green Table Co.','Operations Manager','+886 912 000 002'),
+('reg_3','ev_tech_jun','Sophie Wang','sophie.wang@example.com','Harvest Catering','Chef','+886 912 000 003'),
+('reg_4','ev_tech_jun','Marco Rossi','marco.rossi@example.com','Trattoria 88','Founder','+886 912 000 004'),
+('reg_5','ev_tech_jun','Yuki Tanaka','yuki.tanaka@example.com','Sakura F&B','Marketing Lead','+886 912 000 005'),
+('reg_6','ev_tech_jun','Emma Dubois','emma.dubois@example.com','Café Central','Manager','+886 912 000 006'),
+('reg_7','ev_tech_aug','Liam Murphy','liam.murphy@example.com','Northside Grill','Owner','+886 912 000 007'),
+('reg_8','ev_tech_aug','Chloé Martin','chloe.martin@example.com','Bistro Bleu','Chef','+886 912 000 008')
+on conflict (id) do nothing;
 commit;
