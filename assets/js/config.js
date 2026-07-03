@@ -64,7 +64,7 @@ window.MBL_CONFIG = {
   THIS_MODULE: "catering",
   ANNUAL_DISCOUNT: 0.2,        // 20% off when paid annually (690×12×0.8 = 6,624)
   MODULES: [
-    { key: "shopping", url: "https://www.fbws.tw/mbl_tools",    monthly: 690 },
+    { key: "shopping", url: "https://www.fbws.tw/mbl",          monthly: 690 },
     { key: "catering", url: "https://www.fbws.tw/mbl_catering", monthly: 690 },
     { key: "crm",      url: "https://www.fbws.tw/mbl_crm",      monthly: 690 },
   ],
