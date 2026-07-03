@@ -27,7 +27,19 @@
   const APKEY = "mbl_active_place";
   let activePlaceId = null;
   const cfg = window.MBL_CONFIG || {};
-  const useSupabase = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+  // Login isolation: never connect to a Supabase project used by another MBL
+  // app (MBL Tools / MBL Shopping), or the two would share the same users.
+  // Compare by project ref (the "xxxx" in https://xxxx.supabase.co).
+  const projRef = (u) => { try { return new URL(u).hostname.split(".")[0].toLowerCase(); } catch (e) { return ""; } };
+  const forbiddenRefs = (cfg.OTHER_APP_SUPABASE_URLS || []).map(projRef).filter(Boolean);
+  const sharesOtherApp = !!cfg.SUPABASE_URL && forbiddenRefs.includes(projRef(cfg.SUPABASE_URL));
+  if (sharesOtherApp) {
+    console.error("[MBL Catering] Refusing to connect: SUPABASE_URL is a project listed in OTHER_APP_SUPABASE_URLS (used by another MBL app). Catering must use its OWN Supabase project so logins stay separate. Falling back to local mode.");
+  }
+  const useSupabase = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase) && !sharesOtherApp;
+  // Exposed so the Connect-database dialog can block forbidden projects too.
+  window.MBL_projRef = projRef;
+  window.MBL_forbiddenRefs = forbiddenRefs;
 
   // Seed the default catering places + tag any legacy (place-less) records.
   function ensurePlaces() {
@@ -113,6 +125,9 @@
     source: useSupabase ? "supabase" : "local",
     COLLS, PLACE_COLLS,
     ready: () => readyPromise,
+    // The live Supabase client (created during load) — used by auth.js for
+    // email sign-in. Null in local demo mode.
+    supaClient: () => sb,
     // all() auto-scopes per-place collections to the active place; allRaw() is unscoped.
     // Recipes: shop places have their OWN catalogue (place_id === active shop); catering
     // places share the master recipes (place_id null). This keeps a pastry shop's products

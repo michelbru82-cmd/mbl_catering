@@ -13,12 +13,36 @@ try { _sbUrl = localStorage.getItem("mbl_sb_url") || ""; _sbKey = localStorage.g
 
 window.MBL_CONFIG = {
   // ---- Supabase (blank = local demo mode; filled = cloud) ----
-  SUPABASE_URL:      _sbUrl,   // e.g. https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: _sbKey,   // public anon key
+  // MBL Catering's OWN Supabase project (separate from MBL Tools). The anon key
+  // is public and safe to commit — the data is protected by Row Level Security.
+  // A URL/key entered in-app (the data-source badge) overrides these defaults.
+  SUPABASE_URL:      _sbUrl || "https://mmmjpkkvqfjegyawrisg.supabase.co",
+  SUPABASE_ANON_KEY: _sbKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tbWpwa2t2cWZqZWd5YXdyaXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4OTkyOTIsImV4cCI6MjA5ODQ3NTI5Mn0.nsd8ICeHFuMQTc_o8T99ZgFctlldZ-Ek7Qt4EGUXvjsB",
+
+  // ---- Authentication (email login via Supabase Auth) ----
+  // When connected to Supabase, the homepage requires visitors to sign in
+  // before the management app loads. Set to false to leave it open (data is
+  // still protected by Supabase RLS). Ignored in local demo mode.
+  REQUIRE_AUTH: true,
+
+  // ---- Login isolation (KEEP CATERING SEPARATE FROM MBL TOOLS) ----
+  // Supabase logins belong to a Supabase PROJECT. Two apps that share the
+  // same project also share the same users — a Catering account could then
+  // sign into MBL Tools / MBL Shopping, and vice-versa. To keep the logins
+  // separate, MBL Catering MUST use its OWN Supabase project, distinct from
+  // the one MBL Tools uses.
+  //
+  // Safeguard: list here the Supabase project URL(s) used by your OTHER MBL
+  // apps (e.g. MBL Tools / MBL Shopping). Catering will then REFUSE to connect
+  // to any of them — so this app can never accidentally share their user pool.
+  // Example: OTHER_APP_SUPABASE_URLS: ["https://abcd1234.supabase.co"]
+  OTHER_APP_SUPABASE_URLS: [],
 
   // ---- Branding (also editable in assets/css/theme.css) ----
   ORG_NAME:    "MBL Catering",
   ORG_NAME_ZH: "MBL 餐飲",
+  APP_NAME:    "Management",
+  APP_NAME_ZH: "管理系統",
 
   // ---- Sites / campuses served (used by menus, production, people) ----
   DEFAULT_SITES: ["Liu-Gong Campus", "Yongchun"],
