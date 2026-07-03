@@ -90,6 +90,24 @@ dialog — so it can never accidentally share their user pool:
 OTHER_APP_SUPABASE_URLS: ["https://<mbl-tools-project>.supabase.co"],
 ```
 
+### Demo mode & vouchers
+
+Without full access the app runs in **demo mode** — the bundled seed data is
+read-only and any add/edit/delete invites the visitor to subscribe. **Full
+access** is granted while `profiles.full_access_until` is in the future.
+
+A voucher unlocks **1 month** of full access, limited to **one redemption per
+account and per IP**. To enable it:
+
+1. Run `supabase/voucher_schema.sql` (after `schema.sql`) — adds `profiles` and
+   `voucher_redemptions` with RLS.
+2. Deploy the Edge Function: `supabase functions deploy redeem-voucher`.
+   The accepted code defaults to `MBL_TECHNOLOGY_2026`; override with
+   `supabase secrets set VOUCHER_CODE=… VOUCHER_MONTHS=1`.
+
+Redemption limits and the entitlement write happen server-side (service role),
+so the client can't bypass them.
+
 ---
 
 ## Deploying to `www.fbws.tw/mbl_catering`
