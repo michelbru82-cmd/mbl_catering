@@ -159,6 +159,18 @@
 }
 .landing__grid { display: grid; gap: 16px; }
 .landing__grid--3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.landing__grid--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+/* Pricing cards */
+.price__card { display: flex; flex-direction: column; text-align: left; }
+.price__card--this { border-color: var(--brand-primary); box-shadow: 0 0 0 1px var(--brand-primary) inset; }
+.price__name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.price__amt { color: var(--brand-primary-dark); font-size: 28px; font-weight: 800; line-height: 1.1; }
+.price__per { color: var(--text-soft); font-size: 13px; font-weight: 500; margin-left: 3px; }
+.price__year { margin-top: 4px; }
+.price__cta { width: 100%; margin-top: 16px; text-align: center; text-decoration: none; }
+.price__card--soon { background: var(--surface-2); opacity: .92; }
+.price__soon { margin-bottom: 10px; background: var(--brand-accent-soft); color: var(--brand-accent); }
 
 /* How-it-works steps */
 .landing__step { text-align: center; position: relative; margin-top: 16px; overflow: visible; }
