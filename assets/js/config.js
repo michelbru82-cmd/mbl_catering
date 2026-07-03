@@ -13,8 +13,11 @@ try { _sbUrl = localStorage.getItem("mbl_sb_url") || ""; _sbKey = localStorage.g
 
 window.MBL_CONFIG = {
   // ---- Supabase (blank = local demo mode; filled = cloud) ----
-  SUPABASE_URL:      _sbUrl,   // e.g. https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: _sbKey,   // public anon key
+  // MBL Catering's OWN Supabase project (separate from MBL Tools). The anon key
+  // is public and safe to commit — the data is protected by Row Level Security.
+  // A URL/key entered in-app (the data-source badge) overrides these defaults.
+  SUPABASE_URL:      _sbUrl || "https://mmmjpkkvqfjegyawrisg.supabase.co",
+  SUPABASE_ANON_KEY: _sbKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tbWpwa2t2cWZqZWd5YXdyaXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4OTkyOTIsImV4cCI6MjA5ODQ3NTI5Mn0.nsd8ICeHFuMQTc_o8T99ZgFctlldZ-Ek7Qt4EGUXvjsB",
 
   // ---- Authentication (email login via Supabase Auth) ----
   // When connected to Supabase, the homepage requires visitors to sign in
