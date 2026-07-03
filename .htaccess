@@ -18,5 +18,5 @@ AddCharset utf-8 .html .css .js .json .svg
   # inherited policy for this folder and set one that allows Supabase + the CDNs.
   Header always unset Content-Security-Policy
   Header unset Content-Security-Policy
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://mmmjpkkvqfjegyawrisg.supabase.co wss://mmmjpkkvqfjegyawrisg.supabase.co https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://mmmjpkkvqfjegyawrisg.supabase.co wss://mmmjpkkvqfjegyawrisg.supabase.co https://cdn.jsdelivr.net https://fbws.tw https://www.fbws.tw; object-src 'none'; base-uri 'self'"
 </IfModule>
