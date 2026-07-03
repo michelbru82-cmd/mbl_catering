@@ -132,6 +132,8 @@
           : "Currently LOCAL (this browser only). Paste your Supabase Project URL + anon key to store data in the cloud. First run supabase/schema.sql and supabase/seed.sql in your Supabase SQL editor.")]),
       H("div", { class: "field" }, [H("label", {}, "Supabase URL"), url]),
       H("div", { class: "field" }, [H("label", {}, "Supabase anon key"), key]),
+      H("div", { class: "banner banner--allergen small", style: "margin:-4px 0 10px" },
+        "⚠ Use a Supabase project that is ONLY for MBL Catering. Do NOT reuse the MBL Tools / MBL Shopping project, or the two apps would share the same logins."),
       H("div", { class: "small muted", style: "margin:-4px 0 10px" }, "Tip: export your current data first, then run it in Supabase so the cloud starts with everything you have now."),
       H("button", { class: "btn btn--sm", onClick: () => exportSql() }, "⤓ Export my current data as SQL"),
       connected ? H("button", { class: "btn btn--danger btn--sm", onClick: () => { try { localStorage.removeItem("mbl_sb_url"); localStorage.removeItem("mbl_sb_key"); } catch (e) {} location.reload(); } }, "Disconnect (back to local)") : null,
@@ -141,6 +143,12 @@
       onSave() {
         const u = url.value.trim(), k = key.value.trim();
         if (!u || !k) { U.toast("Both fields required", true); return false; }
+        // Login isolation: refuse a project used by another MBL app.
+        const ref = (window.MBL_projRef || (() => ""))(u);
+        if (ref && (window.MBL_forbiddenRefs || []).includes(ref)) {
+          U.toast("That project belongs to another MBL app — use Catering's own Supabase project so logins stay separate.", true);
+          return false;
+        }
         try { localStorage.setItem("mbl_sb_url", u); localStorage.setItem("mbl_sb_key", k); } catch (e) {}
         location.reload();
       },

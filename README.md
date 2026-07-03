@@ -73,6 +73,23 @@ Edits are saved in your browser (`localStorage`). To wipe back to the seed data,
 > **Tighten these** (e.g. require `auth.role() = 'authenticated'`) before exposing
 > the app publicly, and put it behind Supabase Auth.
 
+### Login isolation — keep Catering separate from MBL Tools
+
+Supabase logins belong to a **Supabase project**. Two apps pointed at the same
+project share the same users — so a Catering account could sign into MBL Tools /
+MBL Shopping, and vice-versa. **To keep the logins separate, give MBL Catering
+its own Supabase project**, distinct from the one MBL Tools uses.
+
+A safeguard is built in: list your other MBL apps' project URLs in
+`OTHER_APP_SUPABASE_URLS` (in `config.js`) and Catering will **refuse to connect
+to any of them** — both at boot and in the in-app *Connect cloud database*
+dialog — so it can never accidentally share their user pool:
+
+```js
+// assets/js/config.js
+OTHER_APP_SUPABASE_URLS: ["https://<mbl-tools-project>.supabase.co"],
+```
+
 ---
 
 ## Deploying to `www.fbws.tw/mbl_catering`

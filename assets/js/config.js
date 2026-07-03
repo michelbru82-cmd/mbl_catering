@@ -22,6 +22,19 @@ window.MBL_CONFIG = {
   // still protected by Supabase RLS). Ignored in local demo mode.
   REQUIRE_AUTH: true,
 
+  // ---- Login isolation (KEEP CATERING SEPARATE FROM MBL TOOLS) ----
+  // Supabase logins belong to a Supabase PROJECT. Two apps that share the
+  // same project also share the same users — a Catering account could then
+  // sign into MBL Tools / MBL Shopping, and vice-versa. To keep the logins
+  // separate, MBL Catering MUST use its OWN Supabase project, distinct from
+  // the one MBL Tools uses.
+  //
+  // Safeguard: list here the Supabase project URL(s) used by your OTHER MBL
+  // apps (e.g. MBL Tools / MBL Shopping). Catering will then REFUSE to connect
+  // to any of them — so this app can never accidentally share their user pool.
+  // Example: OTHER_APP_SUPABASE_URLS: ["https://abcd1234.supabase.co"]
+  OTHER_APP_SUPABASE_URLS: [],
+
   // ---- Branding (also editable in assets/css/theme.css) ----
   ORG_NAME:    "MBL Catering",
   ORG_NAME_ZH: "MBL 餐飲",
