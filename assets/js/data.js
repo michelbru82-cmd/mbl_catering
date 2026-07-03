@@ -141,14 +141,24 @@
     },
     allRaw: (c) => cache[c] || [],
     get: (c, id) => (cache[c] || []).find((x) => x.id === id) || null,
+    // Demo gate: without full access the seed data is read-only. A blocked write
+    // pops the subscribe modal and rejects. (Auth may not be loaded yet at boot;
+    // the app's own seeding writes cache directly and never hits this.)
+    canEdit: () => !(window.Auth && typeof Auth.hasFullAccess === "function") || Auth.hasFullAccess(),
+    _guard() {
+      if (Data.canEdit()) return true;
+      if (window.Auth && Auth.showSubscribe) { try { Auth.showSubscribe(); } catch (e) {} }
+      return false;
+    },
     create: (c, o) => {
+      if (!Data._guard()) return Promise.reject(new Error(I18N.t("demoBlocked")));
       if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId;
       // new recipes created inside a shop place belong to that shop
       if (c === "recipes" && o && o.place_id == null && Data.activePlaceType() === "shop") o.place_id = activePlaceId;
       return adapter.create(c, o);
     },
-    update: (c, id, p) => adapter.update(c, id, p),
-    remove: (c, id) => adapter.remove(c, id),
+    update: (c, id, p) => Data._guard() ? adapter.update(c, id, p) : Promise.reject(new Error(I18N.t("demoBlocked"))),
+    remove: (c, id) => Data._guard() ? adapter.remove(c, id) : Promise.reject(new Error(I18N.t("demoBlocked"))),
     resetLocal: () => { if (!useSupabase) Local.reset(); },
 
     // ---------- catering places ----------

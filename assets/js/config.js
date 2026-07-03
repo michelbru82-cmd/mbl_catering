@@ -68,5 +68,14 @@ window.MBL_CONFIG = {
     { key: "catering", url: "https://www.fbws.tw/mbl_catering", monthly: 690 },
     { key: "crm",      url: "https://www.fbws.tw/mbl_crm",      monthly: 690 },
   ],
-  BUNDLE: { monthly: 1990, comingSoon: true }
+  BUNDLE: { monthly: 1990, comingSoon: true },
+
+  // ---- Demo mode / full access ----
+  // Without full access the app is a read-only demo of the seed data; any
+  // add/edit/delete invites the visitor to subscribe. Full access is granted
+  // while profiles.full_access_until is in the future (see supabase/voucher_schema.sql),
+  // or for the emails listed here (so the owner is never demo-locked).
+  ADMIN_EMAILS: ["michel.bru82@gmail.com"],
+  // Supabase Edge Function that redeems a voucher for 1 month of full access.
+  VOUCHER_FUNCTION: "redeem-voucher"
 };

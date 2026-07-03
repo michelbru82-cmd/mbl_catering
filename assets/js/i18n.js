@@ -57,6 +57,20 @@
       price_bundle_sub: "Every MBL module, one subscription.",
       mod_shopping: "Shopping Management", mod_catering: "Catering Management", mod_crm: "CRM",
 
+      // ---- Demo mode / voucher ----
+      demoBadge: "Demo", demoBlocked: "Subscribe to edit",
+      subscribeTitle: "You're in demo mode",
+      subscribeBody: "This demo is limited to the sample data. Subscribe for full access to add and edit your own menus, recipes, people and more.",
+      seePlans: "See plans", haveVoucher: "Have a voucher code?",
+      voucher: "Voucher code", applyVoucher: "Apply voucher", redeem: "Redeem",
+      voucherNeedAccount: "Create an account and your voucher will apply automatically.",
+      voucherApplied: "Voucher applied — 1 month of full access. 🎉",
+      voucherInvalid: "That voucher code isn't valid.",
+      voucherUsedAccount: "This voucher has already been used on your account.",
+      voucherUsedIp: "This voucher has already been used from your connection.",
+      voucherFailed: "Couldn't redeem the voucher. Please try again.",
+      maybeLater: "Maybe later",
+
       add: "Add", edit: "Edit", save: "Save", cancel: "Cancel", delete: "Delete",
       remove: "Remove", search: "Search…", close: "Close", print: "Print", today: "Today",
       tomorrow: "Tomorrow", nextDay: "Next day", all: "All", none: "None", actions: "Actions",
@@ -199,6 +213,20 @@
       price_soon: "即將推出", price_bundle: "全功能組合包",
       price_bundle_sub: "所有 MBL 模組，一次訂閱。",
       mod_shopping: "採購管理", mod_catering: "餐飲管理", mod_crm: "客戶關係管理",
+
+      // ---- Demo mode / voucher ----
+      demoBadge: "體驗版", demoBlocked: "訂閱後即可編輯",
+      subscribeTitle: "您正在使用體驗版",
+      subscribeBody: "體驗版僅提供範例資料。訂閱後即可完整存取，新增與編輯您自己的菜單、食譜、人員等。",
+      seePlans: "查看方案", haveVoucher: "有優惠代碼？",
+      voucher: "優惠代碼", applyVoucher: "套用優惠代碼", redeem: "兌換",
+      voucherNeedAccount: "建立帳號後，優惠代碼將自動套用。",
+      voucherApplied: "優惠代碼已套用——享有 1 個月完整存取。🎉",
+      voucherInvalid: "此優惠代碼無效。",
+      voucherUsedAccount: "此優惠代碼已在您的帳號使用過。",
+      voucherUsedIp: "此優惠代碼已從您的連線使用過。",
+      voucherFailed: "無法兌換優惠代碼，請再試一次。",
+      maybeLater: "稍後再說",
 
       add: "新增", edit: "編輯", save: "儲存", cancel: "取消", delete: "刪除",
       remove: "移除", search: "搜尋…", close: "關閉", print: "列印", today: "今天",

@@ -21,11 +21,23 @@
 
   const t = (k) => I18N.t(k);
   const h = U.h;
+  const PENDING_VOUCHER = "mbl_pending_voucher";
   let currentUser = null;
+  let fullAccessUntil = null;     // ISO string of the entitlement expiry, or null
+  const adminEmails = (cfg.ADMIN_EMAILS || []).map((e) => String(e).toLowerCase());
 
   const Auth = {
     get user() { return currentUser; },
     get enabled() { return requireAuth; },
+
+    // True when the account may edit (not just browse the demo): local demo is
+    // always read-only; on Supabase, an allow-listed admin email or a live
+    // full_access_until (voucher / subscription) unlocks full access.
+    hasFullAccess() {
+      if (!usingSupabase || !currentUser) return false;
+      if (adminEmails.includes((currentUser.email || "").toLowerCase())) return true;
+      return !!(fullAccessUntil && new Date(fullAccessUntil).getTime() > Date.now());
+    },
 
     // The homepage is the front door: it is shown on EVERY visit. It resolves
     // when the user chooses to enter (Enter button) or has just signed in.
@@ -38,10 +50,90 @@
             currentUser = data && data.session ? data.session.user : null;
             sb.auth.onAuthStateChange((_e, session) => { currentUser = session ? session.user : null; });
           } catch (e) { /* fall through to homepage */ }
+          if (currentUser) {
+            await this._loadEntitlement(sb);
+            await this._redeemPending();
+          }
         }
       }
       await this.showHome();
       return true;
+    },
+
+    async _loadEntitlement(sb) {
+      try {
+        const { data } = await sb.from("profiles").select("full_access_until").eq("id", currentUser.id).maybeSingle();
+        fullAccessUntil = data ? data.full_access_until : null;
+      } catch (e) { fullAccessUntil = null; }
+    },
+
+    // Redeem a voucher that was entered before the account existed.
+    async _redeemPending() {
+      let code = "";
+      try { code = localStorage.getItem(PENDING_VOUCHER) || ""; } catch (e) {}
+      if (!code || this.hasFullAccess()) { try { localStorage.removeItem(PENDING_VOUCHER); } catch (e) {} return; }
+      try { await this.redeemVoucher(code); U.toast(t("voucherApplied")); } catch (e) { /* user can retry in-app */ }
+      try { localStorage.removeItem(PENDING_VOUCHER); } catch (e) {}
+    },
+
+    // Call the redeem-voucher Edge Function (the server enforces the per-IP /
+    // per-account limits). Resolves with the grant; throws an i18n error key.
+    async redeemVoucher(code) {
+      const sb = Data.supaClient();
+      if (!sb || !currentUser) throw new Error("not_signed_in");
+      const { data, error } = await sb.functions.invoke(cfg.VOUCHER_FUNCTION || "redeem-voucher", { body: { code: code } });
+      let body = data;
+      if (error && error.context && typeof error.context.json === "function") {
+        try { body = await error.context.json(); } catch (e) {}
+      }
+      if (body && body.ok) { fullAccessUntil = body.full_access_until; return body; }
+      const map = { invalid_code: "voucherInvalid", already_redeemed_account: "voucherUsedAccount", already_redeemed_ip: "voucherUsedIp", already_redeemed: "voucherUsedAccount" };
+      throw new Error(map[body && body.error] || "voucherFailed");
+    },
+
+    // Centered "you're in demo mode — subscribe" modal, shown when a demo user
+    // attempts to edit. Offers the plans (homepage pricing) and voucher entry.
+    showSubscribe() {
+      const body = h("div", {}, [
+        h("p", { class: "small", style: "margin:0 0 16px;line-height:1.6;color:var(--text-soft)" }, t("subscribeBody")),
+        h("div", { class: "field" }, [
+          h("label", {}, t("voucher")),
+          (function () {
+            const inp = h("input", { class: "input", placeholder: "MBL_…", autocapitalize: "characters" });
+            inp._isVoucher = true; return inp;
+          })(),
+        ]),
+      ]);
+      const voucherInput = body.querySelector("input");
+      const msg = h("div", { class: "small", style: "min-height:16px;margin:-6px 0 8px" });
+      body.appendChild(msg);
+
+      U.modal(t("subscribeTitle"), body, {
+        saveText: t("redeem"),
+        cancelText: t("maybeLater"),
+        async onSave() {
+          const code = (voucherInput.value || "").trim();
+          if (!code) { msg.style.color = "var(--danger)"; msg.textContent = t("voucher"); return false; }
+          if (!usingSupabase || !currentUser) {
+            // No account yet → stash the code and send them to sign up.
+            try { localStorage.setItem(PENDING_VOUCHER, code); } catch (e) {}
+            Auth.openHome();
+            return true;
+          }
+          try {
+            await Auth.redeemVoucher(code);
+            U.toast(t("voucherApplied"));
+            location.reload();
+            return true;
+          } catch (e) {
+            msg.style.color = "var(--danger)"; msg.textContent = t(e.message) || t("voucherFailed");
+            return false;
+          }
+        },
+        buttons: [
+          { label: t("seePlans"), class: "btn--accent", close: true, onClick: () => { Auth.openHome(); setTimeout(() => { const p = document.querySelector(".landing #pricing"); if (p) p.scrollIntoView({ behavior: "smooth" }); }, 60); } },
+        ],
+      });
     },
 
     // Open the homepage over the running app (from the sidebar brand).
@@ -286,6 +378,15 @@
         // when reopening the homepage from inside the app.
         function signin() {
           if (!mustSignIn()) return null;
+          // Entering a voucher without an account: stash it and switch to sign-up
+          // so it applies automatically once the account exists (see _redeemPending).
+          function applyVoucher() {
+            const code = (state.voucher || "").trim();
+            if (!code) return;
+            try { localStorage.setItem(PENDING_VOUCHER, code); } catch (e) {}
+            state.mode = "signup"; state.error = ""; state.info = t("voucherNeedAccount"); state.voucherOpen = false;
+            render(); scrollTo("signin");
+          }
           const emailInp = h("input", { class: "input", type: "email", placeholder: "your@email.com", autocomplete: "username", value: state.email || "" });
           const passInp = h("input", { class: "input", type: "password", placeholder: "••••••••", autocomplete: state.mode === "signup" ? "new-password" : "current-password", value: state.password || "" });
           emailInp.addEventListener("input", (e) => (state.email = e.target.value));
@@ -304,6 +405,18 @@
               state.mode === "signup" ? t("signin_haveAcct") : t("signin_noAcctQ"), " ",
               h("button", { type: "button", class: "landing__link", onClick: () => { state.mode = state.mode === "signup" ? "signin" : "signup"; state.error = ""; state.info = ""; render(); } },
                 state.mode === "signup" ? t("signin_signInLink") : t("signin_create")),
+            ]),
+            h("div", { class: "landing__voucher" }, [
+              h("button", { type: "button", class: "landing__link small", onClick: () => { state.voucherOpen = !state.voucherOpen; render(); } }, t("haveVoucher")),
+              state.voucherOpen ? h("div", { style: "margin-top:8px" }, [
+                (function () {
+                  const vinp = h("input", { class: "input", placeholder: "MBL_…", autocapitalize: "characters", style: "width:100%;box-sizing:border-box", value: state.voucher || "" });
+                  vinp.addEventListener("input", (e) => (state.voucher = e.target.value));
+                  vinp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); applyVoucher(); } });
+                  return vinp;
+                })(),
+                h("button", { type: "button", class: "btn btn--accent", style: "width:100%;margin-top:8px", onClick: applyVoucher }, t("applyVoucher")),
+              ]) : null,
             ]),
           ]);
           return h("section", { id: "signin", class: "landing__section landing__signin" }, form);

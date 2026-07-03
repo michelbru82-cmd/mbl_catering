@@ -212,6 +212,7 @@
 .landing__signin { max-width: 400px; padding-top: 40px; padding-bottom: 24px; }
 .landing__signin-card { box-shadow: var(--shadow); }
 .landing__signin-toggle { text-align: center; margin-top: 14px; }
+.landing__voucher { text-align: center; margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 12px; }
 .landing__link {
   background: none;
   border: none;
