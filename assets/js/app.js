@@ -54,7 +54,7 @@
     document.title = (cfg.ORG_NAME || "MBL Catering") + " — Management";
   }
 
-  // Segmented language switcher in the top bar (mirrors the MBL Tools header).
+  // Segmented language switcher in the sidebar footer (mirrors MBL Tools).
   function buildLangSwitch() {
     const box = document.getElementById("langSwitch");
     if (!box) return;
@@ -66,6 +66,8 @@
           if (I18N.lang === code) return;
           I18N.set(code);
           buildNav(); applyBrand(); buildLangSwitch();
+          const so = document.getElementById("signOutBtn");
+          if (so && so.style.display !== "none") so.textContent = I18N.t("signOut");
           Router.rerender();
         },
       }, label));
@@ -79,12 +81,16 @@
       document.getElementById("sidebar").classList.toggle("open");
     });
 
-    // sign out — only meaningful when email auth is active (Supabase + REQUIRE_AUTH)
-    const signOutBtn = document.getElementById("signOutTop");
+    // Signed-in email + sign out in the sidebar footer (like MBL Tools) — only
+    // when email auth is active (Supabase + REQUIRE_AUTH).
+    const signOutBtn = document.getElementById("signOutBtn");
     if (signOutBtn && window.Auth && Auth.enabled) {
+      signOutBtn.textContent = I18N.t("signOut");
       signOutBtn.style.display = "";
-      signOutBtn.title = I18N.t("signOut");
       signOutBtn.addEventListener("click", () => Auth.signOut());
+      const user = Auth.user;
+      const sbUser = document.getElementById("sbUser");
+      if (sbUser && user && user.email) { sbUser.textContent = user.email; sbUser.style.display = ""; }
     }
     // brand → reopen the homepage
     const brand = document.getElementById("brandHome");
