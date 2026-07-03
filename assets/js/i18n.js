@@ -31,6 +31,8 @@
       sendToAttended: "Send to attendees", sendToNoShow: "Send to no-shows",
       noRecipients: "No recipients in this group", sentOk: "sent", sending: "Sending…",
       sendLog: "Send history", noEventYet: "No events yet — create one to get started.",
+      eventsTableMissingTitle: "Events tables not found in your database",
+      eventsTableMissingBody: "You're connected to Supabase but the events tables don't exist yet, so nothing can load. Open your Supabase project → SQL Editor and run the events migration from supabase/schema.sql (the events, event_registrations and event_sends tables). Then reload this page.",
 
       add: "Add", edit: "Edit", save: "Save", cancel: "Cancel", delete: "Delete",
       remove: "Remove", search: "Search…", close: "Close", print: "Print", today: "Today",
@@ -149,6 +151,8 @@
       sendToAttended: "發送給出席者", sendToNoShow: "發送給未出席者",
       noRecipients: "此群組沒有收件人", sentOk: "已發送", sending: "發送中…",
       sendLog: "發送紀錄", noEventYet: "尚無活動 — 建立一個開始吧。",
+      eventsTableMissingTitle: "資料庫中找不到活動資料表",
+      eventsTableMissingBody: "您已連接 Supabase，但活動資料表尚未建立，因此無法載入。請開啟 Supabase 專案 → SQL Editor，執行 supabase/schema.sql 中的活動遷移（events、event_registrations 與 event_sends 資料表），然後重新載入本頁。",
 
       add: "新增", edit: "編輯", save: "儲存", cancel: "取消", delete: "刪除",
       remove: "移除", search: "搜尋…", close: "關閉", print: "列印", today: "今天",

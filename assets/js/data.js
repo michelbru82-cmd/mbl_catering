@@ -148,13 +148,14 @@
 
   /* ---------------- SUPABASE adapter ---------------- */
   let sb = null;
+  const loadErrors = {}; // coll -> error, when a table fails to load (e.g. missing table)
   const Supa = {
     async load() {
       sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
       await Promise.all(COLLS.map(async (c) => {
         const { data, error } = await sb.from(c).select("*");
-        if (error) { console.error("Supabase load", c, error); cache[c] = []; }
-        else cache[c] = data || [];
+        if (error) { console.error("Supabase load", c, error); cache[c] = []; loadErrors[c] = error; }
+        else { cache[c] = data || []; delete loadErrors[c]; }
       }));
     },
     async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) throw error; cache[coll].push(data); return data; },
@@ -281,6 +282,17 @@
     },
 
     menuForDate(date) { return this.all("menu_days").find((m) => m.date === date) || null; },
+
+    /* ---------- Supabase load diagnostics ---------- */
+    // A collection failed to load from Supabase (only meaningful in supabase mode).
+    loadError(coll) { return loadErrors[coll] || null; },
+    // The collection's table appears to be missing from the database (needs migration).
+    tableMissing(coll) {
+      const e = loadErrors[coll]; if (!e) return false;
+      const code = String(e.code || ""), msg = String(e.message || "").toLowerCase();
+      return code === "42P01" || code === "PGRST205" || code === "PGRST202" ||
+             msg.includes("does not exist") || msg.includes("could not find the table") || msg.includes("schema cache");
+    },
 
     /* ---------- events (company-wide) ---------- */
     eventIsPast(ev) { return !!ev && ev.date < U.realToday(); },

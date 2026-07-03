@@ -17,6 +17,17 @@ PAGES.events = {
 /* ---------------- list ---------------- */
 function renderEventList(view) {
   const t = I18N.t.bind(I18N), h = U.h;
+  // Safety net: in Supabase mode, if the events table hasn't been created yet the
+  // app would otherwise just show empty lists. Surface the real reason + the fix.
+  if (Data.source === "supabase" && (Data.tableMissing("events") || Data.loadError("events"))) {
+    view.appendChild(h("div", { class: "banner banner--warn", style: "align-items:flex-start" }, [
+      h("span", { style: "font-size:18px" }, "⚠️"),
+      h("div", {}, [
+        h("div", { style: "font-weight:700;margin-bottom:2px" }, t("eventsTableMissingTitle")),
+        h("div", { class: "small" }, t("eventsTableMissingBody")),
+      ]),
+    ]));
+  }
   view.appendChild(h("div", { class: "banner banner--info" }, [h("span", {}, "📅"), h("div", { class: "small" }, t("eventsIntro"))]));
   view.appendChild(h("div", { class: "toolbar" }, [
     h("div", { style: "flex:1" }),

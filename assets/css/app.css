@@ -192,6 +192,7 @@ table.data tr.clickable { cursor: pointer; }
   background: var(--brand-accent-soft); color: #7a4d12; margin-bottom: 16px; font-size: 13.5px;
 }
 .banner--info { background: #e8f0fa; color: #1f4d80; }
+.banner--warn { background: #fdecea; color: #b5341f; }
 .banner--allergen { background: var(--allergen-soft); color: var(--allergen); font-weight: 500; }
 
 /* macro chips */
