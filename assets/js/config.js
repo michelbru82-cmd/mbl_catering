@@ -36,7 +36,7 @@ window.MBL_CONFIG = {
   // newsletter. This is your FBWS signature. To show the "add us on LINE" QR,
   // host the image somewhere public and set SIGNATURE_QR_URL below (leave blank
   // to hide it). You can also update the LINE link in SIGNATURE_LINE_URL.
-  SIGNATURE_QR_URL:   "",  // LINE QR image — host it publicly, e.g. "https://www.fbws.tw/assets/line-qr.png" (blank = hidden)
+  SIGNATURE_QR_URL:   "https://www.fbws.tw/mbl_catering/assets/img/line-qr.png",  // LINE QR (served from this app; blank = hidden)
   SIGNATURE_LINE_URL: "https://line.me/R/ti/p/@fbws",  // your LINE add-friend link
   // Details block only — U.signature() lays this out with the QR beside it.
   SIGNATURE_HTML:
