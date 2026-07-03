@@ -68,6 +68,12 @@
 
   // date helpers (local, no Date.now in render-critical paths but fine in UI)
   const TODAY = "2026-06-30"; // app "current day" anchor (matches seed July-2026 menu)
+  // The REAL calendar date (YYYY-MM-DD). Used by real-world features like
+  // events, where past/upcoming must follow the actual day, not the seed anchor.
+  function realToday() {
+    const d = new Date(), p = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  }
   function isoAddDays(iso, n) {
     const [y, m, d] = iso.split("-").map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d + n));
@@ -104,5 +110,5 @@
       <tr><td style="vertical-align:top;font-size:13px;line-height:1.6">${details}</td>${qr}</tr></table>`;
   }
 
-  window.U = { h, esc, toast, modal, confirmDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY, signature };
+  window.U = { h, esc, toast, modal, confirmDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY, realToday, signature };
 })();
