@@ -283,7 +283,7 @@
     menuForDate(date) { return this.all("menu_days").find((m) => m.date === date) || null; },
 
     /* ---------- events (company-wide) ---------- */
-    eventIsPast(ev) { return !!ev && ev.date < U.TODAY; },
+    eventIsPast(ev) { return !!ev && ev.date < U.realToday(); },
     eventsByDate() { return this.all("events").slice().sort((a, b) => b.date.localeCompare(a.date)); },
     upcomingEvents() { return this.eventsByDate().filter((e) => !this.eventIsPast(e)).sort((a, b) => a.date.localeCompare(b.date)); },
     pastEvents() { return this.eventsByDate().filter((e) => this.eventIsPast(e)); },
@@ -309,7 +309,7 @@
         id: r.id, name: r.name, email: r.email, company: r.company,
         job_title: r.job_title, phone: r.phone, attended: false, source: "web",
       }));
-      return await this.update("events", ev.id, { attendees: snapshot, archived_at: U.TODAY });
+      return await this.update("events", ev.id, { attendees: snapshot, archived_at: U.realToday() });
     },
 
     // allergens present in a day's menu (union across slots' recipes + any explicit)

@@ -150,7 +150,7 @@ function eventForm(ev) {
   const f = {
     title_en: h("input", { class: "input", value: e.title_en || "" }),
     title_zh: h("input", { class: "input", value: e.title_zh || "" }),
-    date: h("input", { class: "input", type: "date", value: e.date || U.TODAY }),
+    date: h("input", { class: "input", type: "date", value: e.date || U.realToday() }),
     start_time: h("input", { class: "input", type: "time", value: e.start_time || "" }),
     end_time: h("input", { class: "input", type: "time", value: e.end_time || "" }),
     location: h("input", { class: "input", value: e.location || "" }),
@@ -197,7 +197,7 @@ function eventForm(ev) {
         voucher_code: f.voucher_code.value.trim(), voucher_note: f.voucher_note.value.trim(),
       };
       if (ev) await Data.update("events", ev.id, patch);
-      else await Data.create("events", Object.assign({ attendees: null, archived_at: null, created_at: U.TODAY }, patch));
+      else await Data.create("events", Object.assign({ attendees: null, archived_at: null, created_at: U.realToday() }, patch));
       U.toast(t("saved")); Router.rerender();
     },
   });
@@ -317,7 +317,7 @@ function emailPanel(ev, kind, recipients, state, onSent) {
       });
       await Data.create("event_sends", {
         event_id: ev.id, kind, subject: data.subject,
-        recipients: recipients.map((r) => r.email), count: recipients.length, sent_at: U.TODAY,
+        recipients: recipients.map((r) => r.email), count: recipients.length, sent_at: U.realToday(),
       });
       const n = (res && res.count != null) ? res.count : recipients.length;
       U.toast(n + " " + t("sentOk") + (res && res.local ? " (local demo — wire SMTP to send for real)" : ""));
