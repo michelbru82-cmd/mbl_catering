@@ -133,6 +133,7 @@
             langSwitcher(),
             h("button", { class: "btn btn--ghost btn--sm landing__navlink", onClick: () => scrollTo("features") }, t("nav_features")),
             h("button", { class: "btn btn--ghost btn--sm landing__navlink", onClick: () => scrollTo("how") }, t("nav_how")),
+            h("button", { class: "btn btn--ghost btn--sm landing__navlink", onClick: () => scrollTo("pricing") }, t("nav_pricing")),
             opts.reopen
               ? h("button", { class: "btn btn--primary btn--sm", onClick: enterApp }, t("backToApp"))
               : (mustSignIn()
@@ -234,6 +235,53 @@
           ]);
         }
 
+        // Pricing — the MBL suite of modules. The card for THIS app starts the
+        // trial here; the others link out to their own site.
+        function pricing() {
+          const cur = cfg.CURRENCY || "NT$";
+          const disc = cfg.ANNUAL_DISCOUNT != null ? cfg.ANNUAL_DISCOUNT : 0.2;
+          const annual = (m) => Math.round(m * 12 * (1 - disc));
+          const fmt = (n) => n.toLocaleString();
+          const mods = cfg.MODULES || [];
+          const thisMod = cfg.THIS_MODULE;
+
+          const startTrial = () => {
+            if (mustSignIn()) { state.mode = "signup"; state.error = ""; state.info = ""; render(); scrollTo("signin"); }
+            else enterApp();
+          };
+
+          const priceLines = (name, monthly) => [
+            h("div", { class: "price__name" }, name),
+            h("div", { class: "price__amt" }, [cur + monthly, h("span", { class: "price__per" }, t("price_permo"))]),
+            h("div", { class: "price__year muted small" }, t("price_peryear").replace("{cur}", cur).replace("{n}", fmt(annual(monthly)))),
+          ];
+
+          const cards = mods.map((m) => {
+            const isThis = m.key === thisMod;
+            const cta = isThis
+              ? h("button", { class: "btn btn--primary price__cta", onClick: startTrial }, t("price_trial"))
+              : h("a", { class: "btn btn--primary price__cta", href: m.url, target: "_blank", rel: "noopener" }, t("price_trial"));
+            return h("div", { class: "card price__card" + (isThis ? " price__card--this" : "") },
+              [...priceLines(t("mod_" + m.key), m.monthly), cta]);
+          });
+
+          const b = cfg.BUNDLE;
+          const bundleCard = b ? h("div", { class: "card price__card price__card--soon" }, [
+            h("div", { class: "landing__tag price__soon" }, t("price_soon")),
+            h("div", { class: "price__name" }, t("price_bundle")),
+            h("div", { class: "price__amt" }, [cur + fmt(b.monthly), h("span", { class: "price__per" }, t("price_permo"))]),
+            h("div", { class: "muted small", style: "margin-top:8px" }, t("price_bundle_sub")),
+          ]) : null;
+
+          return h("section", { id: "pricing", class: "landing__section" }, [
+            h("div", { class: "landing__section-head" }, [
+              h("h2", { class: "landing__h2" }, t("pricing_title")),
+              h("div", { class: "muted" }, t("pricing_sub")),
+            ]),
+            h("div", { class: "landing__grid landing__grid--4" }, [...cards, bundleCard].filter(Boolean)),
+          ]);
+        }
+
         // Sign-in card (Supabase + REQUIRE_AUTH). Skipped when auth is off /
         // when reopening the homepage from inside the app.
         function signin() {
@@ -278,6 +326,7 @@
           root.appendChild(hero());
           root.appendChild(how());
           root.appendChild(features());
+          root.appendChild(pricing());
           const si = signin();
           if (si) root.appendChild(si);
           root.appendChild(footer());

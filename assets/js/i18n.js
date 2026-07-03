@@ -48,6 +48,15 @@
       signOut: "Sign out", backToApp: "Back to the app",
       footerTagline: "Daily catering management — menus, kitchen, allergens & newsletter.",
 
+      // ---- Pricing ----
+      nav_pricing: "Pricing",
+      pricing_title: "Simple pricing", pricing_sub: "One price per module. 14-day free trial, no card required.",
+      price_permo: "/mo", price_peryear: "or {cur}{n}/year",
+      price_trial: "Start 14-day free trial", price_open: "Open app →",
+      price_soon: "Coming soon", price_bundle: "All-Access Bundle",
+      price_bundle_sub: "Every MBL module, one subscription.",
+      mod_shopping: "Shopping Management", mod_catering: "Catering Management", mod_crm: "CRM",
+
       add: "Add", edit: "Edit", save: "Save", cancel: "Cancel", delete: "Delete",
       remove: "Remove", search: "Search…", close: "Close", print: "Print", today: "Today",
       tomorrow: "Tomorrow", nextDay: "Next day", all: "All", none: "None", actions: "Actions",
@@ -181,6 +190,15 @@
       err_loginfail: "登入失敗，請檢查電子郵件與密碼。", err_server: "發生錯誤，請再試一次。",
       signOut: "登出", backToApp: "返回系統",
       footerTagline: "每日餐飲管理——菜單、廚房、過敏原與電子報。",
+
+      // ---- Pricing ----
+      nav_pricing: "方案",
+      pricing_title: "簡單方案", pricing_sub: "每個模組一個價格。14 天免費試用，免信用卡。",
+      price_permo: "/月", price_peryear: "或 {cur}{n}/年",
+      price_trial: "開始 14 天免費試用", price_open: "開啟應用 →",
+      price_soon: "即將推出", price_bundle: "全功能組合包",
+      price_bundle_sub: "所有 MBL 模組，一次訂閱。",
+      mod_shopping: "採購管理", mod_catering: "餐飲管理", mod_crm: "客戶關係管理",
 
       add: "新增", edit: "編輯", save: "儲存", cancel: "取消", delete: "刪除",
       remove: "移除", search: "搜尋…", close: "關閉", print: "列印", today: "今天",

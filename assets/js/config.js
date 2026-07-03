@@ -55,5 +55,18 @@ window.MBL_CONFIG = {
 
   // ---- Defaults ----
   DEFAULT_LANG: "en",          // "en" | "zh"
-  CURRENCY: "NT$"
+  CURRENCY: "NT$",
+
+  // ---- Pricing (homepage) ----
+  // The MBL suite of apps, shown as pricing modules on every app's homepage.
+  // `THIS_MODULE` marks which one IS this app: its card starts the trial here;
+  // the others link out to their own site. Annual = 12 months − ANNUAL_DISCOUNT.
+  THIS_MODULE: "catering",
+  ANNUAL_DISCOUNT: 0.2,        // 20% off when paid annually (690×12×0.8 = 6,624)
+  MODULES: [
+    { key: "shopping", url: "https://www.fbws.tw/mbl_tools",    monthly: 690 },
+    { key: "catering", url: "https://www.fbws.tw/mbl_catering", monthly: 690 },
+    { key: "crm",      url: "https://www.fbws.tw/mbl_crm",      monthly: 690 },
+  ],
+  BUNDLE: { monthly: 1990, comingSoon: true }
 };
