@@ -79,6 +79,27 @@ h1,h2,h3,h4 { margin: 0 0 .4em; line-height: 1.2; }
 }
 .topbar__title { font-size: 19px; font-weight: 700; flex: 1; }
 .topbar__actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.topbar__right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.topbar__signout {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 6px 9px; cursor: pointer; color: var(--text-soft); font-size: 15px; line-height: 1;
+}
+.topbar__signout:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+
+/* Segmented language switcher (matches the MBL Tools header) — used in the
+   top bar and on the homepage. */
+.langswitch {
+  display: flex; gap: 2px; padding: 2px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg);
+}
+.langswitch button {
+  border: none; background: transparent; color: var(--text-soft);
+  border-radius: 6px; padding: 5px 10px; cursor: pointer;
+  font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+}
+.langswitch button:hover { color: var(--brand-primary); }
+.langswitch button.active { background: var(--brand-primary); color: #fff; }
 .icon-btn {
   display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text);
 }

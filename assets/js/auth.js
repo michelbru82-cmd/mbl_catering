@@ -18,20 +18,17 @@
   const cfg = window.MBL_CONFIG || {};
   const usingSupabase = Data.source === "supabase";
   const requireAuth = usingSupabase && cfg.REQUIRE_AUTH !== false;
-  const ENTERED_KEY = "mbl_entered";
 
   const t = (k) => I18N.t(k);
   const h = U.h;
   let currentUser = null;
 
-  const entered = () => { try { return localStorage.getItem(ENTERED_KEY) === "1"; } catch (e) { return false; } };
-  const markEntered = () => { try { localStorage.setItem(ENTERED_KEY, "1"); } catch (e) {} };
-
   const Auth = {
     get user() { return currentUser; },
     get enabled() { return requireAuth; },
 
-    // Resolves when the app may render (signed in, entered demo, or auth off).
+    // The homepage is the front door: it is shown on EVERY visit. It resolves
+    // when the user chooses to enter (Enter button) or has just signed in.
     async ensure() {
       if (usingSupabase) {
         const sb = Data.supaClient();
@@ -42,12 +39,7 @@
             sb.auth.onAuthStateChange((_e, session) => { currentUser = session ? session.user : null; });
           } catch (e) { /* fall through to homepage */ }
         }
-        if (currentUser) return true;            // already signed in
-        await this.showHome();                    // sign in (or Enter, if auth off)
-        return true;
       }
-      // Local demo mode — show the homepage once, then remember.
-      if (entered()) return true;
       await this.showHome();
       return true;
     },
@@ -56,7 +48,6 @@
     openHome() { return this.showHome({ reopen: true }); },
 
     async signOut() {
-      try { localStorage.removeItem(ENTERED_KEY); } catch (e) {}
       if (usingSupabase && Data.supaClient()) {
         try { await Data.supaClient().auth.signOut(); } catch (e) {}
       }
@@ -77,11 +68,14 @@
         document.body.appendChild(root);
 
         const enterApp = () => {
-          markEntered();
           root.remove();
           if (app) app.style.display = "";
           resolve(true);
         };
+
+        // Whether the user must sign in before entering (auth on + not signed in
+        // + not just reopening the homepage from inside the app).
+        const mustSignIn = () => requireAuth && !currentUser && !opts.reopen;
 
         // Sign in / sign up against Supabase Auth. On success the page reloads
         // so the data layer re-inits WITH the session and loads the real rows;
@@ -117,10 +111,12 @@
 
         const scrollTo = (id) => root.querySelector("#" + id)?.scrollIntoView({ behavior: "smooth" });
 
-        function langToggle() {
-          const btn = h("button", { class: "landing__lang", onClick: () => { I18N.set(I18N.lang === "en" ? "zh" : "en"); render(); } },
-            I18N.lang === "en" ? "中文" : "EN");
-          return btn;
+        function langSwitcher() {
+          const box = h("div", { class: "langswitch" });
+          [["en", "EN"], ["zh", "中文"]].forEach(([code, label]) => {
+            box.appendChild(h("button", { class: I18N.lang === code ? "active" : "", onClick: () => { if (I18N.lang !== code) { I18N.set(code); render(); } } }, label));
+          });
+          return box;
         }
 
         function header() {
@@ -134,12 +130,12 @@
             ]),
           ]);
           const nav = h("nav", { class: "landing__nav" }, [
-            langToggle(),
+            langSwitcher(),
             h("button", { class: "btn btn--ghost btn--sm landing__navlink", onClick: () => scrollTo("features") }, t("nav_features")),
             h("button", { class: "btn btn--ghost btn--sm landing__navlink", onClick: () => scrollTo("how") }, t("nav_how")),
             opts.reopen
               ? h("button", { class: "btn btn--primary btn--sm", onClick: enterApp }, t("backToApp"))
-              : (requireAuth
+              : (mustSignIn()
                   ? h("button", { class: "btn btn--primary btn--sm", onClick: () => scrollTo("signin") }, t("nav_signin"))
                   : h("button", { class: "btn btn--primary btn--sm", onClick: enterApp }, t("hero_cta"))),
           ]);
@@ -147,12 +143,12 @@
         }
 
         function hero() {
-          const primaryCta = requireAuth && !opts.reopen
+          const primaryCta = mustSignIn()
             ? h("button", { class: "btn btn--primary landing__cta", onClick: () => scrollTo("signin") }, t("nav_signin"))
-            : h("button", { class: "btn btn--primary landing__cta", onClick: enterApp }, t("hero_cta"));
-          const secondaryCta = (usingSupabase && requireAuth && !opts.reopen)
-            ? null
-            : h("button", { class: "btn landing__cta", onClick: enterApp }, opts.reopen ? t("backToApp") : t("hero_demo"));
+            : h("button", { class: "btn btn--primary landing__cta", onClick: enterApp }, opts.reopen ? t("backToApp") : t("hero_cta"));
+          const secondaryCta = (!usingSupabase && !opts.reopen)
+            ? h("button", { class: "btn landing__cta", onClick: enterApp }, t("hero_demo"))
+            : null;
 
           const stats = [
             [t("stat1big"), t("stat1small")],
@@ -188,7 +184,7 @@
                 ]),
                 h("p", { class: "landing__lead" }, t("hero_p")),
                 h("div", { class: "landing__cta-row" }, [primaryCta, secondaryCta]),
-                h("div", { class: "muted small landing__note" }, opts.reopen ? "" : t("hero_note")),
+                h("div", { class: "muted small landing__note" }, (!usingSupabase && !opts.reopen) ? t("hero_note") : ""),
               ]),
               h("div", { class: "landing__hero-art" }, mockCard),
             ]),
@@ -241,15 +237,7 @@
         // Sign-in card (Supabase + REQUIRE_AUTH). Skipped when auth is off /
         // when reopening the homepage from inside the app.
         function signin() {
-          if (opts.reopen) return null;
-          if (!requireAuth) {
-            return h("section", { id: "signin", class: "landing__section landing__signin" }, [
-              h("div", { class: "card landing__signin-card" }, [
-                h("div", { class: "landing__h2", style: "text-align:center;margin-bottom:6px" }, t("why_title")),
-                h("button", { class: "btn btn--primary", style: "width:100%", onClick: enterApp }, t("hero_cta")),
-              ]),
-            ]);
-          }
+          if (!mustSignIn()) return null;
           const emailInp = h("input", { class: "input", type: "email", placeholder: "your@email.com", autocomplete: "username", value: state.email || "" });
           const passInp = h("input", { class: "input", type: "password", placeholder: "••••••••", autocomplete: state.mode === "signup" ? "new-password" : "current-password", value: state.password || "" });
           emailInp.addEventListener("input", (e) => (state.email = e.target.value));
