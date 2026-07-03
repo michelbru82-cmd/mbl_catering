@@ -1,0 +1,238 @@
+/* ============================================================
+   MBL Catering — Homepage / landing
+   ------------------------------------------------------------
+   The public entry screen (hero + how-it-works + features +
+   sign-in). Styled after MBL Tools — editorial serif headings,
+   a tinted hero and soft-shadow cards — using this app's brand
+   tokens (theme.css), so it stays on-brand for Catering.
+   ============================================================ */
+
+.landing {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ─────────────────────────────────────────────── */
+.landing__header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.landing__nav { display: flex; align-items: center; gap: 8px; }
+.landing__lang {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  border-radius: var(--radius-sm);
+  padding: 6px 11px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.landing__lang:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+@media (max-width: 640px) { .landing__navlink { display: none; } }
+
+/* ── Hero ────────────────────────────────────────────────── */
+.landing__hero {
+  background:
+    radial-gradient(820px 360px at 85% -8%, var(--brand-accent-soft), transparent 60%),
+    linear-gradient(180deg, var(--surface) 0%, var(--brand-primary-soft) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.landing__hero-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 72px 24px 52px;
+  display: flex;
+  gap: 44px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.landing__hero-copy { flex: 1 1 360px; min-width: 280px; }
+.landing__hero-art { flex: 1 1 320px; min-width: 280px; }
+
+.landing__tag {
+  display: inline-block;
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding: 4px 11px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+}
+.landing__h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.12;
+  letter-spacing: .3px;
+  margin: 0 0 18px;
+  color: var(--text);
+}
+.landing__h1-accent { color: var(--brand-primary); }
+.landing__lead {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-soft);
+  margin: 0 0 26px;
+  max-width: 540px;
+}
+.landing__cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.landing__cta { padding: 13px 24px; font-size: 14px; }
+.landing__note { margin-top: 16px; }
+
+/* Mock "today's menu" card */
+.landing__mock {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.landing__mock-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.landing__dot { width: 10px; height: 10px; border-radius: 999px; background: var(--border); display: inline-block; }
+.landing__dot:nth-child(1) { background: var(--brand-accent); }
+.landing__dot:nth-child(2) { background: var(--warn); }
+.landing__dot:nth-child(3) { background: var(--brand-primary); }
+.landing__mock-title { margin-left: 8px; color: var(--text-soft); font-size: 11px; letter-spacing: 1px; }
+.landing__mock-body { padding: 14px 16px; }
+.landing__mock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.landing__mock-row:last-of-type { border-bottom: none; }
+.landing__mock-row--alert b { color: var(--allergen); }
+.landing__mock-row--alert span { color: var(--allergen); }
+.landing__mock-caption { margin-top: 10px; }
+
+/* Stat tiles */
+.landing__stats {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px 44px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.landing__stat {
+  flex: 1 1 200px;
+  min-width: 170px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.landing__stat-big { font-weight: 700; color: var(--brand-primary); font-size: 16px; }
+.landing__stat-small { color: var(--text-soft); font-size: 12px; margin-top: 2px; }
+
+/* ── Sections (how / features) ───────────────────────────── */
+.landing__section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 56px 24px 8px;
+  scroll-margin-top: 76px;
+}
+.landing__section-head { text-align: center; margin-bottom: 30px; }
+.landing__h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(22px, 3.4vw, 30px);
+  margin: 0 0 8px;
+  color: var(--text);
+}
+.landing__grid { display: grid; gap: 16px; }
+.landing__grid--3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* How-it-works steps */
+.landing__step { text-align: center; position: relative; margin-top: 16px; overflow: visible; }
+.landing__step-n {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--brand-primary);
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.landing__step-ic { font-size: 30px; margin: 12px 0 8px; }
+.landing__step-h { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+
+/* Feature cards */
+.landing__feat-ic {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--brand-primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.landing__feat-h { font-weight: 700; color: var(--brand-primary-dark); font-size: 15px; margin-bottom: 8px; }
+
+/* ── Sign in ─────────────────────────────────────────────── */
+.landing__signin { max-width: 400px; padding-top: 40px; padding-bottom: 24px; }
+.landing__signin-card { box-shadow: var(--shadow); }
+.landing__signin-toggle { text-align: center; margin-top: 14px; }
+.landing__link {
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.landing__footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 32px 24px 40px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+  .landing__hero-inner { padding: 44px 20px 34px; gap: 28px; }
+  .landing__section { padding: 44px 20px 8px; }
+}

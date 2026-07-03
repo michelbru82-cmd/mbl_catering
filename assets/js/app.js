@@ -72,6 +72,17 @@
       document.getElementById("sidebar").classList.toggle("open");
     });
 
+    // sign out — only meaningful when email auth is active (Supabase + REQUIRE_AUTH)
+    const signOutBtn = document.getElementById("signOutBtn");
+    if (signOutBtn && window.Auth && Auth.enabled) {
+      signOutBtn.style.display = "";
+      signOutBtn.title = I18N.t("signOut");
+      signOutBtn.addEventListener("click", () => Auth.signOut());
+    }
+    // brand → reopen the homepage
+    const brand = document.getElementById("brandHome");
+    if (brand && window.Auth) brand.addEventListener("click", () => Auth.openHome());
+
     // data-source badge → connect / disconnect cloud database
     const src = document.getElementById("dataSrc");
     if (src) { src.style.cursor = "pointer"; src.title = "Connect cloud database"; src.addEventListener("click", connectDbModal); }
@@ -139,6 +150,8 @@
   // expose nav rebuild so the Places page can refresh the switcher after changes
   window.MBLApp = { buildNav, connectDbModal };
 
-  // wait for data then boot UI
-  Data.ready().then(boot);
+  // wait for data, gate on the homepage / auth, then boot the UI
+  Data.ready()
+    .then(() => (window.Auth ? Auth.ensure() : true))
+    .then(boot);
 })();

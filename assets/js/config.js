@@ -16,9 +16,17 @@ window.MBL_CONFIG = {
   SUPABASE_URL:      _sbUrl,   // e.g. https://xxxx.supabase.co
   SUPABASE_ANON_KEY: _sbKey,   // public anon key
 
+  // ---- Authentication (email login via Supabase Auth) ----
+  // When connected to Supabase, the homepage requires visitors to sign in
+  // before the management app loads. Set to false to leave it open (data is
+  // still protected by Supabase RLS). Ignored in local demo mode.
+  REQUIRE_AUTH: true,
+
   // ---- Branding (also editable in assets/css/theme.css) ----
   ORG_NAME:    "MBL Catering",
   ORG_NAME_ZH: "MBL 餐飲",
+  APP_NAME:    "Management",
+  APP_NAME_ZH: "管理系統",
 
   // ---- Sites / campuses served (used by menus, production, people) ----
   DEFAULT_SITES: ["Liu-Gong Campus", "Yongchun"],

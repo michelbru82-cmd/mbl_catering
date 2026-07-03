@@ -113,6 +113,9 @@
     source: useSupabase ? "supabase" : "local",
     COLLS, PLACE_COLLS,
     ready: () => readyPromise,
+    // The live Supabase client (created during load) — used by auth.js for
+    // email sign-in. Null in local demo mode.
+    supaClient: () => sb,
     // all() auto-scopes per-place collections to the active place; allRaw() is unscoped.
     // Recipes: shop places have their OWN catalogue (place_id === active shop); catering
     // places share the master recipes (place_id null). This keeps a pastry shop's products
