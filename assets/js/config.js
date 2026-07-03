@@ -36,7 +36,7 @@ window.MBL_CONFIG = {
   // apps (e.g. MBL Tools / MBL Shopping). Catering will then REFUSE to connect
   // to any of them — so this app can never accidentally share their user pool.
   // Example: OTHER_APP_SUPABASE_URLS: ["https://abcd1234.supabase.co"]
-  OTHER_APP_SUPABASE_URLS: [],
+  OTHER_APP_SUPABASE_URLS: ["https://axgxaeovlcvjbyqpybla.supabase.co"], // MBL Tools / MBL Shopping project
 
   // ---- Branding (also editable in assets/css/theme.css) ----
   ORG_NAME:    "MBL Catering",
