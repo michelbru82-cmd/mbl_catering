@@ -100,6 +100,17 @@
     const src = document.getElementById("dataSrc");
     if (src) { src.style.cursor = "pointer"; src.title = "Connect cloud database"; src.addEventListener("click", connectDbModal); }
 
+    // Demo badge (read-only mode) → opens the subscribe prompt.
+    if (window.Data && Data.canEdit && !Data.canEdit()) {
+      const title = document.getElementById("pageTitle");
+      if (title && !document.getElementById("demoBadge")) {
+        title.insertAdjacentElement("afterend", U.h("span", {
+          id: "demoBadge", class: "demo-badge", title: I18N.t("subscribeTitle"),
+          onClick: () => { if (window.Auth && Auth.showSubscribe) Auth.showSubscribe(); },
+        }, I18N.t("demoBadge")));
+      }
+    }
+
     if (!location.hash) location.hash = "#/dashboard";
     Router.render();
   }
