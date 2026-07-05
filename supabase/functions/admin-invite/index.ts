@@ -65,12 +65,38 @@ Deno.serve(async (req) => {
 
   // ---- parse the request ----
   let email = "", sections: string[] | null = null, redirectTo: string | undefined;
+  let resend = false, userId = "";
   try {
     const body = await req.json();
     email = String(body?.email ?? "").trim().toLowerCase();
     if (Array.isArray(body?.sections)) sections = body.sections.map((s: unknown) => String(s));
     if (typeof body?.redirectTo === "string") redirectTo = body.redirectTo;
+    resend = body?.resend === true;
+    if (typeof body?.user_id === "string") userId = body.user_id;
   } catch { /* no body */ }
+
+  // ---- resend an invite to a user who hasn't accepted yet ----
+  // inviteUserByEmail won't re-email an existing user, so we remove the pending
+  // (unconfirmed) account and invite it again. Confirmed users are left alone.
+  if (resend) {
+    if (!userId) return json({ ok: false, error: "bad_request" }, 400);
+    const { data: got } = await admin.auth.admin.getUserById(userId);
+    const existing = got?.user;
+    if (!existing) return json({ ok: false, error: "not_found" }, 404);
+    if (existing.email_confirmed_at) return json({ ok: false, error: "already_active" }, 409);
+    const targetEmail = (existing.email ?? email).toLowerCase();
+    await admin.auth.admin.deleteUser(userId);
+    const { data: inv, error: invErr } = await admin.auth.admin.inviteUserByEmail(
+      targetEmail, redirectTo ? { redirectTo } : undefined,
+    );
+    if (invErr || !inv?.user) return json({ ok: false, error: "invite_failed", detail: invErr?.message }, 400);
+    await admin.from("profiles").upsert(
+      { id: inv.user.id, email: targetEmail, role: "user", sections, active: true, invited_by: caller.id },
+      { onConflict: "id" },
+    );
+    return json({ ok: true, user_id: inv.user.id, resent: true });
+  }
+
   if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ ok: false, error: "bad_email" }, 400);
 
   // ---- create the invite (service role) ----
