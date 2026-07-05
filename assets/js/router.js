@@ -26,6 +26,12 @@ window.Router = (function () {
   async function render() {
     await Data.ready();
     const { key, params } = parse();
+    // Section gating: send a user to a safe landing if they open a section
+    // their admin hasn't granted (admins & local demo see everything).
+    if (window.Auth && PAGES[key] && !Auth.canSee(key)) {
+      const home = Auth.firstAllowed();
+      if (home !== key) { location.hash = "#/" + home; return; }
+    }
     const page = PAGES[key] || PAGES.dashboard;
     // nav highlight
     document.querySelectorAll("#nav a").forEach((a) => a.classList.toggle("active", a.dataset.key === (PAGES[key] ? key : "dashboard")));
