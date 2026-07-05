@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
   // ---- parse the request ----
   let email = "", sections: string[] | null = null, redirectTo: string | undefined;
-  let resend = false, userId = "";
+  let resend = false, userId = "", action = "", primaryId = "";
   const company: Record<string, string> = {};
   try {
     const body = await req.json();
@@ -74,10 +74,61 @@ Deno.serve(async (req) => {
     if (typeof body?.redirectTo === "string") redirectTo = body.redirectTo;
     resend = body?.resend === true;
     if (typeof body?.user_id === "string") userId = body.user_id;
+    if (typeof body?.action === "string") action = body.action;
+    if (typeof body?.primary_id === "string") primaryId = body.primary_id;
     for (const k of ["company_official", "company_trading", "company_rep", "company_tax"]) {
       if (typeof body?.[k] === "string") company[k] = body[k].trim();
     }
   } catch { /* no body */ }
+
+  const PRIVATE_TABLES = ["sites", "places", "menu_days", "people", "subscribers", "settings", "newsletter_log"];
+  const LIBRARY_TABLES = ["allergens", "ingredients", "recipes"];
+
+  // ---- delete a login (keep the data) ----
+  // Reassign anything the user owns to the admin, re-point any team members to
+  // the admin, then remove the auth login. No data is lost.
+  if (action === "delete") {
+    if (!userId) return json({ ok: false, error: "bad_request" }, 400);
+    if (userId === caller.id) return json({ ok: false, error: "cannot_delete_self" }, 400);
+    for (const tbl of [...PRIVATE_TABLES, ...LIBRARY_TABLES]) {
+      await admin.from(tbl).update({ owner_id: caller.id }).eq("owner_id", userId);
+    }
+    await admin.from("profiles").update({ account_id: caller.id }).eq("account_id", userId); // members follow the data
+    const { error: delErr } = await admin.auth.admin.deleteUser(userId);
+    if (delErr) return json({ ok: false, error: "delete_failed", detail: delErr.message }, 400);
+    await admin.from("profiles").delete().eq("id", userId); // in case the FK isn't ON DELETE CASCADE
+    return json({ ok: true, deleted: userId });
+  }
+
+  // ---- add another email to an existing user's access (shared workspace) ----
+  if (action === "add_member") {
+    if (!primaryId) return json({ ok: false, error: "bad_request" }, 400);
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ ok: false, error: "bad_email" }, 400);
+    // resolve the primary's account + inherit its sections/company identity
+    const { data: primaryProf } = await admin.from("profiles")
+      .select("account_id, sections, company_official, company_trading, company_rep, company_tax")
+      .eq("id", primaryId).maybeSingle();
+    const account = primaryProf?.account_id || primaryId;
+    const inheritSections = sections ?? (Array.isArray(primaryProf?.sections) ? primaryProf!.sections : null);
+    const { data: inv, error: invErr } = await admin.auth.admin.inviteUserByEmail(
+      email, redirectTo ? { redirectTo } : undefined,
+    );
+    if (invErr || !inv?.user) {
+      const msg = (invErr?.message ?? "").toLowerCase();
+      if (msg.includes("already") || msg.includes("registered") || msg.includes("exists")) return json({ ok: false, error: "already_exists" }, 409);
+      return json({ ok: false, error: "invite_failed", detail: invErr?.message }, 400);
+    }
+    await admin.from("profiles").upsert({
+      id: inv.user.id, email, role: "user", active: true, invited_by: caller.id,
+      account_id: account, sections: inheritSections,
+      company_official: primaryProf?.company_official ?? null, company_trading: primaryProf?.company_trading ?? null,
+      company_rep: primaryProf?.company_rep ?? null, company_tax: primaryProf?.company_tax ?? null,
+    }, { onConflict: "id" });
+    // the trigger seeds a starter place owned by the new login; drop it so the
+    // member uses the shared workspace's places instead.
+    await admin.from("places").delete().eq("owner_id", inv.user.id);
+    return json({ ok: true, user_id: inv.user.id, account_id: account, member: true });
+  }
 
   // ---- resend an invite to a user who hasn't accepted yet ----
   // inviteUserByEmail won't re-email an existing user, so we remove the pending

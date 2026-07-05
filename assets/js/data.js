@@ -115,6 +115,16 @@
 
   /* ---------------- SUPABASE adapter ---------------- */
   let sb = null;
+  // Best-effort activity logging (never blocks or breaks the main write).
+  const LOG_COLLS = new Set(["menu_days", "recipes", "ingredients", "people", "subscribers", "places", "allergens", "settings", "sites", "newsletter_log"]);
+  function logAct(action, coll, row) {
+    try {
+      if (!sb || !LOG_COLLS.has(coll)) return;
+      const email = (window.Auth && Auth.user && Auth.user.email) || null;
+      const label = row ? (row.name || row.name_en || row.title || row.date || row.email || null) : null;
+      sb.from("activity_log").insert({ action, entity: coll, entity_id: row && row.id != null ? String(row.id) : null, label, actor_email: email }).then(() => {}, () => {});
+    } catch (e) { /* logging must never throw */ }
+  }
   const Supa = {
     async load() {
       sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
@@ -124,9 +134,9 @@
         else cache[c] = data || [];
       }));
     },
-    async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) throw error; cache[coll].push(data); return data; },
-    async update(coll, id, patch) { const { data, error } = await sb.from(coll).update(patch).eq("id", id).select().single(); if (error) throw error; const i = cache[coll].findIndex((x) => x.id === id); if (i >= 0) cache[coll][i] = data; return data; },
-    async remove(coll, id) { const { error } = await sb.from(coll).delete().eq("id", id); if (error) throw error; cache[coll] = cache[coll].filter((x) => x.id !== id); },
+    async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) throw error; cache[coll].push(data); logAct("create", coll, data); return data; },
+    async update(coll, id, patch) { const { data, error } = await sb.from(coll).update(patch).eq("id", id).select().single(); if (error) throw error; const i = cache[coll].findIndex((x) => x.id === id); if (i >= 0) cache[coll][i] = data; logAct("update", coll, data); return data; },
+    async remove(coll, id) { const prev = cache[coll].find((x) => x.id === id); const { error } = await sb.from(coll).delete().eq("id", id); if (error) throw error; cache[coll] = cache[coll].filter((x) => x.id !== id); logAct("delete", coll, prev || { id }); },
     async sendNewsletter(payload) {
       const { data, error } = await sb.functions.invoke(cfg.NEWSLETTER_FUNCTION || "send-newsletter", { body: payload });
       if (error) throw error; return data;
@@ -142,6 +152,16 @@
     // The live Supabase client (created during load) — used by auth.js for
     // email sign-in. Null in local demo mode.
     supaClient: () => sb,
+    // Record an app-level action (login / menu generation) in the activity log.
+    logActivity(action, entity, label) {
+      try {
+        if (!sb) return;
+        const email = (window.Auth && Auth.user && Auth.user.email) || null;
+        sb.from("activity_log").insert({ action, entity: entity || null, label: label || null, actor_email: email }).then(() => {}, () => {});
+      } catch (e) { /* never throws */ }
+    },
+    // Drop activity older than 3 months (called by admin when viewing history).
+    pruneActivity() { try { if (sb) sb.rpc("prune_activity_log").then(() => {}, () => {}); } catch (e) {} },
     // all() auto-scopes per-place collections to the active place; allRaw() is unscoped.
     // Recipes: shop places have their OWN catalogue (place_id === active shop); catering
     // places share the master recipes (place_id null). This keeps a pastry shop's products

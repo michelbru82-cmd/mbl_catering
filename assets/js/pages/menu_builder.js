@@ -273,6 +273,7 @@ window.MenuBuilder = (function () {
           else await Data.create("menu_days", { id: "menu_" + Data.activePlaceId() + "_" + d.date, date: d.date, slots: d.slots, notes: "" });
           n++;
         }
+        if (window.Data && Data.logActivity) Data.logActivity("generate_menu", "menu", n + " " + T("daysBuilt"));
         U.toast(`${n} ${T("daysBuilt")}`);
         if (result.days[0]) Router.go("#/menu/" + result.days[0].date.slice(0, 7));
         Router.rerender();

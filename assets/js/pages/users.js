@@ -150,6 +150,98 @@
     });
   }
 
+  const fmtTime = (iso) => { try { const d = new Date(iso); return d.toLocaleString(I18N.lang === "zh" ? "zh-TW" : "en-GB", { year: "2-digit", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return iso; } };
+  const actionLabel = (a) => { const t = I18N.t.bind(I18N); return ({ create: t("actCreate"), update: t("actUpdate"), delete: t("actDelete"), login: t("actLogin"), generate_menu: t("actGenerate") })[a] || a; };
+
+  async function invokeInvite(body) {
+    const t = I18N.t.bind(I18N);
+    const sb = Data.supaClient();
+    const res = await sb.functions.invoke("admin-invite", { body });
+    let resp = res.data;
+    if (res.error && res.error.context && typeof res.error.context.json === "function") { try { resp = await res.error.context.json(); } catch (x) {} }
+    if (!resp || resp.ok !== true) {
+      const map = { forbidden: t("errForbidden"), already_exists: t("errAlreadyExists"), bad_email: t("badEmail"), not_found: t("errNotFound"), cannot_delete_self: t("cannotDeleteSelf"), already_active: t("errAlreadyActive") };
+      throw new Error((resp && map[resp.error]) || t("inviteFailed"));
+    }
+    return resp;
+  }
+
+  // Remove a login (data is kept — the Edge Function reassigns it to the admin).
+  async function deleteUser(u, onDone) {
+    const t = I18N.t.bind(I18N);
+    try { await invokeInvite({ action: "delete", user_id: u.id }); U.toast(t("accessRemoved")); if (onDone) onDone(); }
+    catch (err) { U.toast(err.message || t("deleteFailed"), true); }
+  }
+
+  // Shared access: list the emails that sign in to this same workspace, plus an
+  // "add email" control (each added email shares the primary account's data).
+  function sharedAccessSection(u, onReload) {
+    const t = I18N.t.bind(I18N), h = U.h;
+    const account = u.account_id || u.id;
+    const listBox = h("div", {});
+    async function drawList() {
+      listBox.innerHTML = ""; listBox.appendChild(h("div", { class: "muted small" }, t("signin_loading")));
+      const sb = Data.supaClient();
+      let members = [];
+      try { const { data } = await sb.from("profiles").select("id,email,active,account_id").or(`id.eq.${account},account_id.eq.${account}`); members = data || []; } catch (e) {}
+      members.sort((a, b) => (a.id === account ? -1 : 1) - (b.id === account ? -1 : 1));
+      listBox.innerHTML = "";
+      members.forEach((m) => {
+        const isPrimary = m.id === account;
+        listBox.appendChild(h("div", { style: "display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)" }, [
+          h("span", {}, m.email || m.id),
+          isPrimary ? h("span", { class: "badge", style: "margin-left:2px" }, t("primaryAccount")) : null,
+          m.active === false ? h("span", { class: "badge badge--off" }, t("inactive")) : null,
+          h("div", { style: "flex:1" }),
+          (isPrimary || (Auth.profile && Auth.profile.id === m.id)) ? null : h("button", { class: "btn btn--sm btn--danger", type: "button", onClick: async () => {
+            if (!(await U.confirmDelete(t("removeAccessWarn").replace("{e}", m.email || m.id)))) return;
+            await deleteUser(m, () => { drawList(); if (onReload) onReload(); });
+          } }, "🗑"),
+        ]));
+      });
+    }
+    drawList();
+    const addEmail = h("input", { class: "input", type: "email", placeholder: "colleague@email.com" });
+    const addBtn = h("button", { class: "btn btn--sm btn--primary", type: "button", onClick: async () => {
+      const e = (addEmail.value || "").trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) { U.toast(t("badEmail"), true); return; }
+      addBtn.disabled = true; addBtn.textContent = t("signin_loading");
+      try { await invokeInvite({ action: "add_member", primary_id: account, email: e, redirectTo: location.origin + location.pathname }); U.toast(t("inviteSent")); addEmail.value = ""; drawList(); if (onReload) onReload(); }
+      catch (err) { U.toast(err.message || t("inviteFailed"), true); }
+      addBtn.disabled = false; addBtn.textContent = "＋ " + t("addEmail");
+    } }, "＋ " + t("addEmail"));
+    return h("div", { class: "field" }, [
+      h("label", {}, "👥 " + t("linkedEmails")),
+      h("div", { class: "small muted", style: "margin-bottom:6px" }, t("linkedEmailsHint")),
+      listBox,
+      h("div", { style: "display:flex;gap:8px;margin-top:8px" }, [addEmail, addBtn]),
+    ]);
+  }
+
+  // Activity history for one user (last 3 months): time · email · action · item.
+  async function historyModal(u) {
+    const t = I18N.t.bind(I18N), h = U.h;
+    const sb = Data.supaClient();
+    if (Data.pruneActivity) Data.pruneActivity();
+    const box = h("div", {}, h("div", { class: "muted small" }, t("signin_loading")));
+    U.modal("🕑 " + t("history") + " — " + (u.email || u.id), box, { wide: true, buttons: [{ label: t("close"), value: true }] });
+    const since = new Date(Date.now() - 92 * 86400000).toISOString();
+    let rows = [];
+    try { const { data } = await sb.from("activity_log").select("*").eq("actor_id", u.id).gte("occurred_at", since).order("occurred_at", { ascending: false }).limit(500); rows = data || []; } catch (e) {}
+    box.innerHTML = "";
+    box.appendChild(h("div", { class: "small muted", style: "margin-bottom:8px" }, t("historyHint")));
+    if (!rows.length) { box.appendChild(h("p", { class: "muted" }, t("noHistory"))); return; }
+    box.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data" }, [
+      h("thead", {}, h("tr", {}, [h("th", {}, t("when")), h("th", {}, t("emailAddr")), h("th", {}, t("actionCol")), h("th", {}, t("itemCol"))])),
+      h("tbody", {}, rows.map((r) => h("tr", {}, [
+        h("td", { class: "small" }, fmtTime(r.occurred_at)),
+        h("td", { class: "small" }, r.actor_email || "—"),
+        h("td", {}, h("span", { class: "badge" }, actionLabel(r.action))),
+        h("td", { class: "small" }, [r.entity ? h("span", { class: "muted" }, r.entity + " ") : null, r.label || ""]),
+      ]))),
+    ])));
+  }
+
   function userModal(u, onDone) {
     const t = I18N.t.bind(I18N), h = U.h;
     const isMe = Auth.profile && Auth.profile.id === u.id;
@@ -197,7 +289,15 @@
       companySection(co),
       h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker,
         h("div", { class: "small muted", style: "margin-top:6px" }, t("adminSeesAll"))]),
+      sharedAccessSection(u, onDone),
       resendBtn ? h("div", { class: "field", style: "display:flex;gap:8px;align-items:center" }, [resendBtn, h("span", { class: "small muted" }, t("resendHint"))]) : null,
+      h("div", { style: "display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;border-top:1px solid var(--border);padding-top:12px" }, [
+        h("button", { class: "btn btn--sm", type: "button", onClick: () => historyModal(u) }, "🕑 " + t("viewHistory")),
+        isMe ? null : h("button", { class: "btn btn--sm btn--danger", type: "button", onClick: async () => {
+          if (!(await U.confirmDelete(t("removeAccessWarn").replace("{e}", u.email || u.id)))) return;
+          await deleteUser(u, () => { const back = document.querySelector(".modal-backdrop"); if (back) back.click(); if (onDone) onDone(); });
+        } }, "🗑 " + t("removeAccess")),
+      ]),
     ]);
     U.modal(u.email || t("usersTitle"), body, {
       saveText: t("save"),
