@@ -119,29 +119,51 @@
     const email = h("input", { class: "input", type: "email", placeholder: "user@email.com" });
     const picker = sectionPicker(null);
     const co = companyFields({});
+    // Workspace choice: a brand-new private workspace, or share an existing user's.
+    const userSel = h("select", { class: "input" }, [h("option", { value: "" }, t("signin_loading"))]);
+    const shareField = h("div", { class: "field", style: "display:none" }, [h("label", {}, t("wsShareWith")), userSel, h("div", { class: "small muted", style: "margin-top:4px" }, t("wsShareHint"))]);
+    const sectionsField = h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker]);
+    const companyEl = companySection(co);
+    const modeSel = h("select", { class: "input", onChange: () => applyMode() }, [
+      h("option", { value: "separate", selected: true }, t("wsSeparate")),
+      h("option", { value: "share" }, t("wsShare")),
+    ]);
+    function applyMode() {
+      const share = modeSel.value === "share";
+      shareField.style.display = share ? "" : "none";
+      sectionsField.style.display = share ? "none" : "";
+      companyEl.style.display = share ? "none" : "";
+    }
+    // populate the "share with" dropdown from existing users
+    (async () => {
+      try {
+        const sb = Data.supaClient();
+        const { data } = await sb.from("profiles").select("id,email").order("email", { ascending: true });
+        userSel.innerHTML = "";
+        (data || []).forEach((u) => userSel.appendChild(h("option", { value: u.id }, u.email || u.id)));
+        if (!(data || []).length) userSel.appendChild(h("option", { value: "" }, "—"));
+      } catch (e) { userSel.innerHTML = ""; userSel.appendChild(h("option", { value: "" }, "—")); }
+    })();
     const body = h("div", {}, [
       h("p", { class: "small muted" }, t("inviteIntro")),
       h("div", { class: "field" }, [h("label", {}, t("emailAddr")), email]),
-      companySection(co),
-      h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker]),
+      h("div", { class: "field" }, [h("label", {}, "👥 " + t("wsAccess")), modeSel]),
+      shareField,
+      companyEl,
+      sectionsField,
     ]);
     U.modal("✉️ " + t("inviteUser"), body, {
       saveText: t("sendInvite"),
       async onSave() {
         const e = (email.value || "").trim().toLowerCase();
         if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) { U.toast(t("badEmail"), true); return false; }
-        const sb = Data.supaClient();
         try {
-          const res = await sb.functions.invoke("admin-invite", {
-            body: Object.assign({ email: e, sections: picker._get(), redirectTo: location.origin + location.pathname }, co._get()),
-          });
-          let resp = res.data;
-          if (res.error && res.error.context && typeof res.error.context.json === "function") {
-            try { resp = await res.error.context.json(); } catch (x) {}
-          }
-          if (!resp || resp.ok !== true) {
-            const map = { forbidden: t("errForbidden"), already_exists: t("errAlreadyExists"), bad_email: t("badEmail"), not_signed_in: t("errNotSignedIn") };
-            throw new Error((resp && map[resp.error]) || t("inviteFailed"));
+          if (modeSel.value === "share") {
+            const primary = userSel.value;
+            if (!primary) { U.toast(t("wsShareWith") + "?", true); return false; }
+            await invokeInvite({ action: "add_member", primary_id: primary, email: e, redirectTo: location.origin + location.pathname });
+          } else {
+            await invokeInvite(Object.assign({ email: e, sections: picker._get(), redirectTo: location.origin + location.pathname }, co._get()));
           }
           U.toast(t("inviteSent"));
           if (onDone) onDone();
