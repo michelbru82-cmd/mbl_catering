@@ -11,13 +11,28 @@ PAGES.people = {
     let list = [];                       // the currently drawn (filtered) list
 
     const search = h("input", { class: "input search", placeholder: t("search"), oninput: U.debounce((e) => { q = e.target.value.toLowerCase(); draw(); }) });
-    const kindSel = h("select", { class: "input", onChange: (e) => { kind = e.target.value; draw(); } },
-      [h("option", { value: "" }, t("kind") + ": " + t("all")), ...PERSON_KINDS.map((k) => h("option", { value: k }, t(k)))]);
     const actChk = h("label", { class: "small", style: "display:flex;gap:6px;align-items:center" }, [
       h("input", { type: "checkbox", onChange: (e) => { activeOnly = e.target.checked; draw(); } }), t("active"),
     ]);
+
+    // Type views — one tab per kind (with live counts), plus "All".
+    const viewsBar = h("div", { class: "toolbar", style: "gap:6px;flex-wrap:wrap;margin-bottom:8px" });
+    view.appendChild(viewsBar);
+    function renderViews() {
+      viewsBar.innerHTML = "";
+      const all = Data.all("people");
+      const count = (v) => v ? all.filter((p) => p.kind === v).length : all.length;
+      [["", t("all")], ...PERSON_KINDS.map((k) => [k, t(k)])].forEach(([val, label]) => {
+        viewsBar.appendChild(h("button", {
+          class: "btn btn--sm" + (kind === val ? " btn--primary" : ""),
+          onClick: () => { kind = val; renderViews(); draw(); },
+        }, label + " (" + count(val) + ")"));
+      });
+    }
+    renderViews();
+
     view.appendChild(h("div", { class: "toolbar" }, [
-      search, kindSel, actChk, h("span", { class: "muted small", id: "pp-count" }),
+      search, actChk, h("span", { class: "muted small", id: "pp-count" }),
       h("div", { style: "flex:1" }),
       h("button", { class: "btn", onClick: () => importPeopleModal() }, "⤒ " + t("importLabel")),
       h("button", { class: "btn btn--primary", onClick: () => personForm(null) }, "＋ " + t("add")),
