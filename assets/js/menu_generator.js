@@ -241,6 +241,28 @@ window.MenuGen = (function () {
     const recipeKcal = (r) => { if (!r) return 0; const n = Data.recipeNutrition(r); return n && n.kcal != null ? n.kcal : 0; };
     const kcalMin = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.min != null) ? Number(cfg.nutrition.kcal.min) : null;
     const kcalMax = (cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.max != null) ? Number(cfg.nutrition.kcal.max) : null;
+    const kcalRequired = !!(cfg.nutrition && cfg.nutrition.kcal && cfg.nutrition.kcal.required);
+    const hasNutRules = !!(cfg.nutrition && Object.keys(cfg.nutrition).length);
+
+    // Does an existing/locked day satisfy EVERY active rule (not just calories)?
+    // A kept day must respect nutrition min/max, the weekday protein/cuisine rule,
+    // and the max-cost cap — otherwise it is rebuilt so the limits are honoured.
+    function dayComplies(slots, wk) {
+      const nut = dayNutrition(slots);
+      if (hasNutRules && !nut._hasData) return false;              // no data to verify → rebuild
+      if (checkNutrition(nut, cfg.nutrition).length) return false; // nutrition min/max
+      const rule = (cfg.weekday && cfg.weekday[wk]) || {};
+      if ((rule.protein && rule.protein !== "any") || (rule.cuisine && rule.cuisine !== "any")) {
+        const ms = slots.meat;
+        const mr = ms && ms.recipe_id && Data.get("recipes", ms.recipe_id);
+        if (!mr) return false;
+        const tg = tags(mr);
+        if (rule.protein && rule.protein !== "any" && tg.protein !== rule.protein) return false;
+        if (rule.cuisine && rule.cuisine !== "any" && tg.cuisine !== rule.cuisine) return false;
+      }
+      if (cfg.max_cost != null) { const c = dayCost(slots); if (c != null && c > cfg.max_cost) return false; }
+      return true;
+    }
     // Greedily swap dishes (per slot) toward the [min,max] kcal range: each step makes
     // the single swap that most reduces the day's distance to the range, until inside
     // it or no swap improves. Handles both an over-max and an under-min day.
@@ -280,11 +302,12 @@ window.MenuGen = (function () {
       if (cfg.keep_existing && !locked[iso]) {
         const ex = Data.menuForDate(iso);
         if (ex && ["meat", "veg1", "veg2", "carb", "dairy", "fruit"].some((k) => ex.slots[k])) {
-          const exNut = dayNutrition(ex.slots);
-          const exViol = checkNutrition(exNut, cfg.nutrition);
-          if (!exViol.length) {
+          // keep only if the day already respects EVERY active rule (calories,
+          // weekday protein/cuisine, cost). Otherwise fall through and rebuild it.
+          if (dayComplies(ex.slots, wk)) {
+            const exNut = dayNutrition(ex.slots);
             countSlots(ex.slots, iso, idx); prevAlg = Data.dayAllergens(ex);
-            return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: exNut, cost: dayCost(ex.slots), violations: exViol };
+            return { date: iso, weekday: wk, slots: ex.slots, kept: true, locked: true, nutrition: exNut, cost: dayCost(ex.slots), violations: [] };
           }
           // otherwise fall through and rebuild this day to enforce the rules
         }
@@ -329,7 +352,7 @@ window.MenuGen = (function () {
       let nut = dayNutrition(slots), scaled = null;
       // portion-scaling finisher (permission-gated): if a constrained day is still over
       // the max after dish-swapping, shrink its portions uniformly to hit the max exactly.
-      if (allowScale && kcalMax != null && nut._hasData && nut.kcal > kcalMax) {
+      if ((allowScale || kcalRequired) && kcalMax != null && nut._hasData && nut.kcal > kcalMax) {
         scaled = Math.max(0.1, Math.floor((kcalMax / nut.kcal) * 100) / 100);
         RK.forEach((k) => { const s = slots[k]; if (s && s.recipe_id) s.factor = scaled; });
         nut = dayNutrition(slots);

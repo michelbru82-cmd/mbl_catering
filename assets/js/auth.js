@@ -64,7 +64,7 @@
     canSee(key) {
       if (!usingSupabase) return true;                                   // local demo: everything
       if (this.isAdmin()) return true;                                   // admins: everything
-      if (key === "dashboard") return true;                             // always a safe landing
+      if (key === "dashboard" || key === "company") return true;        // always available
       const s = this.sections();
       return s ? s.indexOf(key) !== -1 : true;                          // null = all
     },

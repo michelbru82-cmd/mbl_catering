@@ -71,7 +71,7 @@ window.MenuBuilder = (function () {
     const gap = H("input", { class: "input num", type: "number", min: "0", step: "1", value: cfg.min_repeat_gap == null ? 7 : cfg.min_repeat_gap, style: "max-width:80px" });
     const maxCost = H("input", { class: "input num", type: "number", min: "0", step: "any", value: cfg.max_cost == null ? "" : cfg.max_cost, style: "max-width:100px" });
     const spread = H("input", { type: "checkbox", checked: cfg.spread_allergens !== false });
-    const keep = H("input", { type: "checkbox", checked: cfg.keep_existing !== false });
+    const keep = H("input", { type: "checkbox", checked: cfg.keep_existing === true });
     const optField = (label, node) => H("div", { class: "field", style: "margin:0" }, [H("label", {}, label), node]);
     const optToggle = (label, node) => H("label", { style: "display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px" }, [node, label]);
     const options = H("div", {}, [
