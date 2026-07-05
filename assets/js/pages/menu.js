@@ -55,10 +55,16 @@ PAGES.menu = {
       const kc = dayKcal(d);
       const rows = SLOTS.map(([k, label]) => {
         const s = d.slots[k];
+        // Flag dishes that contribute no calories (not linked to a recipe, or the
+        // recipe has no nutrition) so it's clear why a day's total is missing/partial.
+        const r = s && slotRecipe(s);
+        const noNut = s && s.name_en && !(r && Data.recipeNutrition(r));
         return h("div", { style: "display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px" }, [
           h("span", { class: "badge badge--cat", style: "flex:0 0 84px;justify-content:flex-start;text-align:left;align-self:flex-start" }, label),
           h("div", { style: "flex:1;min-width:0" }, s
-            ? [h("span", {}, s.name_en), s.recipe_id ? h("span", { class: "small", title: "linked recipe" }, " 🔗") : null]
+            ? [h("span", {}, s.name_en),
+               s.recipe_id ? h("span", { class: "small", title: "linked recipe" }, " 🔗") : null,
+               noNut ? h("span", { class: "small", title: t("noNutritionHint"), style: "color:var(--danger,#c0392b)" }, " ⚠") : null]
             : h("span", { class: "muted" }, "—")),
         ]);
       });
