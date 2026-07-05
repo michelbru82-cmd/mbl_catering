@@ -26,9 +26,11 @@
   let currentProfile = null;      // { role, sections, active, full_access_until } for the signed-in user
   let fullAccessUntil = null;     // ISO string of the entitlement expiry, or null
   const adminEmails = (cfg.ADMIN_EMAILS || []).map((e) => String(e).toLowerCase());
-  // Whether we arrived via a Supabase invite / password-reset link (captured
-  // before the supabase client consumes the URL hash).
-  const authAction = ((/[#&?]type=(invite|recovery|signup)/i.exec(location.hash + location.search)) || [])[1] || "";
+  // Whether we arrived via a Supabase invite / password-reset link. Captured in
+  // config.js BEFORE the supabase client consumes the URL hash (fallback here).
+  const authAction = (window.MBL_AUTH_ACTION
+    || ((/[#&?]type=(invite|recovery|signup)/i.exec(location.hash + location.search)) || [])[1]
+    || "").toLowerCase();
 
   const Auth = {
     get user() { return currentUser; },
@@ -77,8 +79,15 @@
         const sb = Data.supaClient();
         if (sb) {
           try {
-            const { data } = await sb.auth.getSession();
+            let { data } = await sb.auth.getSession();
             currentUser = data && data.session ? data.session.user : null;
+            // Invite / recovery links may still be resolving the session from the
+            // URL — wait briefly and retry so we don't miss it.
+            if (!currentUser && (authAction === "invite" || authAction === "recovery")) {
+              await new Promise((r) => setTimeout(r, 700));
+              ({ data } = await sb.auth.getSession());
+              currentUser = data && data.session ? data.session.user : null;
+            }
             sb.auth.onAuthStateChange((_e, session) => { currentUser = session ? session.user : null; });
           } catch (e) { /* fall through to homepage */ }
           if (currentUser) {
@@ -293,6 +302,25 @@
           }
         }
 
+        // Send a password-reset email. The link returns here with type=recovery,
+        // and showSetPassword() lets the user choose a new password.
+        async function doReset() {
+          state.error = ""; state.info = "";
+          const sb = usingSupabase && Data.supaClient();
+          if (!sb) return;
+          const email = (state.email || "").trim();
+          if (!email) { state.error = t("resetNeedEmail"); render(); return; }
+          state.loading = true; render();
+          try {
+            const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+            if (error) throw error;
+            state.info = t("resetSent"); state.loading = false; render();
+          } catch (err) {
+            state.error = (err && err.message) || t("err_server");
+            state.loading = false; render();
+          }
+        }
+
         const scrollTo = (id) => root.querySelector("#" + id)?.scrollIntoView({ behavior: "smooth" });
 
         function langSwitcher() {
@@ -490,6 +518,10 @@
             h("div", { class: "muted small", style: "text-align:center;margin-bottom:16px" }, t("signin_sub")),
             h("div", { class: "field" }, [h("label", {}, t("emailAddr")), emailInp]),
             h("div", { class: "field" }, [h("label", {}, t("password")), passInp]),
+            state.mode === "signin"
+              ? h("div", { style: "text-align:right;margin:-6px 0 10px" },
+                  h("button", { type: "button", class: "landing__link small", onClick: doReset }, t("forgotPassword")))
+              : null,
             state.error ? h("div", { class: "small", style: "color:var(--danger);margin-bottom:10px" }, state.error) : null,
             state.info ? h("div", { class: "small", style: "color:var(--ok);margin-bottom:10px" }, state.info) : null,
             h("button", { class: "btn btn--primary", type: "submit", style: "width:100%", disabled: state.loading }, state.loading ? t("signin_loading") : (state.mode === "signup" ? t("signin_create") : t("signin_title"))),
