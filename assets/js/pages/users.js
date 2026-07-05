@@ -134,6 +134,31 @@
       .map(([v, l]) => h("option", { value: v, selected: (u.role || "user") === v }, l)));
     const activeChk = h("input", { type: "checkbox" }); activeChk.checked = u.active !== false;
     const picker = sectionPicker(Array.isArray(u.sections) ? u.sections : null);
+    // Resend invite — for users who haven't accepted yet (not for yourself).
+    const resendBtn = isMe ? null : h("button", { class: "btn btn--sm", type: "button", onClick: async () => {
+      resendBtn.disabled = true; resendBtn.textContent = t("signin_loading");
+      const sb = Data.supaClient();
+      try {
+        const res = await sb.functions.invoke("admin-invite", {
+          body: { resend: true, user_id: u.id, sections: Array.isArray(u.sections) ? u.sections : null, redirectTo: location.origin + location.pathname },
+        });
+        let resp = res.data;
+        if (res.error && res.error.context && typeof res.error.context.json === "function") {
+          try { resp = await res.error.context.json(); } catch (x) {}
+        }
+        if (!resp || resp.ok !== true) {
+          const map = { forbidden: t("errForbidden"), already_active: t("errAlreadyActive"), not_found: t("errNotFound") };
+          throw new Error((resp && map[resp.error]) || t("inviteFailed"));
+        }
+        U.toast(t("inviteResent"));
+        const back = document.querySelector(".modal-backdrop"); if (back) back.click();
+        if (onDone) onDone();
+      } catch (err) {
+        U.toast(err.message || t("inviteFailed"), true);
+        resendBtn.disabled = false; resendBtn.textContent = "✉️ " + t("resendInvite");
+      }
+    } }, "✉️ " + t("resendInvite"));
+
     const body = h("div", {}, [
       h("div", { class: "field" }, [h("label", {}, t("emailAddr")), h("div", {}, u.email || u.id)]),
       h("div", { class: "row" }, [
@@ -142,6 +167,7 @@
       ]),
       h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker,
         h("div", { class: "small muted", style: "margin-top:6px" }, t("adminSeesAll"))]),
+      resendBtn ? h("div", { class: "field", style: "display:flex;gap:8px;align-items:center" }, [resendBtn, h("span", { class: "small muted" }, t("resendHint"))]) : null,
     ]);
     U.modal(u.email || t("usersTitle"), body, {
       saveText: t("save"),
