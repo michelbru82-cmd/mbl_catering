@@ -21,11 +21,12 @@ try {
 
 window.MBL_CONFIG = {
   // ---- Supabase (blank = local demo mode; filled = cloud) ----
-  // MBL Catering's OWN Supabase project (separate from MBL Tools). The anon key
-  // is public and safe to commit — the data is protected by Row Level Security.
+  // MBL Catering's OWN Supabase project (separate from MBL Tools). The publishable
+  // key is public and safe to commit — the data is protected by Row Level Security.
+  // (New Supabase API-key system: sb_publishable_… replaces the legacy anon JWT.)
   // A URL/key entered in-app (the data-source badge) overrides these defaults.
   SUPABASE_URL:      _sbUrl || "https://mmmjpkkvqfjegyawrisg.supabase.co",
-  SUPABASE_ANON_KEY: _sbKey || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tbWpwa2t2cWZqZWd5YXdyaXNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4OTkyOTIsImV4cCI6MjA5ODQ3NTI5Mn0.nsd8ICeHFuMQTc_o8T99ZgFctlldZ-Ek7Qt4EGUXvjsB",
+  SUPABASE_ANON_KEY: _sbKey || "sb_publishable_aBheAvlkuLo_R_ipfO7O1Q_BEEJQ9Zr",
 
   // ---- Authentication (email login via Supabase Auth) ----
   // When connected to Supabase, the homepage requires visitors to sign in
