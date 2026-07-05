@@ -136,6 +136,21 @@
       applyLbl: "Apply", updatedLbl: "updated", nothingToChange: "Tick at least one field to change.",
       bulkDeleteWarn: "Delete the {n} selected people? This cannot be undone.",
 
+      // ---- users / roles (multi-user) ----
+      usersTitle: "Users",
+      usersIntro: "Invite people to their own private account and choose which sections each can use. Every user's data is separate and stored in your Supabase.",
+      usersNeedCloud: "User management needs a connected Supabase database. In local demo mode there is a single owner and no logins.",
+      usersLoadFail: "Couldn't load users.", notAdmin: "Admins only.",
+      inviteUser: "Invite user",
+      inviteIntro: "They'll get an email invite to set their password, then sign in to their own empty catering workspace.",
+      sendInvite: "Send invite", inviteSent: "Invitation sent", inviteFailed: "Couldn't send the invitation.", badEmail: "Enter a valid email address.",
+      role: "Role", roleAdmin: "Admin", roleUser: "User", sectionsLabel: "Sections", allSections: "All sections",
+      adminSeesAll: "Admins can see every section; section choices apply to Users only.", you: "you",
+      errForbidden: "Only an admin can invite users.", errAlreadyExists: "That email already has an account.", errNotSignedIn: "Please sign in again.",
+      setPasswordTitle: "Set your password", setPasswordSub: "Choose a password to finish setting up your account.",
+      passwordTooShort: "Password must be at least 6 characters.",
+      accountDisabled: "Account disabled", accountDisabledSub: "Your access has been turned off. Please contact your administrator.",
+
       // production
       todayProduction: "Today's production", nextDayProduction: "Next-day production",
       dishesToPrepare: "Dishes to prepare", qtyToPrepare: "Qty to prepare", covers: "Covers",
@@ -301,6 +316,21 @@
       bulkEditIntro: "僅變更已勾選的欄位，其餘保持不變。",
       applyLbl: "套用", updatedLbl: "筆已更新", nothingToChange: "請至少勾選一個要變更的欄位。",
       bulkDeleteWarn: "刪除所選的 {n} 位人員？此動作無法復原。",
+
+      // ---- users / roles (multi-user) ----
+      usersTitle: "用戶",
+      usersIntro: "邀請他人建立自己的私人帳號，並選擇每位可使用的區塊。每位用戶的資料各自獨立，儲存於您的 Supabase。",
+      usersNeedCloud: "用戶管理需連接 Supabase 資料庫。本機示範模式僅有單一擁有者，且沒有登入帳號。",
+      usersLoadFail: "無法載入用戶。", notAdmin: "僅限管理員。",
+      inviteUser: "邀請用戶",
+      inviteIntro: "對方會收到設定密碼的邀請郵件，登入後即進入自己空白的餐飲工作區。",
+      sendInvite: "送出邀請", inviteSent: "邀請已寄出", inviteFailed: "無法寄出邀請。", badEmail: "請輸入有效的電子郵件。",
+      role: "角色", roleAdmin: "管理員", roleUser: "用戶", sectionsLabel: "區塊", allSections: "所有區塊",
+      adminSeesAll: "管理員可檢視所有區塊；區塊設定僅適用於一般用戶。", you: "您",
+      errForbidden: "只有管理員可以邀請用戶。", errAlreadyExists: "該電子郵件已有帳號。", errNotSignedIn: "請重新登入。",
+      setPasswordTitle: "設定您的密碼", setPasswordSub: "請設定密碼以完成帳號建立。",
+      passwordTooShort: "密碼至少需 6 個字元。",
+      accountDisabled: "帳號已停用", accountDisabledSub: "您的存取權限已被關閉，請聯絡您的管理員。",
 
       todayProduction: "今日生產", nextDayProduction: "隔日生產",
       dishesToPrepare: "待準備餐點", qtyToPrepare: "準備數量", covers: "份數",

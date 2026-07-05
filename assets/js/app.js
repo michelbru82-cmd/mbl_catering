@@ -36,9 +36,15 @@
     const nav = document.getElementById("nav");
     nav.innerHTML = "";
     nav.appendChild(buildPlaceSwitcher());
+    const canSee = (k) => !window.Auth || Auth.canSee(k);
+    const isAdmin = !window.Auth || Auth.isAdmin();
     currentNav().forEach(([grp, keys]) => {
+      // Admins get the Users management page in the Admin group.
+      let ks = keys.filter(canSee);
+      if (grp === "grp_admin" && isAdmin && PAGES.users) ks = ks.concat("users");
+      if (!ks.length) return;                               // hide empty groups
       nav.appendChild(U.h("div", { class: "nav__group-label" }, I18N.t(grp)));
-      keys.forEach((key) => {
+      ks.forEach((key) => {
         const p = PAGES[key]; if (!p) return;
         nav.appendChild(U.h("a", { href: "#/" + key, dataset: { key } }, [
           U.h("span", { class: "ico" }, p.icon || "•"),

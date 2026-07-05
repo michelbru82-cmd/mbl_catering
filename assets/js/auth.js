@@ -23,8 +23,12 @@
   const h = U.h;
   const PENDING_VOUCHER = "mbl_pending_voucher";
   let currentUser = null;
+  let currentProfile = null;      // { role, sections, active, full_access_until } for the signed-in user
   let fullAccessUntil = null;     // ISO string of the entitlement expiry, or null
   const adminEmails = (cfg.ADMIN_EMAILS || []).map((e) => String(e).toLowerCase());
+  // Whether we arrived via a Supabase invite / password-reset link (captured
+  // before the supabase client consumes the URL hash).
+  const authAction = ((/[#&?]type=(invite|recovery|signup)/i.exec(location.hash + location.search)) || [])[1] || "";
 
   const Auth = {
     get user() { return currentUser; },
@@ -37,6 +41,33 @@
       if (!usingSupabase || !currentUser) return false;
       if (adminEmails.includes((currentUser.email || "").toLowerCase())) return true;
       return !!(fullAccessUntil && new Date(fullAccessUntil).getTime() > Date.now());
+    },
+
+    // ── Roles & per-section access (multi-user) ──────────────────
+    get profile() { return currentProfile; },
+    // The account owner / admin (can invite users & set their sections).
+    isAdmin() {
+      if (!usingSupabase) return true;                                   // local demo = single owner
+      if (adminEmails.includes((currentUser && currentUser.email || "").toLowerCase())) return true;
+      return !!(currentProfile && currentProfile.role === "admin");
+    },
+    // Allowed section keys, or null for "all sections".
+    sections() {
+      const s = currentProfile && currentProfile.sections;
+      return Array.isArray(s) ? s : null;
+    },
+    // May the signed-in user open this page/section?
+    canSee(key) {
+      if (!usingSupabase) return true;                                   // local demo: everything
+      if (this.isAdmin()) return true;                                   // admins: everything
+      if (key === "dashboard") return true;                             // always a safe landing
+      const s = this.sections();
+      return s ? s.indexOf(key) !== -1 : true;                          // null = all
+    },
+    firstAllowed() { return "dashboard"; },
+    async reloadProfile() {
+      const sb = Data.supaClient();
+      if (sb && currentUser) await this._loadEntitlement(sb);
     },
 
     // The homepage is the front door: it is shown on EVERY visit. It resolves
@@ -53,6 +84,10 @@
           if (currentUser) {
             await this._loadEntitlement(sb);
             await this._redeemPending();
+            // Account disabled by the admin — block entry (never resolves to app).
+            if (currentProfile && currentProfile.active === false) { await this.showBlocked(); return true; }
+            // Arrived from an invite / reset link — let the user set a password.
+            if (authAction === "invite" || authAction === "recovery") { await this.showSetPassword(sb); }
           }
         }
       }
@@ -60,11 +95,68 @@
       return true;
     },
 
+    // Load the signed-in user's profile: entitlement + role + allowed sections.
+    // Uses select("*") so it degrades gracefully if the multi-user columns
+    // (role/sections/active) haven't been added to `profiles` yet.
     async _loadEntitlement(sb) {
       try {
-        const { data } = await sb.from("profiles").select("full_access_until").eq("id", currentUser.id).maybeSingle();
+        const { data } = await sb.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+        currentProfile = data || null;
         fullAccessUntil = data ? data.full_access_until : null;
-      } catch (e) { fullAccessUntil = null; }
+      } catch (e) { currentProfile = null; fullAccessUntil = null; }
+    },
+
+    // Minimal full-screen card shown after an invite/reset link so the user
+    // can choose a password (Supabase already established the session).
+    showSetPassword(sb) {
+      const app = document.getElementById("app"); if (app) app.style.display = "none";
+      return new Promise((resolve) => {
+        const state = { pw: "", err: "", loading: false };
+        const root = h("div", { class: "landing" });
+        document.body.appendChild(root);
+        const done = () => {
+          root.remove(); if (app) app.style.display = "";
+          try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+          resolve(true);
+        };
+        async function submit(ev) {
+          if (ev) ev.preventDefault();
+          if ((state.pw || "").length < 6) { state.err = t("passwordTooShort"); render(); return; }
+          state.loading = true; state.err = ""; render();
+          try { const { error } = await sb.auth.updateUser({ password: state.pw }); if (error) throw error; done(); }
+          catch (e) { state.err = (e && e.message) || t("err_server"); state.loading = false; render(); }
+        }
+        function render() {
+          root.innerHTML = "";
+          const pw = h("input", { class: "input", type: "password", placeholder: "••••••••", autocomplete: "new-password", value: state.pw });
+          pw.addEventListener("input", (e) => (state.pw = e.target.value));
+          pw.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(e); });
+          root.appendChild(h("form", { class: "card landing__signin-card", onSubmit: submit, style: "max-width:420px;margin:12vh auto" }, [
+            h("div", { class: "landing__h2", style: "text-align:center;font-size:20px;margin-bottom:4px" }, t("setPasswordTitle")),
+            h("div", { class: "muted small", style: "text-align:center;margin-bottom:16px" }, t("setPasswordSub")),
+            h("div", { class: "field" }, [h("label", {}, t("password")), pw]),
+            state.err ? h("div", { class: "banner banner--allergen small", style: "margin-bottom:10px" }, state.err) : null,
+            h("button", { class: "btn btn--primary", type: "submit", disabled: state.loading }, state.loading ? t("signin_loading") : t("save")),
+          ]));
+          pw.focus();
+        }
+        render();
+      });
+    },
+
+    // Full-screen block for a deactivated account (only exit is sign-out).
+    showBlocked() {
+      const app = document.getElementById("app"); if (app) app.style.display = "none";
+      return new Promise(() => {
+        const root = h("div", { class: "landing" });
+        root.appendChild(h("div", { class: "card landing__signin-card", style: "max-width:440px;margin:14vh auto;text-align:center" }, [
+          h("div", { style: "font-size:40px" }, "🔒"),
+          h("div", { class: "landing__h2", style: "font-size:20px;margin:8px 0" }, t("accountDisabled")),
+          h("div", { class: "muted small", style: "margin-bottom:16px" }, t("accountDisabledSub")),
+          h("button", { class: "btn btn--primary", onClick: () => Auth.signOut() }, t("signOut")),
+        ]));
+        document.body.appendChild(root);
+      });
     },
 
     // Redeem a voucher that was entered before the account existed.

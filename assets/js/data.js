@@ -268,7 +268,17 @@
   (async function () {
     if (useSupabase) { try { await Supa.load(); } catch (e) { console.error(e); } }
     else Local.load();
-    ensurePlaces(); migratePlaces();
+    // Local demo fabricates default places; Supabase mode gets ONE real place
+    // for a brand-new user (their own isolated dataset) so the app is usable.
+    if (useSupabase) {
+      if (!Array.isArray(cache.places) || cache.places.length === 0) {
+        try { await Supa.create("places", { id: newId("place"), name: "My catering", type: "catering", covers: 100, use_by_days: 2, food_cost_pct: 30 }); }
+        catch (e) { console.error("seed place", e); }
+      }
+    } else {
+      ensurePlaces();
+    }
+    migratePlaces();
     if (!useSupabase) Local.persist();
     // resolve the active place (persisted choice, else the first place)
     let stored = null; try { stored = localStorage.getItem(APKEY); } catch (e) {}
