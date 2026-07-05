@@ -66,6 +66,7 @@ Deno.serve(async (req) => {
   // ---- parse the request ----
   let email = "", sections: string[] | null = null, redirectTo: string | undefined;
   let resend = false, userId = "";
+  const company: Record<string, string> = {};
   try {
     const body = await req.json();
     email = String(body?.email ?? "").trim().toLowerCase();
@@ -73,6 +74,9 @@ Deno.serve(async (req) => {
     if (typeof body?.redirectTo === "string") redirectTo = body.redirectTo;
     resend = body?.resend === true;
     if (typeof body?.user_id === "string") userId = body.user_id;
+    for (const k of ["company_official", "company_trading", "company_rep", "company_tax"]) {
+      if (typeof body?.[k] === "string") company[k] = body[k].trim();
+    }
   } catch { /* no body */ }
 
   // ---- resend an invite to a user who hasn't accepted yet ----
@@ -111,9 +115,9 @@ Deno.serve(async (req) => {
     return json({ ok: false, error: "invite_failed", detail: invErr?.message }, 400);
   }
 
-  // ---- pre-set the new user's profile (role + allowed sections) ----
+  // ---- pre-set the new user's profile (role + allowed sections + company) ----
   const { error: upErr } = await admin.from("profiles").upsert(
-    { id: inv.user.id, email, role: "user", sections, active: true, invited_by: caller.id },
+    { id: inv.user.id, email, role: "user", sections, active: true, invited_by: caller.id, ...company },
     { onConflict: "id" },
   );
   if (upErr) return json({ ok: true, user_id: inv.user.id, warning: "profile_not_set" });

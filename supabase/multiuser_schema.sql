@@ -28,6 +28,14 @@ alter table public.profiles add column if not exists active   boolean not null d
 alter table public.profiles add column if not exists pro      boolean not null default false;     -- free full access (e.g. partners), no subscription
 alter table public.profiles add column if not exists invited_by uuid references auth.users(id) on delete set null;
 
+-- Company legal identity (set by the admin when inviting; the user sees it
+-- read-only on the "My company infos" page). Kept on the profile because it is
+-- per-user, not per-place.
+alter table public.profiles add column if not exists company_official text;   -- official / registered company name
+alter table public.profiles add column if not exists company_trading  text;   -- trading (doing-business-as) name
+alter table public.profiles add column if not exists company_rep      text;   -- legal representative name
+alter table public.profiles add column if not exists company_tax      text;   -- tax / VAT number
+
 -- people: optional contact email (used for menu mailing)
 alter table public.people add column if not exists email text;
 

@@ -94,13 +94,35 @@
     ]);
   }
 
+  // Company legal-identity inputs (official name / trading name / representative
+  // / tax number). Stored on the user's profile; shown to them read-only.
+  const COMPANY_KEYS = ["company_official", "company_trading", "company_rep", "company_tax"];
+  function companyFields(u) {
+    const h = U.h;
+    const f = {};
+    COMPANY_KEYS.forEach((k) => (f[k] = h("input", { class: "input", value: u && u[k] != null ? u[k] : "" })));
+    f._get = () => { const o = {}; COMPANY_KEYS.forEach((k) => (o[k] = f[k].value.trim())); return o; };
+    return f;
+  }
+  function companySection(co) {
+    const t = I18N.t.bind(I18N), h = U.h;
+    const fld = (label, node) => h("div", { class: "field" }, [h("label", {}, label), node]);
+    return h("div", {}, [
+      h("div", { class: "small muted", style: "margin:6px 0 2px;font-weight:600" }, "🏢 " + t("companyInfo")),
+      h("div", { class: "row" }, [fld(t("companyOfficial"), co.company_official), fld(t("companyTrading"), co.company_trading)]),
+      h("div", { class: "row" }, [fld(t("companyRep"), co.company_rep), fld(t("taxNumber"), co.company_tax)]),
+    ]);
+  }
+
   function inviteModal(onDone) {
     const t = I18N.t.bind(I18N), h = U.h;
     const email = h("input", { class: "input", type: "email", placeholder: "user@email.com" });
     const picker = sectionPicker(null);
+    const co = companyFields({});
     const body = h("div", {}, [
       h("p", { class: "small muted" }, t("inviteIntro")),
       h("div", { class: "field" }, [h("label", {}, t("emailAddr")), email]),
+      companySection(co),
       h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker]),
     ]);
     U.modal("✉️ " + t("inviteUser"), body, {
@@ -111,7 +133,7 @@
         const sb = Data.supaClient();
         try {
           const res = await sb.functions.invoke("admin-invite", {
-            body: { email: e, sections: picker._get(), redirectTo: location.origin + location.pathname },
+            body: Object.assign({ email: e, sections: picker._get(), redirectTo: location.origin + location.pathname }, co._get()),
           });
           let resp = res.data;
           if (res.error && res.error.context && typeof res.error.context.json === "function") {
@@ -136,6 +158,7 @@
     const activeChk = h("input", { type: "checkbox" }); activeChk.checked = u.active !== false;
     const proChk = h("input", { type: "checkbox" }); proChk.checked = u.pro === true;
     const picker = sectionPicker(Array.isArray(u.sections) ? u.sections : null);
+    const co = companyFields(u);
     // Resend invite — for users who haven't accepted yet (not for yourself).
     const resendBtn = isMe ? null : h("button", { class: "btn btn--sm", type: "button", onClick: async () => {
       resendBtn.disabled = true; resendBtn.textContent = t("signin_loading");
@@ -171,6 +194,7 @@
         h("label", { style: "display:flex;gap:8px;align-items:center" }, [proChk, t("proAccess")]),
         h("div", { class: "small muted", style: "margin-top:4px" }, t("proHint")),
       ]),
+      companySection(co),
       h("div", { class: "field" }, [h("label", {}, t("sectionsLabel")), selectAllBtns(picker), picker,
         h("div", { class: "small muted", style: "margin-top:6px" }, t("adminSeesAll"))]),
       resendBtn ? h("div", { class: "field", style: "display:flex;gap:8px;align-items:center" }, [resendBtn, h("span", { class: "small muted" }, t("resendHint"))]) : null,
@@ -180,7 +204,7 @@
       async onSave() {
         const sb = Data.supaClient();
         const role = roleSel.value;
-        const patch = { role: role, active: activeChk.checked, pro: proChk.checked, sections: role === "admin" ? null : picker._get() };
+        const patch = Object.assign({ role: role, active: activeChk.checked, pro: proChk.checked, sections: role === "admin" ? null : picker._get() }, co._get());
         try {
           const { error } = await sb.from("profiles").update(patch).eq("id", u.id);
           if (error) throw error;
