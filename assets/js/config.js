@@ -11,6 +11,14 @@
 var _sbUrl = "", _sbKey = "";
 try { _sbUrl = localStorage.getItem("mbl_sb_url") || ""; _sbKey = localStorage.getItem("mbl_sb_key") || ""; } catch (e) {}
 
+// Capture a Supabase invite / password-reset action from the URL NOW, before the
+// Supabase client is created (it parses and clears the hash on init, which would
+// otherwise hide the "type=invite|recovery" flag from auth.js).
+try {
+  var _mblAuth = /[#&?]type=(invite|recovery|signup|magiclink)/i.exec((location.hash || "") + (location.search || ""));
+  window.MBL_AUTH_ACTION = _mblAuth ? _mblAuth[1].toLowerCase() : "";
+} catch (e) { window.MBL_AUTH_ACTION = ""; }
+
 window.MBL_CONFIG = {
   // ---- Supabase (blank = local demo mode; filled = cloud) ----
   // MBL Catering's OWN Supabase project (separate from MBL Tools). The anon key
