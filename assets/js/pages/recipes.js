@@ -14,6 +14,7 @@ PAGES.recipes = {
     view.appendChild(h("div", { class: "toolbar" }, [
       search, catSel, h("span", { class: "muted small", id: "rc-count" }),
       h("div", { style: "flex:1" }),
+      Data.hiddenCount("recipes") ? h("button", { class: "btn btn--sm", onClick: () => U.hiddenManager("recipes") }, "🙈 " + t("hidden") + " (" + Data.hiddenCount("recipes") + ")") : null,
       h("button", { class: "btn", title: "Replace recipes & ingredients with the MBL dataset (real grams)", onClick: importMblData }, "⤓ Load MBL data"),
       h("button", { class: "btn btn--primary", onClick: () => edit(null) }, "＋ " + t("add")),
     ]));
@@ -193,6 +194,15 @@ function recipeForm(r) {
       h("div", { class: "field", style: "flex:0 0 150px" }, [h("label", {}, (window.MBL_CONFIG.CURRENCY || "NT$") + " " + t("salePrice")), priceI]),
     ]),
     h("div", { class: "field" }, [h("label", {}, t("method")), methodI]),
+    isNew ? null : (function () {
+      const hide = Data.willHide("recipes", r);
+      return h("button", { class: "btn btn--danger btn--sm", style: "margin-top:6px", onClick: async () => {
+        if (await U.confirmDelete(hide ? t("hideConfirm") : undefined)) {
+          await Data.removeOrHide("recipes", r); U.toast(hide ? t("hiddenToast") : t("deleted"));
+          document.querySelector(".modal-backdrop").click(); Router.go("#/recipes"); Router.rerender();
+        }
+      } }, hide ? "🙈 " + t("hideFromView") : "🗑 " + t("delete"));
+    })(),
   ]);
 
   U.modal(isNew ? t("add") + " · " + t("recipes") : t("edit"), form, {

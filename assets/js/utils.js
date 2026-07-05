@@ -89,5 +89,25 @@
   const fmtNum = (n) => n == null ? "—" : (Math.round(n * 10) / 10).toLocaleString();
   const debounce = (fn, ms = 200) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
 
-  window.U = { h, esc, toast, modal, confirmDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY };
+  // Restore-hidden manager: lists the shared items the current user has hidden
+  // from their own view and lets them bring each one back.
+  function hiddenManager(coll) {
+    const t = I18N.t.bind(I18N);
+    const nameOf = (id) => { const o = Data.get(coll, id); return o ? (I18N.pick(o, "name") || o.name_en || o.name || id) : id; };
+    const box = h("div", {});
+    function render() {
+      box.innerHTML = "";
+      const ids = Data.hiddenIds(coll);
+      if (!ids.length) { box.appendChild(h("p", { class: "muted" }, t("noHidden"))); return; }
+      box.appendChild(h("p", { class: "small muted" }, t("hiddenIntro")));
+      ids.forEach((id) => box.appendChild(h("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border,#8882)" }, [
+        h("span", {}, nameOf(id)),
+        h("button", { class: "btn btn--sm", onClick: async () => { await Data.unhideItem(coll, id); render(); if (window.Router) Router.rerender(); } }, t("restore")),
+      ])));
+    }
+    render();
+    return modal(t("hiddenItems"), box, { buttons: [{ label: t("close"), value: true }] });
+  }
+
+  window.U = { h, esc, toast, modal, confirmDelete, hiddenManager, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY };
 })();

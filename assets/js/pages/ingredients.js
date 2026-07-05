@@ -17,6 +17,7 @@ PAGES.ingredients = {
     view.appendChild(h("div", { class: "toolbar" }, [
       search, suppSel, algChk, h("span", { class: "muted small", id: "ig-count" }),
       h("div", { style: "flex:1" }),
+      Data.hiddenCount("ingredients") ? h("button", { class: "btn btn--sm", onClick: () => U.hiddenManager("ingredients") }, "🙈 " + t("hidden") + " (" + Data.hiddenCount("ingredients") + ")") : null,
       h("button", { class: "btn", title: "Replace recipes & ingredients with the MBL dataset (real grams)", onClick: importMblData }, "⤓ Load MBL data"),
       h("button", { class: "btn btn--primary", onClick: () => ingredientForm(null) }, "＋ " + t("add")),
     ]));
@@ -152,7 +153,15 @@ function ingredientForm(i) {
       fld(t("sodium") + " (g)", mk("sodium", "number")), fld(t("calcium") + " (mg)", mk("calcium", "number")),
     ]),
     h("div", { class: "field" }, [h("label", {}, t("allergensLabel")), picker]),
-    isNew ? null : h("button", { class: "btn btn--danger btn--sm", onClick: async () => { if (await U.confirmDelete()) { await Data.remove("ingredients", i.id); U.toast(t("deleted")); document.querySelector(".modal-backdrop").click(); Router.go("#/ingredients"); } } }, "🗑 " + t("delete")),
+    isNew ? null : (function () {
+      const hide = Data.willHide("ingredients", i);
+      return h("button", { class: "btn btn--danger btn--sm", onClick: async () => {
+        if (await U.confirmDelete(hide ? t("hideConfirm") : undefined)) {
+          await Data.removeOrHide("ingredients", i); U.toast(hide ? t("hiddenToast") : t("deleted"));
+          document.querySelector(".modal-backdrop").click(); Router.go("#/ingredients"); Router.rerender();
+        }
+      } }, (hide ? "🙈 " + t("hideFromView") : "🗑 " + t("delete")));
+    })(),
   ]);
   function fld(label, input) { return h("div", { class: "field" }, [h("label", {}, label), input]); }
 

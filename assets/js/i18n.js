@@ -81,6 +81,10 @@
       supplier: "Supplier", site: "Site", date: "Date", notes: "Notes", quantity: "Quantity",
       grams: "Grams", portions: "Portions", confirmDelete: "Delete this item? This cannot be undone.",
       saved: "Saved", deleted: "Deleted", nothingHere: "Nothing here yet",
+      hidden: "Hidden", hiddenItems: "Hidden items", noHidden: "Nothing hidden.", restore: "Restore",
+      hiddenIntro: "These items are hidden from your view only. Restore any to bring it back.",
+      hideFromView: "Hide from my view", hiddenToast: "Hidden from your view",
+      hideConfirm: "Remove this from your view? It stays available for other users.",
 
       // macros
       kcal: "Energy (kcal)", protein: "Protein", carbs: "Carbs", fat: "Fat",
@@ -274,6 +278,10 @@
       supplier: "供應商", site: "據點", date: "日期", notes: "備註", quantity: "數量",
       grams: "公克", portions: "份數", confirmDelete: "確定刪除？此動作無法復原。",
       saved: "已儲存", deleted: "已刪除", nothingHere: "尚無資料",
+      hidden: "已隱藏", hiddenItems: "已隱藏項目", noHidden: "沒有已隱藏的項目。", restore: "還原",
+      hiddenIntro: "這些項目僅在您的檢視中隱藏。可還原以重新顯示。",
+      hideFromView: "從我的檢視隱藏", hiddenToast: "已從您的檢視隱藏",
+      hideConfirm: "從您的檢視中移除？其他用戶仍可使用。",
 
       kcal: "熱量 (大卡)", protein: "蛋白質", carbs: "碳水化合物", fat: "脂肪",
       sugar: "糖", fiber: "膳食纖維", salt: "鹽", per100: "每 100 公克", perPortion: "每份",
