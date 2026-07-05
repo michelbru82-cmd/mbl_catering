@@ -28,7 +28,20 @@ PAGES.ingredients = {
     ]);
     view.appendChild(banner);
 
+    const selected = new Set();
+    const bulkBar = h("div", { class: "toolbar", style: "display:none;gap:8px;align-items:center;background:var(--card,#0000000a);border-radius:8px;padding:6px 10px" });
+    view.appendChild(bulkBar);
     const host = h("div", {}); view.appendChild(host);
+
+    function updateBulk() {
+      bulkBar.innerHTML = "";
+      if (!selected.size) { bulkBar.style.display = "none"; return; }
+      bulkBar.style.display = "";
+      const admin = !window.Auth || !Auth.isAdmin || Auth.isAdmin();
+      bulkBar.appendChild(h("b", {}, selected.size + " " + t("selectedLbl")));
+      bulkBar.appendChild(h("button", { class: "btn btn--sm btn--danger", onClick: () => U.bulkDelete("ingredients", [...selected], () => { selected.clear(); draw(); }) }, (admin ? "🗑 " + t("delete") : "🙈 " + t("hideFromView"))));
+      bulkBar.appendChild(h("button", { class: "btn btn--sm", onClick: () => { selected.clear(); draw(); } }, t("clearSelBtn")));
+    }
 
     function draw() {
       let list = Data.all("ingredients").slice();
@@ -38,15 +51,21 @@ PAGES.ingredients = {
       list.sort((a, b) => a.name_en.localeCompare(b.name_en));
       document.getElementById("ig-count").textContent = list.length + " " + t("ingredientCount");
       host.innerHTML = "";
+      const allChk = h("input", { type: "checkbox", title: t("selectAll"), onChange: (e) => { const on = e.target.checked; list.forEach((i) => (on ? selected.add(i.id) : selected.delete(i.id))); draw(); } });
+      allChk.checked = list.length > 0 && list.every((i) => selected.has(i.id));
       const tbl = h("table", { class: "data" });
       tbl.appendChild(h("thead", {}, h("tr", {}, [
+        h("th", { style: "width:1%" }, allChk),
         h("th", {}, t("name")), h("th", {}, t("supplier")),
         h("th", { class: "num" }, "kcal"), h("th", { class: "num" }, "P"), h("th", { class: "num" }, "C"), h("th", { class: "num" }, "F"),
         h("th", {}, t("allergensLabel")), h("th", {}, ""),
       ])));
       const tb = h("tbody", {});
       list.forEach((i) => {
+        const rowChk = h("input", { type: "checkbox", onClick: (e) => e.stopPropagation(), onChange: (e) => { if (e.target.checked) selected.add(i.id); else selected.delete(i.id); allChk.checked = list.length > 0 && list.every((x) => selected.has(x.id)); updateBulk(); } });
+        rowChk.checked = selected.has(i.id);
         tb.appendChild(h("tr", { class: "clickable", onClick: () => Router.go("#/ingredients/" + i.id) }, [
+          h("td", { onClick: (e) => e.stopPropagation() }, rowChk),
           h("td", {}, [h("b", {}, i.name_en), i.name_zh ? h("div", { class: "bilingual-zh zh" }, i.name_zh) : null]),
           h("td", { class: "small muted" }, i.supplier || "—"),
           h("td", { class: "num" }, i.kcal == null ? "—" : i.kcal),
@@ -59,6 +78,7 @@ PAGES.ingredients = {
       });
       tbl.appendChild(tb);
       host.appendChild(h("div", { class: "table-wrap" }, tbl));
+      updateBulk();
     }
     draw();
   },

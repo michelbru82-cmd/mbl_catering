@@ -18,7 +18,20 @@ PAGES.recipes = {
       h("button", { class: "btn", title: "Replace recipes & ingredients with the MBL dataset (real grams)", onClick: importMblData }, "⤓ Load MBL data"),
       h("button", { class: "btn btn--primary", onClick: () => edit(null) }, "＋ " + t("add")),
     ]));
+    const selected = new Set();
+    const bulkBar = h("div", { class: "toolbar", style: "display:none;gap:8px;align-items:center;background:var(--card,#0000000a);border-radius:8px;padding:6px 10px" });
+    view.appendChild(bulkBar);
     const host = h("div", {}); view.appendChild(host);
+
+    function updateBulk() {
+      bulkBar.innerHTML = "";
+      if (!selected.size) { bulkBar.style.display = "none"; return; }
+      bulkBar.style.display = "";
+      const admin = !window.Auth || !Auth.isAdmin || Auth.isAdmin();
+      bulkBar.appendChild(h("b", {}, selected.size + " " + t("selectedLbl")));
+      bulkBar.appendChild(h("button", { class: "btn btn--sm btn--danger", onClick: () => U.bulkDelete("recipes", [...selected], () => { selected.clear(); draw(); }) }, (admin ? "🗑 " + t("delete") : "🙈 " + t("hideFromView"))));
+      bulkBar.appendChild(h("button", { class: "btn btn--sm", onClick: () => { selected.clear(); draw(); } }, t("clearSelBtn")));
+    }
 
     function draw() {
       let list = Data.all("recipes").slice();
@@ -27,13 +40,18 @@ PAGES.recipes = {
       list.sort((a, b) => a.name_en.localeCompare(b.name_en));
       document.getElementById("rc-count").textContent = list.length + " " + t("recipeCount");
       host.innerHTML = "";
-      if (!list.length) { host.appendChild(h("div", { class: "empty" }, t("nothingHere"))); return; }
+      if (!list.length) { host.appendChild(h("div", { class: "empty" }, t("nothingHere"))); updateBulk(); return; }
+      const allChk = h("input", { type: "checkbox", title: t("selectAll"), onChange: (e) => { const on = e.target.checked; list.forEach((r) => (on ? selected.add(r.id) : selected.delete(r.id))); draw(); } });
+      allChk.checked = list.length > 0 && list.every((r) => selected.has(r.id));
       const tbl = h("table", { class: "data" });
-      tbl.appendChild(h("thead", {}, h("tr", {}, [h("th", {}, t("name")), h("th", {}, t("category")), h("th", { class: "num" }, t("ingredientsInRecipe")), h("th", {}, t("allergensLabel")), h("th", {}, "")])));
+      tbl.appendChild(h("thead", {}, h("tr", {}, [h("th", { style: "width:1%" }, allChk), h("th", {}, t("name")), h("th", {}, t("category")), h("th", { class: "num" }, t("ingredientsInRecipe")), h("th", {}, t("allergensLabel")), h("th", {}, "")])));
       const tb = h("tbody", {});
       list.forEach((r) => {
         const algs = Data.recipeAllergens(r);
+        const rowChk = h("input", { type: "checkbox", onClick: (e) => e.stopPropagation(), onChange: (e) => { if (e.target.checked) selected.add(r.id); else selected.delete(r.id); allChk.checked = list.length > 0 && list.every((x) => selected.has(x.id)); updateBulk(); } });
+        rowChk.checked = selected.has(r.id);
         tb.appendChild(h("tr", { class: "clickable", onClick: () => Router.go("#/recipes/" + r.id) }, [
+          h("td", { onClick: (e) => e.stopPropagation() }, rowChk),
           h("td", {}, [h("b", {}, r.name_en), r.name_zh ? h("div", { class: "bilingual-zh zh" }, r.name_zh) : null]),
           h("td", {}, r.category ? h("span", { class: "badge badge--cat" }, r.category) : ""),
           h("td", { class: "num" }, (r.items || []).length),
@@ -43,6 +61,7 @@ PAGES.recipes = {
       });
       tbl.appendChild(tb);
       host.appendChild(h("div", { class: "table-wrap" }, tbl));
+      updateBulk();
     }
     draw();
 
