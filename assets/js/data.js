@@ -62,6 +62,18 @@
   }
 
   const cache = {}; COLLS.forEach((c) => (cache[c] = []));
+  // Per-user "hidden" library items: a user can remove a SHARED (owner-less)
+  // allergen/ingredient/recipe from their own view without deleting it for
+  // everyone. Stored in the hidden_items table (Supabase) or localStorage (local).
+  const HIDE_COLLS = ["allergens", "ingredients", "recipes"];
+  const hidden = {}; HIDE_COLLS.forEach((c) => (hidden[c] = new Set()));
+  const HIDDEN_LSKEY = "mbl_hidden_v1";
+  function loadHiddenLocal() {
+    try { const o = JSON.parse(localStorage.getItem(HIDDEN_LSKEY) || "{}"); HIDE_COLLS.forEach((c) => (hidden[c] = new Set(o[c] || []))); } catch (e) {}
+  }
+  function persistHiddenLocal() {
+    try { const o = {}; HIDE_COLLS.forEach((c) => (o[c] = [...hidden[c]])); localStorage.setItem(HIDDEN_LSKEY, JSON.stringify(o)); } catch (e) {}
+  }
   let readyResolve; const readyPromise = new Promise((r) => (readyResolve = r));
 
   // simple id generator (avoids Date.now/Math.random ban concerns in app runtime is fine here,
@@ -135,11 +147,16 @@
     // places share the master recipes (place_id null). This keeps a pastry shop's products
     // separate from the catering menus.
     all: (c) => {
+      let list;
       if (c === "recipes") {
         const shop = Data.activePlaceType() === "shop";
-        return (cache.recipes || []).filter((r) => shop ? r.place_id === activePlaceId : (r.place_id == null));
+        list = (cache.recipes || []).filter((r) => shop ? r.place_id === activePlaceId : (r.place_id == null));
+      } else {
+        list = PLACE_COLLS.includes(c) ? (cache[c] || []).filter((x) => x.place_id === activePlaceId) : (cache[c] || []);
       }
-      return PLACE_COLLS.includes(c) ? (cache[c] || []).filter((x) => x.place_id === activePlaceId) : (cache[c] || []);
+      // Drop items the current user has hidden from their own view.
+      if (hidden[c] && hidden[c].size) list = list.filter((x) => !hidden[c].has(x.id));
+      return list;
     },
     allRaw: (c) => cache[c] || [],
     get: (c, id) => (cache[c] || []).find((x) => x.id === id) || null,
@@ -167,6 +184,38 @@
     update: (c, id, p) => Data._guard() ? adapter.update(c, id, p) : Promise.reject(new Error(I18N.t("demoBlocked"))),
     remove: (c, id) => Data._guard() ? adapter.remove(c, id) : Promise.reject(new Error(I18N.t("demoBlocked"))),
     resetLocal: () => { if (!useSupabase) Local.reset(); },
+
+    // ---------- per-user hide of shared library items ----------
+    canHide: (c) => HIDE_COLLS.includes(c),
+    isHidden: (c, id) => !!(hidden[c] && hidden[c].has(id)),
+    hiddenIds: (c) => (hidden[c] ? [...hidden[c]] : []),
+    hiddenCount: (c) => (hidden[c] ? hidden[c].size : 0),
+    async hideItem(c, id) {
+      if (!HIDE_COLLS.includes(c)) return;
+      hidden[c].add(id);
+      if (useSupabase && sb) { try { await sb.from("hidden_items").upsert({ coll: c, item_id: id }, { onConflict: "owner_id,coll,item_id" }); } catch (e) { console.error("hideItem", e); } }
+      else persistHiddenLocal();
+    },
+    async unhideItem(c, id) {
+      if (!hidden[c]) return;
+      hidden[c].delete(id);
+      if (useSupabase && sb) { try { await sb.from("hidden_items").delete().eq("coll", c).eq("item_id", id); } catch (e) { console.error("unhideItem", e); } }
+      else persistHiddenLocal();
+    },
+    // True when "deleting" this item would only hide it from the current user's
+    // view (a shared, owner-less library item + a non-admin) rather than delete
+    // it for everyone. (In local/demo mode the single owner is admin, so this is
+    // false and deletes are real.)
+    willHide(c, item) {
+      return !!(item && item.owner_id == null && HIDE_COLLS.includes(c) &&
+        window.Auth && !(Auth.isAdmin && Auth.isAdmin()));
+    },
+    // Delete an item the "right" way: a shared (owner-less) library item is only
+    // HIDDEN from a non-admin's own view; own items and admin actions really delete.
+    removeOrHide(c, item) {
+      if (!item) return Promise.resolve();
+      return Data.willHide(c, item) ? Data.hideItem(c, item.id) : Data.remove(c, item.id);
+    },
 
     // ---------- catering places ----------
     places: () => cache.places || [],
@@ -285,6 +334,11 @@
     }
     migratePlaces();
     if (!useSupabase) Local.persist();
+    // load this user's hidden library items
+    if (useSupabase && sb) {
+      try { const { data } = await sb.from("hidden_items").select("coll,item_id"); (data || []).forEach((r) => { if (hidden[r.coll]) hidden[r.coll].add(r.item_id); }); }
+      catch (e) { /* table may not exist yet — ignore */ }
+    } else loadHiddenLocal();
     // resolve the active place (persisted choice, else the first place)
     let stored = null; try { stored = localStorage.getItem(APKEY); } catch (e) {}
     activePlaceId = (stored && (cache.places || []).some((p) => p.id === stored)) ? stored : ((cache.places[0] || {}).id || null);

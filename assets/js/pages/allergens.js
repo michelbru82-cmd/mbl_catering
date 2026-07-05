@@ -6,6 +6,7 @@ PAGES.allergens = {
     view.appendChild(h("div", { class: "toolbar" }, [
       h("span", { class: "muted small" }, t("eu14")),
       h("div", { style: "flex:1" }),
+      Data.hiddenCount("allergens") ? h("button", { class: "btn btn--sm", onClick: () => U.hiddenManager("allergens") }, "🙈 " + t("hidden") + " (" + Data.hiddenCount("allergens") + ")") : null,
       h("button", { class: "btn btn--primary", onClick: () => form(null) }, "＋ " + t("addAllergen")),
     ]));
 
@@ -47,17 +48,23 @@ PAGES.allergens = {
           h("div", { class: "field" }, [h("label", {}, t("name_en")), en]),
           h("div", { class: "field" }, [h("label", {}, t("name_zh")), zh]),
         ]),
-        isNew ? null : h("button", { class: "btn btn--danger btn--sm", onClick: async () => {
-          if (await U.confirmDelete("Delete this allergen? It will be removed from ingredients & people too.")) {
-            // cascade remove from ingredients & people
-            for (const i of Data.all("ingredients").filter((x) => (x.allergen_ids || []).includes(a.id)))
-              await Data.update("ingredients", i.id, { allergen_ids: i.allergen_ids.filter((x) => x !== a.id) });
-            for (const p of Data.all("people").filter((x) => (x.allergen_ids || []).includes(a.id)))
-              await Data.update("people", p.id, { allergen_ids: p.allergen_ids.filter((x) => x !== a.id) });
-            await Data.remove("allergens", a.id);
-            U.toast(t("deleted")); document.querySelector(".modal-backdrop").click(); Router.rerender();
-          }
-        } }, "🗑 " + t("delete")),
+        isNew ? null : (function () {
+          const hide = Data.willHide("allergens", a);
+          return h("button", { class: "btn btn--danger btn--sm", onClick: async () => {
+            if (await U.confirmDelete(hide ? t("hideConfirm") : "Delete this allergen? It will be removed from ingredients & people too.")) {
+              if (hide) { await Data.hideItem("allergens", a.id); }
+              else {
+                // cascade remove from ingredients & people
+                for (const i of Data.all("ingredients").filter((x) => (x.allergen_ids || []).includes(a.id)))
+                  await Data.update("ingredients", i.id, { allergen_ids: i.allergen_ids.filter((x) => x !== a.id) });
+                for (const p of Data.all("people").filter((x) => (x.allergen_ids || []).includes(a.id)))
+                  await Data.update("people", p.id, { allergen_ids: p.allergen_ids.filter((x) => x !== a.id) });
+                await Data.remove("allergens", a.id);
+              }
+              U.toast(hide ? t("hiddenToast") : t("deleted")); document.querySelector(".modal-backdrop").click(); Router.rerender();
+            }
+          } }, hide ? "🙈 " + t("hideFromView") : "🗑 " + t("delete"));
+        })(),
       ]);
       U.modal(isNew ? t("addAllergen") : a.name_en, body, {
         async onSave() {

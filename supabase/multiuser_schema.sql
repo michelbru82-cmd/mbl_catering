@@ -31,6 +31,19 @@ alter table public.profiles add column if not exists invited_by uuid references 
 -- people: optional contact email (used for menu mailing)
 alter table public.people add column if not exists email text;
 
+-- per-user "hidden" list: a user can remove a SHARED library item (allergen /
+-- ingredient / recipe) from their OWN view without deleting it for everyone.
+create table if not exists public.hidden_items (
+  owner_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  coll     text not null,       -- 'allergens' | 'ingredients' | 'recipes'
+  item_id  text not null,
+  primary key (owner_id, coll, item_id)
+);
+alter table public.hidden_items enable row level security;
+drop policy if exists hidden_items_owner on public.hidden_items;
+create policy hidden_items_owner on public.hidden_items
+  for all using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+
 -- is_admin(): SECURITY DEFINER so profiles policies can call it WITHOUT
 -- recursing through profiles' own RLS.
 create or replace function public.is_admin()
