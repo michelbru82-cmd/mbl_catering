@@ -119,9 +119,22 @@
       computedFromIngredients: "Computed from ingredients (where data available)",
 
       // people
-      kind: "Type", kid: "Kid", employee: "Employee", guest: "Guest", dateIn: "Start date",
+      kind: "Type", kid: "Student", student: "Student", teacher: "Teacher", employee: "Employee", guest: "Guest", dateIn: "Start date",
       dateOut: "End date", active: "Active", inactive: "Inactive", allergen1: "Allergen 1",
       allergen2: "Allergen 2", allergen3: "Allergen 3", headcount: "Active people",
+      // people — import
+      importLabel: "Import", importPeople: "Import people",
+      importIntro: "Bulk-add people from a CSV file, pasted text, or a Google Sheet. Columns (any order): name, type, start date, end date, allergens.",
+      csvFile: "CSV file", pasteData: "Or paste CSV", googleSheetUrl: "Google Sheet link", loadSheet: "Load", loadingSheet: "Loading…",
+      sheetHint: "Paste a Google Sheets link. The sheet must be shared as “Anyone with the link”, or published to the web. If loading fails, download it as CSV and use the file picker above.",
+      sheetError: "Couldn't load that sheet — check the link is a shared/published Google Sheet, or upload a CSV instead.",
+      previewLbl: "Preview", importBtn: "Import", rowsReady: "rows ready",
+      nothingToImport: "No valid rows found — each row needs at least a name.", importedPeople: "people imported",
+      // people — bulk edit
+      selectedLbl: "selected", bulkEdit: "Bulk edit", clearSelBtn: "Clear",
+      bulkEditIntro: "Only ticked fields are changed; the rest are left as they are.",
+      applyLbl: "Apply", updatedLbl: "updated", nothingToChange: "Tick at least one field to change.",
+      bulkDeleteWarn: "Delete the {n} selected people? This cannot be undone.",
 
       // production
       todayProduction: "Today's production", nextDayProduction: "Next-day production",
@@ -272,9 +285,22 @@
       addIngredientRow: "新增食材", allergensLabel: "過敏原", noAllergens: "無過敏原",
       computedFromIngredients: "依食材計算（若有資料）",
 
-      kind: "類型", kid: "孩童", employee: "員工", guest: "訪客", dateIn: "開始日期",
+      kind: "類型", kid: "學生", student: "學生", teacher: "老師", employee: "員工", guest: "訪客", dateIn: "開始日期",
       dateOut: "結束日期", active: "在籍", inactive: "已停用", allergen1: "過敏原 1",
       allergen2: "過敏原 2", allergen3: "過敏原 3", headcount: "在籍人數",
+      // people — import
+      importLabel: "匯入", importPeople: "匯入人員",
+      importIntro: "從 CSV 檔案、貼上的文字或 Google 試算表批次新增人員。欄位（順序不限）：姓名、類型、開始日期、結束日期、過敏原。",
+      csvFile: "CSV 檔案", pasteData: "或貼上 CSV", googleSheetUrl: "Google 試算表連結", loadSheet: "載入", loadingSheet: "載入中…",
+      sheetHint: "貼上 Google 試算表連結。該試算表需設為「知道連結的任何人」或發布到網路。若載入失敗，請下載為 CSV 後改用上方檔案選擇。",
+      sheetError: "無法載入該試算表 — 請確認連結為已共用／已發布的 Google 試算表，或改為上傳 CSV。",
+      previewLbl: "預覽", importBtn: "匯入", rowsReady: "筆待匯入",
+      nothingToImport: "找不到有效資料 — 每一列至少需要姓名。", importedPeople: "位人員已匯入",
+      // people — bulk edit
+      selectedLbl: "已選取", bulkEdit: "批次編輯", clearSelBtn: "清除",
+      bulkEditIntro: "僅變更已勾選的欄位，其餘保持不變。",
+      applyLbl: "套用", updatedLbl: "筆已更新", nothingToChange: "請至少勾選一個要變更的欄位。",
+      bulkDeleteWarn: "刪除所選的 {n} 位人員？此動作無法復原。",
 
       todayProduction: "今日生產", nextDayProduction: "隔日生產",
       dishesToPrepare: "待準備餐點", qtyToPrepare: "準備數量", covers: "份數",

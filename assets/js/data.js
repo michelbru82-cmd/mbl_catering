@@ -57,6 +57,8 @@
     (cache.settings || []).forEach((s) => { if (s.id === "menu_config") s.id = "menu_config__" + def; });
     // default type/margin on any older place records
     (cache.places || []).forEach((p) => { if (p.type == null) p.type = "catering"; if (p.food_cost_pct == null) p.food_cost_pct = 30; });
+    // people "kind" renamed: kid -> student (teacher added as a new option in the UI)
+    (cache.people || []).forEach((p) => { if (p.kind === "kid") p.kind = "student"; });
   }
 
   const cache = {}; COLLS.forEach((c) => (cache[c] = []));
