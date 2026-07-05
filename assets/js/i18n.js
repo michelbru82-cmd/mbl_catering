@@ -85,6 +85,8 @@
       hiddenIntro: "These items are hidden from your view only. Restore any to bring it back.",
       hideFromView: "Hide from my view", hiddenToast: "Hidden from your view",
       hideConfirm: "Remove this from your view? It stays available for other users.",
+      deleteSelectedWarn: "Delete the {n} selected items? This cannot be undone.",
+      hideSelectedWarn: "Hide the {n} selected items from your view?",
 
       // macros
       kcal: "Energy (kcal)", protein: "Protein", carbs: "Carbs", fat: "Fat",
@@ -282,6 +284,8 @@
       hiddenIntro: "這些項目僅在您的檢視中隱藏。可還原以重新顯示。",
       hideFromView: "從我的檢視隱藏", hiddenToast: "已從您的檢視隱藏",
       hideConfirm: "從您的檢視中移除？其他用戶仍可使用。",
+      deleteSelectedWarn: "刪除所選的 {n} 個項目？此動作無法復原。",
+      hideSelectedWarn: "從您的檢視隱藏所選的 {n} 個項目？",
 
       kcal: "熱量 (大卡)", protein: "蛋白質", carbs: "碳水化合物", fat: "脂肪",
       sugar: "糖", fiber: "膳食纖維", salt: "鹽", per100: "每 100 公克", perPortion: "每份",

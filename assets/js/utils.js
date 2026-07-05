@@ -109,5 +109,22 @@
     return modal(t("hiddenItems"), box, { buttons: [{ label: t("close"), value: true }] });
   }
 
-  window.U = { h, esc, toast, modal, confirmDelete, hiddenManager, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY };
+  // Bulk delete a set of ids from a collection: admins delete for real, regular
+  // users hide shared items from their own view (see Data.removeOrHide).
+  async function bulkDelete(coll, ids, onDone) {
+    if (!ids || !ids.length) return;
+    const t = I18N.t.bind(I18N);
+    const admin = !window.Auth || !Auth.isAdmin || Auth.isAdmin();
+    const warn = (admin ? t("deleteSelectedWarn") : t("hideSelectedWarn")).replace("{n}", ids.length);
+    if (!(await confirmDelete(warn))) return;
+    let n = 0;
+    for (const id of ids) {
+      const item = Data.get(coll, id);
+      try { await Data.removeOrHide(coll, item); n++; } catch (e) { toast(e.message || String(e), true); break; }
+    }
+    toast((admin ? t("deleted") : t("hiddenToast")) + " · " + n);
+    if (onDone) onDone();
+  }
+
+  window.U = { h, esc, toast, modal, confirmDelete, hiddenManager, bulkDelete, isoAddDays, fmtDate, weekdayName, round, fmtNum, debounce, TODAY };
 })();
