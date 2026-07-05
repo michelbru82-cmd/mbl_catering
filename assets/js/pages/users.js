@@ -27,39 +27,67 @@
       ]));
       const host = h("div", {}); view.appendChild(host);
 
+      let allRows = [], lastLogin = {}, sortBy = "email", sortDir = 1;
+      const companyOf = (u) => u.company_official || u.company_trading || "";
+      const secCount = (u) => u.role === "admin" ? 1e9 : (Array.isArray(u.sections) ? u.sections.length : SECTION_KEYS.length);
+
       async function draw() {
         host.innerHTML = "";
         host.appendChild(h("div", { class: "muted small" }, t("signin_loading")));
         const sb = Data.supaClient();
-        let rows = [];
         try {
           const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: true });
           if (error) throw error;
-          rows = data || [];
+          allRows = data || [];
         } catch (e) {
           host.innerHTML = "";
           host.appendChild(h("div", { class: "banner banner--allergen" }, [h("span", {}, "⚠"), h("div", {}, t("usersLoadFail") + " " + (e.message || ""))]));
           return;
         }
+        // last sign-in per user (from the activity log's login events)
+        lastLogin = {};
+        try {
+          const { data } = await sb.from("activity_log").select("actor_id,occurred_at").eq("action", "login").order("occurred_at", { ascending: false }).limit(3000);
+          (data || []).forEach((r) => { if (r.actor_id && !lastLogin[r.actor_id]) lastLogin[r.actor_id] = r.occurred_at; });
+        } catch (e) { /* log may not exist yet */ }
+        renderTable();
+      }
+
+      function renderTable() {
         host.innerHTML = "";
+        const cols = [
+          { key: "email", label: t("emailAddr"), sort: (u) => (u.email || u.id).toLowerCase(),
+            cell: (u, me) => h("td", {}, [h("b", {}, u.email || u.id), me ? h("span", { class: "badge", style: "margin-left:6px" }, t("you")) : null, u.account_id ? h("span", { class: "badge", style: "margin-left:6px", title: t("linkedEmails") }, "👥") : null]) },
+          { key: "company", label: t("companyName"), sort: (u) => companyOf(u).toLowerCase(),
+            cell: (u) => h("td", { class: "small" }, companyOf(u) || h("span", { class: "muted" }, "—")) },
+          { key: "role", label: t("role"), sort: (u) => (u.role === "admin" ? 0 : 1),
+            cell: (u) => h("td", {}, [h("span", { class: "badge" }, u.role === "admin" ? t("roleAdmin") : t("roleUser")), u.pro && u.role !== "admin" ? h("span", { class: "badge badge--ok", style: "margin-left:4px" }, t("proBadge")) : null]) },
+          { key: "sections", label: t("sectionsLabel"), sort: (u) => secCount(u),
+            cell: (u) => h("td", { class: "small" }, u.role === "admin" ? t("allSections") : (Array.isArray(u.sections) ? u.sections.length + " / " + SECTION_KEYS.length : t("allSections"))) },
+          { key: "lastlogin", label: t("lastLogin"), sort: (u) => lastLogin[u.id] || "",
+            cell: (u) => h("td", { class: "small" }, lastLogin[u.id] ? fmtTime(lastLogin[u.id]) : h("span", { class: "muted" }, t("never"))) },
+          { key: "active", label: t("active"), sort: (u) => (u.active === false ? 0 : 1),
+            cell: (u) => h("td", {}, u.active === false ? h("span", { class: "badge badge--off" }, t("inactive")) : h("span", { class: "badge badge--ok" }, t("active"))) },
+        ];
+        const col = cols.find((c) => c.key === sortBy) || cols[0];
+        const sorted = allRows.slice().sort((a, b) => { const va = col.sort(a), vb = col.sort(b); return (va < vb ? -1 : va > vb ? 1 : 0) * sortDir; });
+        const arrow = (k) => sortBy === k ? (sortDir === 1 ? " ▲" : " ▼") : "";
+        const onHead = (k) => () => { if (sortBy === k) sortDir = -sortDir; else { sortBy = k; sortDir = 1; } renderTable(); };
         const tbl = h("table", { class: "data" });
         tbl.appendChild(h("thead", {}, h("tr", {}, [
-          h("th", {}, t("emailAddr")), h("th", {}, t("role")), h("th", {}, t("sectionsLabel")), h("th", {}, t("active")), h("th", {}, ""),
+          ...cols.map((c) => h("th", { style: "cursor:pointer;user-select:none", onClick: onHead(c.key) }, c.label + arrow(c.key))),
+          h("th", {}, ""),
         ])));
         const tb = h("tbody", {});
-        rows.forEach((u) => {
+        sorted.forEach((u) => {
           const isMe = Auth.profile && Auth.profile.id === u.id;
-          const secText = Array.isArray(u.sections) ? (u.sections.length + " / " + SECTION_KEYS.length) : t("allSections");
           tb.appendChild(h("tr", { class: "clickable", onClick: () => userModal(u, draw) }, [
-            h("td", {}, [h("b", {}, u.email || u.id), isMe ? h("span", { class: "badge", style: "margin-left:6px" }, t("you")) : null]),
-            h("td", {}, [h("span", { class: "badge" }, u.role === "admin" ? t("roleAdmin") : t("roleUser")),
-              u.pro && u.role !== "admin" ? h("span", { class: "badge badge--ok", style: "margin-left:4px" }, t("proBadge")) : null]),
-            h("td", { class: "small" }, u.role === "admin" ? t("allSections") : secText),
-            h("td", {}, u.active === false ? h("span", { class: "badge badge--off" }, t("inactive")) : h("span", { class: "badge badge--ok" }, t("active"))),
+            ...cols.map((c) => c.cell(u, isMe)),
             h("td", {}, h("button", { class: "btn btn--sm", onClick: (e) => { e.stopPropagation(); userModal(u, draw); } }, "✏️")),
           ]));
         });
         tbl.appendChild(tb);
+        host.appendChild(h("div", { class: "small muted", style: "margin-bottom:6px" }, allRows.length + " · " + t("sortHint")));
         host.appendChild(h("div", { class: "table-wrap" }, tbl));
       }
       draw();
