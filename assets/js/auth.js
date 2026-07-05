@@ -90,7 +90,18 @@
               ({ data } = await sb.auth.getSession());
               currentUser = data && data.session ? data.session.user : null;
             }
-            sb.auth.onAuthStateChange((_e, session) => { currentUser = session ? session.user : null; });
+            sb.auth.onAuthStateChange((ev, session) => {
+              currentUser = session ? session.user : null;
+              // Record an actual sign-in once per browser session (skip token refreshes).
+              if (ev === "SIGNED_IN" && currentUser) {
+                try {
+                  if (sessionStorage.getItem("mbl_login_logged") !== currentUser.id) {
+                    sessionStorage.setItem("mbl_login_logged", currentUser.id);
+                    if (window.Data && Data.logActivity) Data.logActivity("login", "auth", currentUser.email || null);
+                  }
+                } catch (e) {}
+              }
+            });
           } catch (e) { /* fall through to homepage */ }
           if (currentUser) {
             await this._loadEntitlement(sb);
