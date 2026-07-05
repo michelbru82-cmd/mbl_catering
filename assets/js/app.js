@@ -102,9 +102,16 @@
     const brand = document.getElementById("brandHome");
     if (brand && window.Auth) brand.addEventListener("click", () => Auth.openHome());
 
-    // data-source badge → connect / disconnect cloud database
+    // data-source badge → connect / disconnect cloud database.
+    // Admins only: it reveals the Supabase URL/key and connection controls, so it
+    // is hidden from regular users. (The anon/publishable key is public anyway;
+    // this keeps the connection settings out of non-admins' hands.)
     const src = document.getElementById("dataSrc");
-    if (src) { src.style.cursor = "pointer"; src.title = "Connect cloud database"; src.addEventListener("click", connectDbModal); }
+    if (src) {
+      const admin = !window.Auth || !Auth.isAdmin || Auth.isAdmin();
+      if (admin) { src.style.cursor = "pointer"; src.title = "Connect cloud database"; src.addEventListener("click", connectDbModal); }
+      else { src.style.display = "none"; }
+    }
 
     // Demo badge (read-only mode) → opens the subscribe prompt.
     if (window.Data && Data.canEdit && !Data.canEdit()) {
