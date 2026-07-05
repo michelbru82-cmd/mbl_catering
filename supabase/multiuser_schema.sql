@@ -54,41 +54,59 @@ create policy "profiles_update_admin" on public.profiles
 -- (No client insert: profile rows are created by the new-user trigger below.
 --  Entitlements/voucher writes still go through the service-role Edge Functions.)
 
--- ---- 2. Per-user data isolation: owner_id + owner-scoped RLS ----------------
--- owner_id defaults to auth.uid(), so a signed-in client's inserts are
--- auto-stamped with the owner. Service-role writes (Edge Functions) must set
--- owner_id explicitly (auth.uid() is null under the service role).
+-- ---- 2. Isolation model: private per user + a shared "original library" ----
+-- owner_id defaults to auth.uid(), so a signed-in client's inserts are stamped.
+--   • PRIVATE tables (menus, people, subscribers, settings, places, sites):
+--     you only ever see/modify your own rows.
+--   • SHARED library (allergens, ingredients, recipes): everyone reads the
+--     original owner-less rows (owner_id null) plus their own; users may add
+--     their own private items; admins manage the shared originals.
 do $$
 declare t text;
 begin
+  -- add owner_id + clear any prior policies on every table
   foreach t in array array['allergens','sites','places','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
   loop
-    execute format(
-      'alter table public.%I add column if not exists owner_id uuid default auth.uid() references auth.users(id) on delete cascade;', t);
-    -- Replace the permissive starter policy from schema.sql (named after the table).
-    execute format('drop policy if exists %I on public.%I;', t, t);
+    execute format('alter table public.%I add column if not exists owner_id uuid default auth.uid() references auth.users(id) on delete cascade;', t);
+    execute format('drop policy if exists %I on public.%I;', t, t);              -- permissive starter policy (schema.sql)
     execute format('drop policy if exists %I on public.%I;', t || '_owner', t);
-    execute format(
-      'create policy %I on public.%I for all using (owner_id = auth.uid()) with check (owner_id = auth.uid());',
-      t || '_owner', t);
+    execute format('drop policy if exists %I on public.%I;', t || '_read', t);
+    execute format('drop policy if exists %I on public.%I;', t || '_write', t);
+  end loop;
+
+  -- Private, per-user tables.
+  foreach t in array array['sites','places','menu_days','people','subscribers','settings','newsletter_log']
+  loop
+    execute format('create policy %I on public.%I for all using (owner_id = auth.uid()) with check (owner_id = auth.uid());', t || '_owner', t);
+  end loop;
+
+  -- Shared reference library.
+  foreach t in array array['allergens','ingredients','recipes']
+  loop
+    execute format('create policy %I on public.%I for select using (owner_id is null or owner_id = auth.uid() or public.is_admin());', t || '_read', t);
+    execute format('create policy %I on public.%I for all using (owner_id = auth.uid() or public.is_admin()) with check (owner_id = auth.uid() or public.is_admin());', t || '_write', t);
   end loop;
 end $$;
 
--- ---- 3. Adopt existing (pre-migration) rows so nothing is orphaned ---------
--- Any rows that existed before this migration have owner_id = null and would
--- become invisible. Assign them to the admin account so its current data stays.
--- Change the email below if the owner account is different.
+-- ---- 3. Seed ownership: keep private data with the admin, share the library -
+-- Private rows are adopted by the admin; the reference library is made
+-- owner-less so every user gets the "original database". Change the email if
+-- the owner account is different.
 do $$
 declare admin_id uuid; t text;
 begin
   select id into admin_id from auth.users where lower(email) = lower('michel.bru82@gmail.com') limit 1;
   if admin_id is not null then
     update public.profiles set role = 'admin' where id = admin_id;
-    foreach t in array array['allergens','sites','places','ingredients','recipes','menu_days','people','subscribers','settings','newsletter_log']
+    foreach t in array array['sites','places','menu_days','people','subscribers','settings','newsletter_log']
     loop
       execute format('update public.%I set owner_id = %L where owner_id is null;', t, admin_id);
     end loop;
   end if;
+  -- Shared library -> owner-less (visible to everyone).
+  update public.allergens   set owner_id = null;
+  update public.ingredients set owner_id = null;
+  update public.recipes     set owner_id = null where place_id is null;  -- catering master recipes (shop recipes stay private)
 end $$;
 
 -- ---- 4. New-user bootstrap: profile row + a starter catering place ---------

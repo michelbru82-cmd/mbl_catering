@@ -157,6 +157,11 @@
       if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId;
       // new recipes created inside a shop place belong to that shop
       if (c === "recipes" && o && o.place_id == null && Data.activePlaceType() === "shop") o.place_id = activePlaceId;
+      // Shared "original library": allergens/ingredients and catering master recipes
+      // added by an admin are owner-less (owner_id null) so every user can see them.
+      if (useSupabase && o && window.Auth && Auth.isAdmin && Auth.isAdmin()) {
+        if (c === "allergens" || c === "ingredients" || (c === "recipes" && o.place_id == null)) o.owner_id = null;
+      }
       return adapter.create(c, o);
     },
     update: (c, id, p) => Data._guard() ? adapter.update(c, id, p) : Promise.reject(new Error(I18N.t("demoBlocked"))),
