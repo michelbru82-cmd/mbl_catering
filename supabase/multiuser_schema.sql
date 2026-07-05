@@ -25,7 +25,11 @@
 alter table public.profiles add column if not exists role     text    not null default 'user';   -- 'admin' | 'user'
 alter table public.profiles add column if not exists sections jsonb;                              -- null = all sections; else array of page keys
 alter table public.profiles add column if not exists active   boolean not null default true;      -- false = login blocked by the app
+alter table public.profiles add column if not exists pro      boolean not null default false;     -- free full access (e.g. partners), no subscription
 alter table public.profiles add column if not exists invited_by uuid references auth.users(id) on delete set null;
+
+-- people: optional contact email (used for menu mailing)
+alter table public.people add column if not exists email text;
 
 -- is_admin(): SECURITY DEFINER so profiles policies can call it WITHOUT
 -- recursing through profiles' own RLS.

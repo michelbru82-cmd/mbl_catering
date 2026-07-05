@@ -132,7 +132,7 @@
       ingredients: ["id", "name_en", "name_zh", "supplier", "category", "origin", "kcal", "protein", "carbs", "fat", "sugar", "added_sugar", "fiber", "sodium", "calcium", "salt", "price_per_kg", "unit_weight", "unit_label", "allergen_ids"],
       recipes: ["id", "name_en", "name_zh", "category", "yield_portions", "portion_weight", "method", "prep_min", "cook_min", "sale_price", "course", "protein", "cuisine", "contains_carb", "items", "allergen_ids"],
       menu_days: ["id", "place_id", "date", "site", "slots", "notes"],
-      people: ["id", "place_id", "name", "kind", "site_id", "date_in", "date_out", "allergen_ids"],
+      people: ["id", "place_id", "name", "email", "kind", "site_id", "date_in", "date_out", "allergen_ids"],
       subscribers: ["id", "place_id", "email", "name", "active", "created_at"],
       settings: ["id", "place_id", "name", "months", "service_days", "weekday", "nutrition", "rotation_max", "rotation_window_days", "min_repeat_gap", "spread_allergens", "keep_existing", "max_cost"],
     };

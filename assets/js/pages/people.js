@@ -87,7 +87,7 @@ PAGES.people = {
       const tbl = h("table", { class: "data" });
       tbl.appendChild(h("thead", {}, h("tr", {}, [
         h("th", { style: "width:1%" }, allChk),
-        h("th", {}, t("name")), h("th", {}, t("kind")),
+        h("th", {}, t("name")), h("th", {}, t("email")), h("th", {}, t("kind")),
         h("th", {}, t("dateIn")), h("th", {}, t("dateOut")), h("th", {}, t("allergensLabel")), h("th", {}, ""),
       ])));
       const tb = h("tbody", {});
@@ -101,6 +101,7 @@ PAGES.people = {
         tb.appendChild(h("tr", { class: "clickable", onClick: () => personForm(p) }, [
           h("td", { onClick: (e) => e.stopPropagation() }, rowChk),
           h("td", {}, [h("b", {}, p.name), " ", isActive(p) ? h("span", { class: "badge badge--ok" }, t("active")) : h("span", { class: "badge badge--off" }, t("inactive"))]),
+          h("td", { class: "small" }, p.email ? h("a", { href: "mailto:" + p.email, onClick: (e) => e.stopPropagation() }, p.email) : "—"),
           h("td", {}, h("span", { class: "badge" }, t(p.kind || "student"))),
           h("td", { class: "small" }, p.date_in || "—"),
           h("td", { class: "small" }, p.date_out || "—"),
@@ -119,14 +120,16 @@ PAGES.people = {
 function personForm(p) {
   const t = I18N.t.bind(I18N), h = U.h;
   const isNew = !p;
-  p = p || { name: "", kind: "student", date_in: "", date_out: "", allergen_ids: [] };
+  p = p || { name: "", email: "", kind: "student", date_in: "", date_out: "", allergen_ids: [] };
   const name = h("input", { class: "input", value: p.name });
+  const email = h("input", { class: "input", type: "email", placeholder: "name@email.com", value: p.email || "" });
   const kindSel = h("select", { class: "input" }, PERSON_KINDS.map((k) => h("option", { value: k, selected: k === p.kind }, t(k))));
   const dIn = h("input", { class: "input", type: "date", value: p.date_in || "" });
   const dOut = h("input", { class: "input", type: "date", value: p.date_out || "" });
   const picker = allergenPicker(p.allergen_ids, 3);
   const form = h("div", {}, [
     h("div", { class: "field" }, [h("label", {}, t("name")), name]),
+    h("div", { class: "field" }, [h("label", {}, t("email")), email]),
     h("div", { class: "row" }, [
       h("div", { class: "field" }, [h("label", {}, t("kind")), kindSel]),
       h("div", { class: "field" }, [h("label", {}, t("dateIn")), dIn]),
@@ -137,7 +140,7 @@ function personForm(p) {
   ]);
   U.modal(isNew ? t("add") + " · " + t("people") : p.name, form, {
     async onSave() {
-      const payload = { name: name.value.trim(), kind: kindSel.value, date_in: dIn.value || null, date_out: dOut.value || null, allergen_ids: picker._get().slice(0, 3) };
+      const payload = { name: name.value.trim(), email: email.value.trim() || null, kind: kindSel.value, date_in: dIn.value || null, date_out: dOut.value || null, allergen_ids: picker._get().slice(0, 3) };
       if (!payload.name) { U.toast(t("name") + "?", true); return false; }
       if (isNew) await Data.create("people", payload); else await Data.update("people", p.id, payload);
       U.toast(t("saved")); Router.rerender();
@@ -189,7 +192,7 @@ function importPeopleModal() {
   let records = [];
 
   const ta = h("textarea", { class: "input", rows: "6", spellcheck: "false",
-    placeholder: "name,type,start,end,allergens\nAlex Chen,student,2025-08-25,,Peanut;Milk",
+    placeholder: "name,email,type,start,end,allergens\nAlex Chen,alex@mail.com,student,2025-08-25,,Peanut;Milk",
     style: "width:100%;font-family:monospace;font-size:12px" });
   const file = h("input", { type: "file", accept: ".csv,text/csv,text/plain" });
   const sheet = h("input", { class: "input", style: "flex:1", placeholder: "https://docs.google.com/spreadsheets/d/…" });
@@ -203,11 +206,12 @@ function importPeopleModal() {
     if (!records.length) return;
     const tbl = h("table", { class: "data" });
     tbl.appendChild(h("thead", {}, h("tr", {}, [
-      h("th", {}, t("name")), h("th", {}, t("kind")), h("th", {}, t("dateIn")), h("th", {}, t("dateOut")), h("th", {}, t("allergensLabel")),
+      h("th", {}, t("name")), h("th", {}, t("email")), h("th", {}, t("kind")), h("th", {}, t("dateIn")), h("th", {}, t("dateOut")), h("th", {}, t("allergensLabel")),
     ])));
     const tb = h("tbody", {});
     records.slice(0, 100).forEach((r) => tb.appendChild(h("tr", {}, [
       h("td", {}, h("b", {}, r.name)),
+      h("td", { class: "small" }, r.email || "—"),
       h("td", {}, h("span", { class: "badge" }, t(r.kind))),
       h("td", { class: "small" }, r.date_in || "—"),
       h("td", { class: "small" }, r.date_out || "—"),
@@ -252,7 +256,7 @@ function importPeopleModal() {
       if (!records.length) { U.toast(t("nothingToImport"), true); return false; }
       let n = 0;
       for (const r of records) {
-        try { await Data.create("people", { name: r.name, kind: r.kind, date_in: r.date_in, date_out: r.date_out, allergen_ids: r.allergen_ids }); n++; }
+        try { await Data.create("people", { name: r.name, email: r.email, kind: r.kind, date_in: r.date_in, date_out: r.date_out, allergen_ids: r.allergen_ids }); n++; }
         catch (e) { U.toast(e.message || String(e), true); if (!n) return false; break; }
       }
       U.toast(n + " " + t("importedPeople")); Router.rerender();
@@ -292,6 +296,7 @@ function peopleFromCSV(text) {
   const at = (r, i) => (i >= 0 && r[i] != null ? r[i] : "");
   return body.map((r) => ({
     name: at(r, idx.name).trim(),
+    email: at(r, idx.email).trim() || null,
     kind: normPersonKind(at(r, idx.kind)),
     date_in: toISODate(at(r, idx.date_in)),
     date_out: toISODate(at(r, idx.date_out)),
@@ -300,10 +305,11 @@ function peopleFromCSV(text) {
 }
 
 function mapPeopleHeader(cells) {
-  const idx = { name: -1, kind: -1, date_in: -1, date_out: -1, allergens: -1 };
+  const idx = { name: -1, email: -1, kind: -1, date_in: -1, date_out: -1, allergens: -1 };
   cells.forEach((c, i) => {
     const n = (c || "").trim().toLowerCase();
     if (idx.allergens < 0 && /(allerg|過敏)/.test(n)) idx.allergens = i;
+    else if (idx.email < 0 && /(e-?mail|courriel|郵|信箱|電郵)/.test(n)) idx.email = i;
     else if (idx.date_in < 0 && /(start|date.?in|début|debut|開始|入)/.test(n)) idx.date_in = i;
     else if (idx.date_out < 0 && /(end|date.?out|fin|結束|離|停)/.test(n)) idx.date_out = i;
     else if (idx.kind < 0 && /(type|kind|類型|categor|catégor)/.test(n)) idx.kind = i;
