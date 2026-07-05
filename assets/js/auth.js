@@ -42,6 +42,8 @@
     hasFullAccess() {
       if (!usingSupabase || !currentUser) return false;
       if (adminEmails.includes((currentUser.email || "").toLowerCase())) return true;
+      // Admins and "pro" accounts (e.g. partners) get full access with no subscription.
+      if (currentProfile && (currentProfile.role === "admin" || currentProfile.pro === true)) return true;
       return !!(fullAccessUntil && new Date(fullAccessUntil).getTime() > Date.now());
     },
 
