@@ -100,7 +100,7 @@ create table if not exists people (
   id        text primary key,
   place_id  text references places(id) on delete cascade,
   name      text not null,
-  kind      text default 'kid',     -- kid | employee | guest
+  kind      text default 'student', -- student | employee | teacher | guest
   site_id   text references sites(id) on delete set null,
   date_in   date,
   date_out  date,
