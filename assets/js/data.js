@@ -115,6 +115,11 @@
 
   /* ---------------- SUPABASE adapter ---------------- */
   let sb = null;
+  // Surface cloud write failures instead of failing silently.
+  function sbErr(op, coll, error) {
+    console.error("Supabase " + op, coll, error);
+    try { if (window.U && U.toast) U.toast("Cloud " + op + " failed: " + ((error && error.message) || "error"), true); } catch (e) {}
+  }
   // Best-effort activity logging (never blocks or breaks the main write).
   const LOG_COLLS = new Set(["menu_days", "recipes", "ingredients", "people", "subscribers", "places", "allergens", "settings", "sites", "newsletter_log"]);
   function logAct(action, coll, row) {
@@ -134,9 +139,9 @@
         else cache[c] = data || [];
       }));
     },
-    async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) throw error; cache[coll].push(data); logAct("create", coll, data); return data; },
-    async update(coll, id, patch) { const { data, error } = await sb.from(coll).update(patch).eq("id", id).select().single(); if (error) throw error; const i = cache[coll].findIndex((x) => x.id === id); if (i >= 0) cache[coll][i] = data; logAct("update", coll, data); return data; },
-    async remove(coll, id) { const prev = cache[coll].find((x) => x.id === id); const { error } = await sb.from(coll).delete().eq("id", id); if (error) throw error; cache[coll] = cache[coll].filter((x) => x.id !== id); logAct("delete", coll, prev || { id }); },
+    async create(coll, obj) { const { data, error } = await sb.from(coll).insert(obj).select().single(); if (error) { sbErr("save", coll, error); throw error; } cache[coll].push(data); logAct("create", coll, data); return data; },
+    async update(coll, id, patch) { const { data, error } = await sb.from(coll).update(patch).eq("id", id).select().single(); if (error) { sbErr("update", coll, error); throw error; } const i = cache[coll].findIndex((x) => x.id === id); if (i >= 0) cache[coll][i] = data; logAct("update", coll, data); return data; },
+    async remove(coll, id) { const prev = cache[coll].find((x) => x.id === id); const { error } = await sb.from(coll).delete().eq("id", id); if (error) { sbErr("delete", coll, error); throw error; } cache[coll] = cache[coll].filter((x) => x.id !== id); logAct("delete", coll, prev || { id }); },
     async sendNewsletter(payload) {
       const { data, error } = await sb.functions.invoke(cfg.NEWSLETTER_FUNCTION || "send-newsletter", { body: payload });
       if (error) throw error; return data;
@@ -191,6 +196,12 @@
     },
     create: (c, o) => {
       if (!Data._guard()) return Promise.reject(new Error(I18N.t("demoBlocked")));
+      // Assign a primary key up-front. Supabase id columns are `text primary key`
+      // with no default, so an insert without an id is rejected by Postgres — this
+      // is what made new ingredients (and recipes/people/etc.) silently fail to
+      // save in cloud mode. The local adapter already generated ids, so local
+      // mode was unaffected — which is why it "worked for me but not for them".
+      if (o && o.id == null) o.id = newId(c.slice(0, 3));
       if (PLACE_COLLS.includes(c) && o && o.place_id == null) o.place_id = activePlaceId;
       // new recipes created inside a shop place belong to that shop
       if (c === "recipes" && o && o.place_id == null && Data.activePlaceType() === "shop") o.place_id = activePlaceId;
